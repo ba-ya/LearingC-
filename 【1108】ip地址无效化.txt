@@ -1,0 +1,7 @@
+2021年3月23日23点17分
+力扣的1108号题目(ip地址无效化)
+明白了
+1，string有它内部的insert函数，举例address.insert(i, "a"),因为是可以插入字符串，所以需要用双引号
+2，for（char c : address）
+这条代码可以把address的第一个字符赋值给c
+而且与for捆绑了

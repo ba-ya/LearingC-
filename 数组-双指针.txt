@@ -1,0 +1,17 @@
+2021年11月28日15:54:36
+【283】移动0
+一、快慢指针
+        int sPoint = 0;
+        int n = nums.size();
+        for (int fPoint = 0; fPoint < n; fPoint++)//注1：这三行可以直接套用
+        {
+            if (nums[fPoint] != 0)
+            {
+                nums[sPoint++] = nums[fPoint];
+            }
+        }//注2：for里面内容实现功能
+二、将后面的数据变为0--要用sPoint来操作
+        for (sPoint;sPoint < nums.size();sPoint++)
+        {
+            nums[sPoint] = 0;
+        }

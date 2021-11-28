@@ -1,0 +1,17 @@
+2021年11月28日15:51:45
+【704】二分查找
+        int left = 0;
+        int right = nums.size() - 1; // 改2：应该是-1的
+        while(left <= right) // 注：采用的是【】这种形式
+	  	      //所以下面left和right是+1或者-1
+        {
+            int middle = (left + right) / 2;// 改1：第一次没有改middle的值，循环个鬼
+            if(target > nums[middle])
+                left = middle + 1;
+            if(target < nums[middle])
+                right = middle -1;
+            if(target == nums[middle])
+                return middle;
+            middle = (left + right) / 2;
+        }
+        return -1;
