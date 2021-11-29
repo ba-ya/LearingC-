@@ -1,0 +1,29 @@
+2021年11月29日22:28:04
+class Solution {
+public:
+    vector<int> sortedSquares(vector<int>& nums) {
+        //看过题解后，用双指针写写
+        //最大值只会出现在最左边或最右边
+        int left = 0;
+        int right = nums.size() - 1;
+        vector<int> result = nums;
+        int write = nums.size() - 1;
+        //只把大的放在write里面
+        while(left <= right)
+        {
+            if (nums[left]*nums[left] > nums[right] * nums[right])
+            {
+                result[write] = nums[left]*nums[left];
+                left++;
+                write--;
+            }
+            else
+            {
+                result[write] = nums[right] * nums[right];
+                right--;
+                write--;
+            }
+        }
+        return result;
+    }
+};
