@@ -2,44 +2,23 @@
 
 平台：力扣
 
-文档：[代码随想录](https://programmercarl.com/)
-
 [时间复杂度](https://blog.csdn.net/qq_41523096/article/details/82142747)
 
-[TOC]
+# 2021
 
-## 数组：2021年
+[a little](./2021/2021.md)
 
-### 1.二分查找11月26日-29日
+# 2025
 
-```c++
-/*
-【704】二分查找
-【35】搜索插入位置
-【34】在排序数组中查找元素的第一个和最后一个位置
-【69】x 的平方根
-【367】有效的完全平方数
-```
+## [题单](https://github.com/EndlessCheng/codeforces-go/tree/master/leetcode)
 
-### 2.移出数据11月28日-29日
-
-```c++
-/*
-27移出元素
-26.删除排序数组中的重复项 //返回慢指针
-283.移动零  //处理冗余0
-844.比较含退格的字符串 //2021年11月29日22:13:46还是不太明白，等后来学到双指针了再回来写
-977.有序数组的平方 //暴力法会；另一种方法题解下面那人写的清楚
-```
-
-[977题解](https://leetcode-cn.com/problems/squares-of-a-sorted-array/solution/shuang-zhi-zhen-by-du-tu-9-gxo5/)
-
-## 209.长度最小的子数组
-
-```c++
-/*
-209 暴力解法写错好多遍，不能掉以轻心，要把自己当小学生，啥都要自己才行
-```
-
-
-
+| 类型                  | 题目数目 | 通过次数 |
+| --------------------- | -------- | -------- |
+| TwoPointersTowards1   | 5        | 2        |
+| TwoPointersTowards2   | 4        | 1        |
+| SlidingWindow         | 12       | 1        |
+| BinarySearch1         | 11       | 1        |
+| BinarySearch2         | 6        | 1        |
+| LinkedList_Reverse    | 6        |          |
+| LinkedList_QuickNSlow | 5        |          |
+| LinkedList_Delete     | 7        |          |
