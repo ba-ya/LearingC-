@@ -19,6 +19,6 @@
 | SlidingWindow         | 12       | 1        |
 | BinarySearch1         | 11       | 1        |
 | BinarySearch2         | 6        | 1        |
-| LinkedList_Reverse    | 6        |          |
+| LinkedList_Reverse    | 6        | 1        |
 | LinkedList_QuickNSlow | 5        |          |
 | LinkedList_Delete     | 7        |          |
