@@ -187,7 +187,57 @@ ListNode* doubleIt(ListNode* head) {
 }
 
 namespace LinkedList_QuickNSlow {
+// 876链表的中间节点
+ListNode* middleNode(ListNode* head) {
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
 
+// 141环形链表
+bool hasCycle(ListNode *head) {
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        if (slow == fast) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// 142环形链表2
+ListNode *detectCycle(ListNode *head) {
+    // 假设
+    // a = head到环入口的距离
+    // b = head到相遇点的距离, slow走过的路程
+    // c = 环长
+    // 2b = b + kc
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+        // 在环内的相遇点
+        // slow现在在环内走过的距离是 b - a = kc - a,
+        // 再+a就能得到一个完整环
+        // 所有head与slow一起走,相遇的点就是入环口
+        if (slow == fast) {
+            while (slow != head) {
+                slow = slow->next;
+                head = head->next;
+            }
+            return slow;
+        }
+    }
+    return nullptr;
+}
 }
 
 namespace LinkedList_Delete {
