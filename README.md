@@ -15,7 +15,7 @@
 | 类型                  | 题目数目(91) | 通过次数 |
 | --------------------- | ------------ | -------- |
 | TwoPointersTowards1   | 5            | 2        |
-| TwoPointersTowards2   | 4            | 1        |
+| TwoPointersTowards2   | 4            | 2        |
 | SlidingWindow         | 12           | 1        |
 | BinarySearch1         | 11           | 1        |
 | BinarySearch2         | 6            | 1        |
