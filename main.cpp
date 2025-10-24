@@ -8,16 +8,13 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    std::vector<int> vec = {4,3,3,4};
-    std::vector<std::vector<int>> vecs = {{1}, {3}};
-    int target = 8;
-
+    std::vector<int> vec = {5,2,13,3,8};
     ListNode dummy(0, new ListNode());
-    ListNode *head = &dummy;
+    ListNode *cur = &dummy;
     for (auto v : vec) {
-        head->next = new ListNode(v);
-        head = head->next;
+        cur->next = new ListNode(v);
+        cur = cur->next;
     }
-    LinkedList_QuickNSlow::isPalindrome(dummy.next);
+    LinkedList_Delete::removeNodes(dummy.next);
     return a.exec();
 }

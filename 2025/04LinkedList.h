@@ -3,12 +3,24 @@
 
 #include "00solution.h"
 
+#include <unordered_set>
+
 struct ListNode {
     int val;
     ListNode *next;
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
     ListNode(int x, ListNode *next) : val(x), next(next) {}
+
+    void debug() {
+        QStringList s;
+        ListNode *cur = this;
+        while (cur) {
+            s << QString::number(cur->val);
+            cur = cur->next;
+        }
+        qDebug().noquote() << s.join(",");
+    }
 };
 
 namespace LinkedList_Reverse {
@@ -322,7 +334,143 @@ bool isPalindrome(ListNode* head) {
 }
 
 namespace LinkedList_Delete {
+// 237删除链表中的节点
+void deleteNode(ListNode* node) {
+    ListNode *next = node->next;
+    // 解引用, 把值和指针都给node了
+    // 解引用, 此时是第二个指针不用
+    *node = *next;
+    delete next;
+}
 
+// 19删除链表倒数第N个节点
+ListNode* removeNthFromEnd(ListNode* head, int n) {
+    // need dummy
+    // 如果遇到需要删除头节点的题目，添加哨兵节点可以简化代码逻辑
+    ListNode dummy(0, head);
+    ListNode *right = &dummy;
+    ListNode *left = &dummy;
+    for (int i = 0; i < n; i++) {
+        right = right->next;
+    }
+
+    // 如果要遍历到最后一个节点，需要写 while node;
+    // 如果要遍历到倒数第二个节点，需要写 while node.next。
+    while (right->next) {
+        left = left->next;
+        right = right->next;
+    }
+    // 此时left是倒数第n+1个节点
+    ListNode *next = left->next;
+    // 赋值, 此时是第一个指针不用
+    left->next = left->next->next;
+    delete next;
+    return dummy.next;
+}
+
+// 83删除排序链表中的重复元素
+ListNode* deleteDuplicates(ListNode* head) {
+    if (head == nullptr) {
+        return nullptr;
+    }
+    ListNode *cur = head;
+    while (cur->next) {
+        if (cur->val == cur->next->val) {
+            ListNode *next = cur->next;
+            cur->next = cur->next->next;
+            delete next;
+        } else {
+            cur = cur->next;
+        }
+    }
+    return head;
+}
+
+// 82删除排序链表中的重复元素2
+ListNode* deleteDuplicates2(ListNode* head) {
+    ListNode dummy(0, head);
+    ListNode *cur = &dummy;
+    // 比较后面两个值
+    while (cur->next && cur->next->next) {
+        int val = cur->next->val;
+        if (val == cur->next->next->val) {
+            while (cur->next && cur->next->val == val) {
+                ListNode *next = cur->next;
+                cur->next = cur->next->next;
+                delete next;
+            }
+        } else {
+            cur = cur->next;
+        }
+    }
+    return dummy.next;
+}
+
+// 203移除链表元素
+ListNode* removeElements(ListNode* head, int val) {
+    ListNode dummy(0, head);
+    ListNode *cur = &dummy;
+    while (cur->next) {
+        ListNode *next = cur->next;
+        if (cur->next->val == val) {
+            cur->next = cur->next->next;
+            delete next;
+        } else {
+            cur = next;
+        }
+    }
+    return dummy.next;
+}
+
+// 3217从链表中移除在数组中存在的节点
+ListNode* modifiedList(vector<int>& nums, ListNode* head) {
+    // set查找时间复杂度是O(1)
+    unordered_set<int> st(nums.begin(), nums.end());
+    ListNode dummy(0, head);
+    ListNode *cur = &dummy;
+    while (cur->next) {
+        ListNode *next = cur->next;
+        if (st.find(cur->next->val) != st.end()) {
+            cur->next = cur->next->next;
+            // 应该是力扣自己回收了,添加delete会报错
+            // delete next;
+        } else {
+            cur = next;
+        }
+    }
+    return dummy.next;
+}
+
+// 2487从链表中移除节点
+ListNode* removeNodes(ListNode* head) {
+    auto reverse_list = [](ListNode* head) {
+        ListNode *pre = nullptr;
+        ListNode *cur = head;
+        while (cur) {
+            ListNode *next = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    };
+    head->debug();
+    ListNode *head2 = reverse_list(head);
+    head2->debug();
+    ListNode *cur = head2;
+    while (cur->next) {
+        ListNode *next = cur->next;
+        if (cur->val > cur->next->val) {
+            cur->next = cur->next->next;
+            delete next;
+        } else {
+            cur = next;
+        }
+    }
+    ListNode *head3 = reverse_list(head2);
+    head3->debug();
+    return head3;
+}
 }
 
 #endif // _4LINKEDLIST_H

@@ -21,4 +21,4 @@
 | BinarySearch2         | 6            | 1        |
 | LinkedList_Reverse    | 6            | 1        |
 | LinkedList_QuickNSlow | 5            | 1        |
-| LinkedList_Delete     | 7            |          |
+| LinkedList_Delete     | 7            | 1        |
