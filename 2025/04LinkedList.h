@@ -238,6 +238,87 @@ ListNode *detectCycle(ListNode *head) {
     }
     return nullptr;
 }
+
+// 143重排链表
+void reorderList(ListNode* head) {
+    auto reverse_list = [](ListNode* head) {
+        ListNode *pre = nullptr;
+        ListNode *cur = head;
+        while (cur) {
+            ListNode *next = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    };
+    auto find_mid = [](ListNode* head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    };
+    ListNode *mid = find_mid(head);
+    ListNode *head2 = reverse_list(mid);
+    qDebug() << "--1";
+    while (head) {
+        qDebug() << head->val;
+        head = head->next;
+    }
+    qDebug() << "--2";
+    while (head2) {
+        qDebug() << head2->val;
+        head2 = head2->next;
+    }
+    while (head2->next) {
+        ListNode *next1 = head->next;
+        ListNode *next2 = head2->next;
+        head->next = head2;
+        head2->next = next1;
+        head = next1;
+        head2 = next2;
+    }
+}
+
+// 234回文链表, 参考
+bool isPalindrome(ListNode* head) {
+    auto reverse_list = [](ListNode* head) {
+        ListNode *pre = nullptr;
+        ListNode *cur = head;
+        while (cur) {
+            ListNode *next = cur->next;
+            cur->next = pre;
+            pre = cur;
+            cur = next;
+        }
+        return pre;
+    };
+    auto find_mid = [](ListNode* head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        return slow;
+    };
+    ListNode *mid = find_mid(head);
+    ListNode *head2 = reverse_list(mid);
+    // (1221), mid是122这个2
+    // 122, 12
+    // 以head2后半部分为主,
+    while (head2) {
+        if (head->val != head2->val) {
+            return false;
+        }
+        head = head->next;
+        head2 = head2->next;
+    }
+    return true;
+}
 }
 
 namespace LinkedList_Delete {
