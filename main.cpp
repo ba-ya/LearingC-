@@ -3,6 +3,7 @@
 #include "02SlidingWindow.h"
 #include "03BinarySearch.h"
 #include "04LinkedList.h"
+#include "05BinaryTree.h"
 
 int main(int argc, char *argv[])
 {

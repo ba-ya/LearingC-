@@ -22,6 +22,7 @@ set(2025
     2025/02SlidingWindow.h
     2025/03BinarySearch.h
     2025/04LinkedList.h
+    2025/05BinaryTree.h
 )
 
 set(PROJECT_SOURCES

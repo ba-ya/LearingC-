@@ -230,31 +230,8 @@ int maxArea(vector<int>& height) {
 }
 
 // 42接雨水
-int trap(vector<int>& height)    {
-    // 方法1, 数组计算前后缀
-    // 空间复杂度O(n)
-#if 0
-        int ans = 0;
-        int n = height.size();
-        vector<int> pre_max(n, 0);
-        vector<int> suf_max(n, 0);
-        // pre
-        pre_max[0] = height[0];
-        for (int i = 1; i < n; ++i) {
-            pre_max[i] = std::max(pre_max[i - 1], height[i]);
-        }
-        // suf
-        suf_max[n - 1] = height[n - 1];
-        for (int i = n - 2; i >= 0 ; --i) {
-            suf_fix[i] = max(suf_fix[i + 1], height[i]);
-        }
-        // 计算容量,
-        for (int i = 0; i < n; i++) {
-            ans += min(pre_max[i], suf_fix[i]) - height[i];
-        }
-        return ans;
-#endif
-    // 方法2,变量存储前后缀
+int trap(vector<int>& height ) {
+    // 变量存储前后缀
     // 空间复杂度O(1)
     int n = height.size();
     int ans = 0;
