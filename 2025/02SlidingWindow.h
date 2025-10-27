@@ -94,11 +94,7 @@ int longestSemiRepetitiveSubstring(string s) {
             same += 1;
         }
         if (same > 1) {
-            left++;
-            // 移除左边两个重复字符的第一个字符
-            while (s[left] != s[left - 1]) {
-                left++;
-            }
+            for (left++; left <= right && s[left] != s[left - 1]; left++);
             same = 1;
         }
         ans = max(ans, right - left + 1);
@@ -123,30 +119,8 @@ int maximumBeauty(vector<int>& nums, int k) {
     return ans;
 }
 
-// 1004最大连续1的个数, own + 参考
+// 1004最大连续1的个数, 参考
 int longestOnes(vector<int>& nums, int k) {
-    // 方法1, 根据翻转次数,自己写的
-#if 0
-        int ans = 0;
-        int flip = 0;
-        int left = 0;
-        for (int right = 0; right < nums.size(); ++right) {
-            if (nums[right] == 0) {
-                flip++;
-            }
-            if (flip > k) {
-                while (left < right && nums[left] == 1) {
-                    left++;
-                }
-                left++;
-                flip--;
-            }
-            ans = max(ans, right - left + 1);
-        }
-        return ans;
-#endif
-
-    // 方法2, 转化为子数组内0的个数<=k, 参考
     int ans = 0;
     int cnt0 = 0;
     int left = 0;
@@ -159,7 +133,6 @@ int longestOnes(vector<int>& nums, int k) {
         ans = max(ans, right - left + 1);
     }
     return ans;
-
 }
 
 // 2962统计最大元素出现至少K次的子数组,
