@@ -22,7 +22,7 @@
 | LinkedList_Reverse    | 6            | 1        |
 | LinkedList_QuickNSlow | 5            | 1        |
 | LinkedList_Delete     | 7            | 1        |
-| BinaryTree_Understand | 7            |          |
+| BinaryTree_Understand | 7            | 1        |
 | BinaryTree_Apply      | 8            |          |
 | BinaryTree_ThreeOrder | 9            |          |
 | BinaryTree_Ancestor   | 3            |          |

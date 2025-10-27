@@ -147,7 +147,30 @@ vector<vector<int>> verticalTraversal(TreeNode* root) {
 }
 }
 namespace BinaryTree_Apply {
+// 100相同的树
+bool isSameTree(TreeNode* p, TreeNode* q) {
+    if (p == nullptr || q == nullptr) {
+        return p == q;
+    }
+    return (p->val == q->val)
+           && isSameTree(p->left, q->left)
+           && isSameTree(p->right, q->right);
+}
 
+// 101对称二叉树
+bool isSymmetric(TreeNode* root) {
+    if (root == nullptr) {
+        return false;
+    }
+    function<bool(TreeNode *, TreeNode *)> is_same =
+        [&](TreeNode *p, TreeNode *q) {
+            if (p == nullptr || q == nullptr) {
+                return p == q;
+            }
+            return p->val == q->val && is_same(p->left, q->right) && is_same(p->right, q->left);
+        };
+    return is_same(root->left, root->right);
+}
 }
 namespace BinaryTree_ThreeOrder {
 
