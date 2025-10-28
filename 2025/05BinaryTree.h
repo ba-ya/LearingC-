@@ -171,6 +171,58 @@ bool isSymmetric(TreeNode* root) {
         };
     return is_same(root->left, root->right);
 }
+
+// 110平衡二叉树
+bool isBalanced(TreeNode* root) {
+    function<int(TreeNode* root)> get_height = [&](TreeNode* root) {
+        if (root == nullptr) {
+            return 0;
+        }
+        int left_h = get_height(root->left);
+        if (left_h == -1) {
+            return -1;// 提前退出递归
+        }
+        int right_h = get_height(root->right);
+        if (right_h == -1 || abs(left_h - right_h) > 1) {
+            return -1;
+        }
+        return max(left_h, right_h) + 1;
+    };
+    return get_height(root) != -1;
+}
+
+// 199二叉树的右视图
+vector<int> rightSideView(TreeNode* root) {
+    vector<int> ans;
+    function<void(TreeNode *root, int dep)> dfs = [&](TreeNode *root, int dep) {
+        if (root == nullptr) {
+            return;
+        }
+        if (ans.size() == dep) {
+            ans.emplace_back(root->val);
+        }
+        dfs(root->right, dep + 1);
+        dfs(root->left, dep + 1);
+    };
+    dfs(root, 0);
+    return ans;
+}
+
+// 226翻转二叉树
+TreeNode* invertTree(TreeNode* root) {
+    if (root == nullptr) {
+        return root;
+    }
+    swap(root->left, root->right);
+    invertTree(root->left);
+    invertTree(root->right);
+    return root;
+}
+
+// 617合并二叉树
+TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+
+}
 }
 namespace BinaryTree_ThreeOrder {
 
