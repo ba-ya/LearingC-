@@ -221,7 +221,36 @@ TreeNode* invertTree(TreeNode* root) {
 
 // 617合并二叉树
 TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
+    if (root1 == nullptr) {
+        return root2;
+    } else if (root2 == nullptr) {
+        return root1;
+    } else {
+        return new TreeNode(root1->val + root2->val,
+                            mergeTrees(root1->left, root2->left),
+                            mergeTrees(root1->right, root2->right));
+    }
+}
 
+// 1026 节点与祖父之间的最大差值
+int maxAncestorDiff(TreeNode* root) {
+    int ans = 0;
+    // 以node为根的最小值和最大值
+    // 返回[min, max]
+    function<pair<int, int>(TreeNode * node)> dfs =
+        [&](TreeNode* node) -> pair<int, int> {
+        if (node == nullptr) {
+            return {INT_MAX, INT_MIN};// 返回最大值和最小.避免有影响
+        }
+        auto [l_min, l_max] = dfs(node->left);
+        auto [r_min, r_max] = dfs(node->right);
+        int mn = min(node->val, min(l_min, r_min));
+        int mx = max(node->val, max(l_max, r_max));
+        ans = max(ans, max(node->val - mn, mx - node->val));
+        return {mn, mx};
+    };
+    dfs(root);
+    return ans;
 }
 }
 namespace BinaryTree_ThreeOrder {
