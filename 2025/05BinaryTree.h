@@ -267,7 +267,126 @@ TreeNode* sufficientSubset(TreeNode* root, int limit) {
 }
 }
 namespace BinaryTree_ThreeOrder {
+// 98验证二叉搜索树
+bool isValidBST(TreeNode* root) {
+    function<pair<long long, long long>(TreeNode *node)> dfs = [&](TreeNode *node) -> pair<long long, long long> {
+        if (node == nullptr) {
+            // 是二叉搜索树
+            return {LLONG_MAX, LLONG_MIN};
+        }
+        auto [l_min, l_max] = dfs(node->left);
+        auto [r_min, r_max] = dfs(node->right);
+        long long x = node->val;
+        // 这种情况下不是二叉搜索树
+        if (x <= l_max || x >= r_min) {
+            return {LLONG_MIN, LLONG_MAX};
+        }
+        // 二叉搜索树, 左边小于根小于右边
+        return {min(l_min, x), max(r_max, x)};
+    };
+    // 根据结果与{LLONG_MIN, LLONG_MAX}不匹配就是二叉搜索树
+    return dfs(root).first != LLONG_MIN;
+}
 
+// 938二叉搜索树的范围和
+int rangeSumBST(TreeNode* root, int low, int high) {
+    if (root == nullptr) {
+        return 0;
+    }
+    int val = root->val;
+    if (val >= low && val <= high) {
+        return val + rangeSumBST(root->left, low, val) + rangeSumBST(root->right, val, high);
+    } else {
+        return rangeSumBST(root->left, low, high) + rangeSumBST(root->right, low, high);
+    }
+}
+
+// 2476二叉搜索树最近节点查询
+vector<vector<int>> closestNodes(TreeNode* root, vector<int>& queries) {
+    vector<int> a;
+    long long pre = LLONG_MAX;
+    // 知道中序遍历,但不知道怎么实现
+    function<void(TreeNode*)> dfs = [&](TreeNode* node){
+        if (node == nullptr) {
+            return;
+        }
+        dfs(node->left);
+        a.push_back(node->val);
+        dfs(node->right);
+    };
+    // 第一个 >= x 的位置
+    auto lower_bound = [&](vector<int> &nums, int x) {
+        int left = -1;
+        int right = nums.size();
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= x) {
+                right = mid;
+            } else {
+                left = mid;
+            }
+        }
+        return right;
+    };
+    dfs(root);
+    int n = a.size();
+    vector<vector<int>> ans;
+    for (auto x : queries) {
+        int id = lower_bound(a, x);
+        // max
+        int mx = id < n ? a[id] : -1;
+        // min
+        int mn;
+        if (id < n && a[id] == x) {
+            mn = a[id];
+        } else {
+            mn = id ? a[id - 1] : -1;
+        }
+        ans.push_back({mn, mx});
+    }
+    return ans;
+}
+
+// 230二叉搜索树中第K小的元素
+int kthSmallest(TreeNode* root, int k) {
+    vector<int> nums;
+    function<void(TreeNode*)> dfs = [&](TreeNode *node) {
+        if (node == nullptr) {
+            return;
+        }
+        dfs(node->left);
+        nums.push_back(node->val);
+        dfs(node->right);
+    };
+    dfs(root);
+    int n = nums.size() - 1;
+    int id = min(k - 1, n);
+    return nums[id];
+}
+
+// 1373 二叉搜索子树的最大键值和
+int maxSumBST(TreeNode* root) {
+    int ans = 0;
+    // 后序遍历, 最小值, 最大值, 总和
+    function<tuple<int, int, int>(TreeNode*)> dfs = [&](TreeNode *node) -> tuple<int, int, int> {
+        if (node == nullptr) {
+            // 不成立的数
+            return {INT_MAX, INT_MIN, 0};
+        }
+        auto [l_min, l_max, l_sum] = dfs(node->left);
+        auto [r_min, r_max, r_sum] = dfs(node->right);
+        int val = node->val;
+        if (val <= l_max || val >= r_min) {
+            // 不是二叉搜索树
+            return {INT_MIN, INT_MAX, 0};
+        }
+        int s = l_sum + r_sum + val;
+        ans = max(ans, s);
+        return {min(l_min, val), max(r_max, val), s};
+    };
+    dfs(root);
+    return ans;
+}
 }
 namespace BinaryTree_Ancestor {
 
