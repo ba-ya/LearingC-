@@ -252,6 +252,19 @@ int maxAncestorDiff(TreeNode* root) {
     dfs(root);
     return ans;
 }
+
+// 1080根到叶路径的不足节点
+TreeNode* sufficientSubset(TreeNode* root, int limit) {
+    limit -= root->val;
+    // 叶子节点
+    if (root->left == nullptr && root->right == nullptr) {
+        return limit > 0 ? nullptr : root;
+    }
+    if (root->left) root->left = sufficientSubset(root->left, limit);
+    if (root->right) root->right = sufficientSubset(root->right, limit);
+    return root->left == nullptr && root->right == nullptr ? nullptr : root;
+
+}
 }
 namespace BinaryTree_ThreeOrder {
 
