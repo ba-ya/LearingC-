@@ -3,6 +3,8 @@
 
 #include "00solution.h"
 
+#include <unordered_set>
+
 struct TreeNode {
     int val;
     TreeNode *left;
@@ -385,6 +387,87 @@ int maxSumBST(TreeNode* root) {
         return {min(l_min, val), max(r_max, val), s};
     };
     dfs(root);
+    return ans;
+}
+
+// 105从前序与中序遍历序列构造二叉树
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    if (preorder.empty()) {
+        return nullptr;
+    }
+    // [left, right)
+    int left_size = ranges::find(inorder, preorder[0]) - inorder.begin();
+    vector<int> pre1(preorder.begin() + 1, preorder.begin() + 1 + left_size);
+    vector<int> pre2(preorder.begin() + 1 + left_size, preorder.end());
+    vector<int> in1(inorder.begin(), inorder.begin() + left_size);
+    vector<int> in2(inorder.begin() + 1 + left_size, inorder.end());
+    TreeNode *left = buildTree(pre1, in1);
+    TreeNode *right = buildTree(pre2, in2);
+    return new TreeNode(preorder[0], left, right);
+}
+
+// 106从中序与后序遍历序列构造二叉树
+TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder) {
+    if (postorder.empty()) {
+        return nullptr;
+    }
+    int left_size = ranges::find(inorder, postorder.back()) - inorder.begin();
+    vector<int> in1(inorder.begin(), inorder.begin() + left_size);
+    vector<int> in2(inorder.begin() + left_size + 1, inorder.end());
+    vector<int> post1(postorder.begin(), postorder.begin() + left_size);
+    vector<int> post2(postorder.begin() + left_size, postorder.end() - 1);
+    TreeNode *left = buildTree2(in1, post1);
+    TreeNode *right = buildTree2(in2, post2);
+    return new TreeNode(postorder.back(), left, right);
+}
+
+// 889从前序与后序遍历序列构造二叉树
+TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
+    if (preorder.empty()) {
+        return nullptr;
+    }
+    if (preorder.size() == 1) {
+        return new TreeNode(preorder[0]);
+    }
+    // 前序第二个值是左子树的根
+    // [left, right), left_size是第一个找到preorder[1]的id(从0开始)
+    int left_size = ranges::find(postorder, preorder[1]) - postorder.begin();
+    vector<int> pre1(preorder.begin() + 1, preorder.begin() + 1 + left_size + 1);
+    vector<int> pre2(preorder.begin() + 1 + left_size + 1, preorder.end());
+    vector<int> post1(postorder.begin(), postorder.begin() + left_size + 1);
+    vector<int> post2(postorder.begin() + left_size + 1, postorder.end() - 1);
+    TreeNode *left = constructFromPrePost(pre1, post1);
+    TreeNode *right = constructFromPrePost(pre2, post2);
+    return new TreeNode(preorder.front(), left, right);
+}
+
+// 1110删点成林
+vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
+    unordered_set<int> s;
+    for (auto a : to_delete) {
+        s.insert(a);
+    }
+    vector<TreeNode*> ans;
+    function<TreeNode*(TreeNode*)> dfs = [&](TreeNode *node) ->TreeNode* {
+        if (node == nullptr) {
+            return nullptr;
+        }
+        node->left = dfs(node->left);
+        node->right = dfs(node->right);
+        // 当前节点没有被删除, 返回本身,
+        if (s.count(node->val) == 0) {
+            return node;
+        }
+        // 如果被删除, 左(右)节点存在就是孤立的树,需要放入ans
+        if (node->left) ans.push_back(node->left);
+        if (node->right) ans.push_back(node->right);
+        // 被删除了,返回空节点
+        return nullptr;
+    };
+    auto node = dfs(root);
+    if (node) {
+        ans.push_back(node);
+    }
     return ans;
 }
 }
