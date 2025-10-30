@@ -472,7 +472,55 @@ vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
 }
 }
 namespace BinaryTree_Ancestor {
+// 236二叉树的最近公共祖先
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if (root == nullptr || root == p || root == q) {
+        return root;
+    }
+    TreeNode *left = lowestCommonAncestor(root->left, p, q);
+    TreeNode *right = lowestCommonAncestor(root->right, p, q);
+    if (left && right) {
+        return root;
+    }
+    // left不存在, right存在返回right, right不存在返回nullptr(right也是nullptr)
+    return left ? left : right;
+}
 
+// 235二叉搜索树的最近公共祖先
+TreeNode* lowestCommonAncestor2(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    int x = root->val;
+    if (p->val < x && q->val < x) {
+        return lowestCommonAncestor2(root->left, p, q);
+    }
+    if (p->val > x && q->val > x) {
+        return lowestCommonAncestor2(root->right, p, q);
+    }
+    return root;
+}
+
+// 1123最深叶节点的最近公共祖先
+TreeNode* lcaDeepestLeaves(TreeNode* root) {
+    function<pair<int, TreeNode*>(TreeNode *)> dfs = [&](TreeNode *node) -> pair<int, TreeNode*> {
+        if (node == nullptr) {
+            return {0, nullptr};
+        }
+        // height 是根节点到深度,
+        auto [l_height, lca] = dfs(node->left);
+        auto [r_height, rca] = dfs(node->right);
+        if (l_height > r_height) {
+            // +1 是因为要把root节点的深度加上
+            return {l_height + 1, lca};
+        }
+        if (l_height < r_height) {
+            return {r_height + 1, rca};
+        }
+        return {l_height + 1, node};
+    };
+    return dfs(root).second;
+}
 }
 namespace BinaryTree_BFS {
 

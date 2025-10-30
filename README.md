@@ -25,5 +25,5 @@
 | BinaryTree_Understand | 7            | 1        |
 | BinaryTree_Apply      | 8            | 1        |
 | BinaryTree_ThreeOrder | 9            | 1        |
-| BinaryTree_Ancestor   | 3            |          |
+| BinaryTree_Ancestor   | 3            | 1        |
 | BinaryTree_BFS        | 8            |          |
