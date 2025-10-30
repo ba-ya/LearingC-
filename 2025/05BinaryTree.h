@@ -3,6 +3,7 @@
 
 #include "00solution.h"
 
+#include <queue>
 #include <unordered_set>
 
 struct TreeNode {
@@ -523,7 +524,67 @@ TreeNode* lcaDeepestLeaves(TreeNode* root) {
 }
 }
 namespace BinaryTree_BFS {
+// 102二叉树的层序遍历
+vector<vector<int>> levelOrder(TreeNode* root) {
+    if (root ==nullptr) {
+        return {};
+    }
+    vector<vector<int>> ans;
+    vector<TreeNode*> cur{root};
 
+    while (!cur.empty()) {
+        vector<TreeNode*> next;
+        vector<int> val;
+        for (TreeNode *node : cur) {
+            val.push_back(node->val);
+            if (node->left) next.push_back(node->left);
+            if (node->right) next.push_back(node->right);
+        }
+        cur = std::move(next);
+        ans.emplace_back(val);
+    }
+    return ans;
+}
+
+// 103二叉树的锯齿形层序遍历
+vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+    if (root == nullptr) {
+        return {};
+    }
+    vector<vector<int>> ans;
+    vector<TreeNode *> cur{root};
+    while (cur.size()) {
+        vector<TreeNode*> next;
+        vector<int> val;
+        for (TreeNode *node : cur) {
+            val.push_back(node->val);
+            if (node->left) next.push_back(node->left);
+            if (node->right) next.push_back(node->right);
+        }
+        cur = std::move(next);
+        // ans前面有奇数层,当前就是偶数层需要翻转
+        if (ans.size() % 2) ranges::reverse(val);
+        ans.emplace_back(val);
+    }
+    return ans;
+}
+
+// 513找树左下角的值
+int findBottomLeftValue(TreeNode* root) {
+    TreeNode * node;
+    queue<TreeNode *> q;
+    q.push(root);
+    while (q.size()) {
+        int n = q.size();
+        for (int i = 0; i < n; i++) {
+            node = q.front();
+            q.pop();
+            if (node->right) q.push(node->right);
+            if (node->left) q.push(node->left);
+        }
+    }
+    return node->val;
+}
 }
 
 #endif // _5BINARYTREE_H
