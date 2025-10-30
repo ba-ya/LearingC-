@@ -228,9 +228,10 @@ long long minimumTime(vector<int>& time, int totalTrips) {
     };
 
     long long min = *min_element(time.begin(), time.end());
+    // min = ranges::min(time);
     // 同样二分答案, 区间[1, 最小时间*totalTrips]
-    long long left = 0; // 循环不变量, check(left)必不满足条件
-    long long right = (long long)min * totalTrips;// 循环不变量, check(right)必满足条件
+    long long left = min - 1; // 循环不变量, check(left)必不满足条件,
+    long long right = 1LL * min * totalTrips;// 循环不变量, check(right)必满足条件
     while (left + 1 < right) {
         long long mid = left + (right - left) / 2;
         if (check(mid)) {

@@ -12,18 +12,18 @@
 
 ## [题单](https://github.com/EndlessCheng/codeforces-go/tree/master/leetcode)
 
-| 类型                  | 题目数目(91) | 通过次数   |
-| --------------------- | ------------ | ---------- |
-| TwoPointersTowards1   | 5            | 2          |
-| TwoPointersTowards2   | 4            | 2          |
-| SlidingWindow         | 12           | 2          |
-| BinarySearch1         | 11           | 1(do 2563) |
-| BinarySearch2         | 6            | 1          |
-| LinkedList_Reverse    | 6            | 1          |
-| LinkedList_QuickNSlow | 5            | 1          |
-| LinkedList_Delete     | 7            | 1          |
-| BinaryTree_Understand | 7            | 1          |
-| BinaryTree_Apply      | 8            | 1          |
-| BinaryTree_ThreeOrder | 9            |            |
-| BinaryTree_Ancestor   | 3            |            |
-| BinaryTree_BFS        | 8            |            |
+| 类型                  | 题目数目(91) | 通过次数 |
+| --------------------- | ------------ | -------- |
+| TwoPointersTowards1   | 5            | 2        |
+| TwoPointersTowards2   | 4            | 2        |
+| SlidingWindow         | 12           | 2        |
+| BinarySearch1         | 11           | 2        |
+| BinarySearch2         | 6            | 1        |
+| LinkedList_Reverse    | 6            | 1        |
+| LinkedList_QuickNSlow | 5            | 1        |
+| LinkedList_Delete     | 7            | 1        |
+| BinaryTree_Understand | 7            | 1        |
+| BinaryTree_Apply      | 8            | 1        |
+| BinaryTree_ThreeOrder | 9            |          |
+| BinaryTree_Ancestor   | 3            |          |
+| BinaryTree_BFS        | 8            |          |
