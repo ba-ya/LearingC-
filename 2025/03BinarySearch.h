@@ -343,8 +343,8 @@ int findPeakElement(vector<int>& nums) {
     // [0, n - 2]->(-1, n - 1)
     // while里面有mid + 1,所有范围限制为n-2
     int n = nums.size();
-    int left = -1;
-    int right = n - 1;
+    int left = -1;// 不可能是峰值
+    int right = n - 1; // 可能是最大峰值
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
         if (nums[mid] > nums[mid + 1]) {
@@ -361,7 +361,7 @@ int findMin(vector<int>& nums) {
     // [0, n-2]
     int n = nums.size();
     int left = -1;//不满足
-    int right = n - 1;// 满足
+    int right = n - 1;// 满足, 可能最小值
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
         (nums[mid] > nums.back() ? left : right) = mid;
@@ -371,26 +371,41 @@ int findMin(vector<int>& nums) {
 
 // 33搜索旋转排序数组
 int search(vector<int>& nums, int target) {
-    // 只讨论 target <= x的情况
-    // [0, n - 2]
-    int last = nums.back();
-    // 返回x在target的右侧吗
-    auto check = [&](int i) {
-        int x = nums[i];
-        if (x > last) {
-            return target > last && x >= target;
+    auto find_min = [&](vector<int> &nums) {
+        int left = -1;
+        // 如果第二段只有一个值, 最小值就是下标n-1对应的值
+        int right = nums.size() - 1;
+        while (left + 1 < right) {
+            int mid = left + (right - left) / 2;
+            (nums[mid] > nums.back() ? left : right) = mid;
         }
-        return target > last || x >= target;
+        return right;
     };
-
+    // [)
+    auto lower_bound = [&](int left, int right, int target) {
+        int l = left - 1;
+        int r = right;
+        while (l + 1 < r) {
+            int mid = l + (r - l) / 2;
+            if (nums[mid] >= target) {
+                r = mid;
+            } else {
+                l = mid;
+            }
+        }
+        return nums[r] == target ? r : -1;
+    };
     int n = nums.size();
-    int left = -1;
-    int right = n - 1;
-    while (left + 1 < right) {
-        int mid = left + (right - left) / 2;
-        (check(mid) ? right : left) = mid;
+    // 找到最小值对应的下标
+    int i = find_min(nums);
+    // 判断target在哪一段,之后在段内进行二分查找
+    // 第二段[i, n - 1]
+    if (target <= nums.back()) {
+        return lower_bound(i, n, target);
+    //第一段[0, i - 1]
+    } else {
+        return lower_bound(0, i, target);
     }
-    return nums[right] == target ? right : -1;
 }
 
 // 74搜索二维矩阵
@@ -416,7 +431,6 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
     }
     int k = lower_bound(right, target);
     return k > 0 && k < n && matrix[right][k] == target;
-
 }
 
 // 1901寻找峰值2

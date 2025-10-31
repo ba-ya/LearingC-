@@ -23,6 +23,7 @@ set(2025
     2025/03BinarySearch.h
     2025/04LinkedList.h
     2025/05BinaryTree.h
+    2025/06BackTracking.h
 )
 
 set(PROJECT_SOURCES
