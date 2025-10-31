@@ -402,7 +402,7 @@ int search(vector<int>& nums, int target) {
     // 第二段[i, n - 1]
     if (target <= nums.back()) {
         return lower_bound(i, n, target);
-    //第一段[0, i - 1]
+        //第一段[0, i - 1]
     } else {
         return lower_bound(0, i, target);
     }
@@ -435,6 +435,7 @@ bool searchMatrix(vector<vector<int>>& matrix, int target) {
 
 // 1901寻找峰值2
 vector<int> findPeakGrid(vector<vector<int>>& mat) {
+    // 人往高处走
     auto index_of_max = [](vector<int> &vec) -> int {
         return max_element(vec.begin(), vec.end()) - vec.begin();
     };
@@ -458,6 +459,7 @@ int findMin2(vector<int>& nums) {
     int right = n - 1;
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
+        // 此时可以知道right颜色是蓝色,二分区间可以减小1个
         if (nums[mid] == nums[right]) {
             right--;
         } else if (nums[mid] > nums[right]) {
