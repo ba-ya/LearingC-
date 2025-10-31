@@ -15,6 +15,20 @@ struct TreeNode {
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+class Node {
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node* next;
+
+    Node() : val(0), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL) {}
+
+    Node(int _val, Node* _left, Node* _right, Node* _next)
+        : val(_val), left(_left), right(_right), next(_next) {}
+};
 namespace BinaryTree_Understand {
 // 104二叉树的最大深度
 int maxDepth(TreeNode* root) {
@@ -584,6 +598,156 @@ int findBottomLeftValue(TreeNode* root) {
         }
     }
     return node->val;
+}
+
+// 二叉树的层序遍历2
+vector<vector<int>> levelOrderBottom(TreeNode* root) {
+    if (root == nullptr) {
+        return {};
+    }
+    vector<vector<int>> ans;
+    queue<TreeNode *> q;
+    q.push(root);
+    while (q.size()) {
+        vector<int> val;
+        int n = q.size();
+        for (int i = 0; i < n; i++) {
+            TreeNode *node = q.front();
+            q.pop();
+            val.push_back(node->val);
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+        }
+        ans.push_back(val);
+    }
+    ranges::reverse(ans);
+    return ans;
+}
+
+// 116填充每个节点的下一个右侧节点指针
+Node* connect(Node* root) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    Node *node;
+    queue<Node *> q;
+    q.push(root);
+    while (q.size()) {
+        int n = q.size();
+        for (int i = 0; i < n; i++) {
+            node = q.front();
+            q.pop();
+            if (i < n - 1) {
+                node->next = q.front();
+            }
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+        }
+    }
+    return root;
+}
+
+// 117填充每个节点的下一个右侧节点指针
+Node* connect2(Node* root) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    Node dummy;
+    // 根节点本身满足条件,不需要处理
+    Node *cur = root;
+    while (cur) {
+        dummy.next = nullptr;
+        // next从每一层的起始点开始
+        Node *next = &dummy;
+        // 每一层若干个节点
+        while (cur) {
+            if (cur->left) {
+                next->next = cur->left;
+                next = cur->left;
+                // cur = cur->left;
+            }
+            if (cur->right) {
+                next->next = cur->right;
+                next = cur->right;
+            }
+            cur = cur->next;
+        }
+        // 下一层的起始点
+        cur = dummy.next;
+    }
+    return root;
+}
+
+// 2415反转二叉树的奇数层
+TreeNode* reverseOddLevels(TreeNode* root) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    vector<TreeNode*> cur{root};
+    bool odd = true;
+    while (cur.size()) {
+        vector<TreeNode*> next{};
+        vector<int> val;
+        for (TreeNode *node : cur) {
+            if (node->left) {
+                next.push_back(node->left);
+                if (odd) {
+                    val.push_back(node->left->val);
+                }
+            }
+            if (node->right) {
+                next.push_back(node->right);
+                if (odd) {
+                    val.push_back(node->right->val);
+                }
+            }
+        }
+        ranges::reverse(val);
+        for (int i = 0; i < val.size(); i++) {
+            next[i]->val = val[i];
+        }
+        cur = std::move(next);
+        odd = !odd;
+    }
+    return root;
+}
+
+// 2641二叉树的堂兄弟节点2
+TreeNode* replaceValueInTree(TreeNode* root) {
+    if (root == nullptr) {
+        return nullptr;
+    }
+    root->val = 0;
+    vector<TreeNode*> cur{root};
+    while (cur.size()) {
+        vector<TreeNode *> next;
+        vector<int> vals;
+        for (TreeNode *node : cur) {
+            int val = 0;
+            if (node->left) {
+                val += node->left->val;
+                next.push_back(node->left);
+            }
+            if (node->right) {
+                val += node->right->val;
+                next.push_back(node->right);
+            }
+            vals.push_back(val);
+        }
+        int sum = reduce(vals.begin(), vals.end(), 0);
+        for (int i = 0; i < cur.size(); i++) {
+            TreeNode *node = cur[i];
+            int adj = sum - vals[i];
+            if (node->left) {
+                node->left->val = adj;
+            }
+            if (node->right) {
+                node->right->val = adj;
+            }
+        }
+        cur = std::move(next);
+    }
+    return root;
 }
 }
 

@@ -26,4 +26,4 @@
 | BinaryTree_Apply      | 8            | 1        |
 | BinaryTree_ThreeOrder | 9            | 1        |
 | BinaryTree_Ancestor   | 3            | 1        |
-| BinaryTree_BFS        | 8            |          |
+| BinaryTree_BFS        | 8            | 1        |
