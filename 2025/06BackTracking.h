@@ -125,6 +125,54 @@ int punishmentNumber(int n) {
 
 }
 namespace BackTrack_CombinationNPrun {
+// 77组合
+vector<vector<int>> combine(int n, int k) {
+    vector<vector<int>> ans;
+    vector<int> path;
+    function<void(int)> dfs = [&](int i) {
+        // path还需要d个数
+        int d = k - path.size();
+        if (d == 0) {
+            ans.emplace_back(path);
+            return;
+        }
+        // 不选i
+        if (i > d) {
+            dfs(i - 1);
+        }
+
+        //选i
+        path.emplace_back(i);
+        dfs(i - 1);
+        path.pop_back();
+    };
+    dfs(n);
+    return ans;
+}
+
+// 216组合总和3
+vector<vector<int>> combinationSum3(int k, int n) {
+    vector<vector<int>> ans;
+    vector<int> path;
+    function<void(int, int)> dfs = [&](int i, int left_sum) {
+        int d = k - path.size();
+        // 剪枝操作
+        if (left_sum < 0 || left_sum > (2 * i - d + 1) * d / 2) {
+            return;
+        }
+        if (d == 0) {
+            ans.emplace_back(path);
+            return;
+        }
+        for (int j = i; j >= d; j--) {
+            path.emplace_back(j);
+            dfs(j - 1, left_sum - j);
+            path.pop_back();
+        }
+    };
+    dfs(9, n);
+    return ans;
+}
 }
 namespace BackTrack_Permutation {
 }
