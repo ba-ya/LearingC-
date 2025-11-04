@@ -21,8 +21,8 @@
 | BinarySearch2              | 6             | 2        |
 | LinkedList_Reverse         | 6             | 2        |
 | LinkedList_QuickNSlow      | 5             | 2        |
-| LinkedList_Delete          | 7             | 1        |
-| BinaryTree_Understand      | 7             | 1        |
+| LinkedList_Delete          | 7             | 2        |
+| BinaryTree_Understand      | 7             | 2        |
 | BinaryTree_Apply           | 8             | 1        |
 | BinaryTree_ThreeOrder      | 9             | 1        |
 | BinaryTree_Ancestor        | 3             | 1        |
