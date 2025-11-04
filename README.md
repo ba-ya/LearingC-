@@ -20,7 +20,7 @@
 | BinarySearch1              | 11            | 2        |
 | BinarySearch2              | 6             | 2        |
 | LinkedList_Reverse         | 6             | 2        |
-| LinkedList_QuickNSlow      | 5             | 1        |
+| LinkedList_QuickNSlow      | 5             | 2        |
 | LinkedList_Delete          | 7             | 1        |
 | BinaryTree_Understand      | 7             | 1        |
 | BinaryTree_Apply           | 8             | 1        |
