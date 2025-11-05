@@ -28,5 +28,5 @@
 | BinaryTree_Ancestor        | 3             | 1        |
 | BinaryTree_BFS             | 8             | 1        |
 | BackTrack_Subset           | 4             | 1        |
-| BackTrack_CombinationNPrun | 5             |          |
+| BackTrack_CombinationNPrun | 5             | 1        |
 | BackTrack_Permutation      | 4             |          |

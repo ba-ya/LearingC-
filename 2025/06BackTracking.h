@@ -222,8 +222,43 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
 
 // 93复原IP地址
 vector<string> restoreIpAddresses(string s) {
+    int n = s.size();
+    vector<string> ans;
+    //.号所在位置
+    int path[4]{0};
+    // i是字符位置,j是段数,val是当前段的值[0, 255]
+    function<void(int, int, int)> dfs = [&](int i, int j, int val){
+        if (i == n) {// 到字符结尾
+            if (j == 4) { // 4段
+                auto [a, b, c, d] = path;
+                ans.emplace_back(s.substr(0, a) + "." +
+                                 s.substr(a, b - a) + "." +
+                                 s.substr(b, c - b) + "." +
+                                 s.substr(c, d - c));
+                return;
+            }
+        }
+        if (j == 4) {
+            return;
+        }
 
-}
+        val = val * 10 + s[i] - '0';
+        if (val > 255) {
+            return;
+        }
+        //不选, i+1, j不变
+        //必须在ip没有前置0的情况才能不选
+        // 也就是第一个数字必须非0
+        if (val > 0) {
+            dfs(i + 1, j, val);
+        }
+
+        //选
+        path[j] = i + 1;
+        dfs(i + 1, j + 1, 0);
+    };
+    dfs(0, 0, 0);
+    return ans;
 }
 namespace BackTrack_Permutation {
 }
