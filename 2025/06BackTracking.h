@@ -173,6 +173,57 @@ vector<vector<int>> combinationSum3(int k, int n) {
     dfs(9, n);
     return ans;
 }
+
+// 22括号生成
+vector<string> generateParenthesis(int n) {
+    vector<string> ans;
+    // 长度固定为2n,可以先给path一个长度
+    string path(n * 2, 0);
+    // left个左括号,right个右括号
+    function<void(int, int)> dfs = [&](int left, int right) {
+        if (right ==  n) {
+            ans.emplace_back(path);
+            return;
+        }
+        // '('当作选
+        if (left < n) {
+            path[left + right] = '(';
+            dfs(left + 1, right);
+        }
+        // ')'当作不选
+        if (right < left) {
+            path[left + right] = ')';
+            dfs(left, right + 1);
+        }
+    };
+    dfs(0, 0);
+    return ans;
+}
+
+// 39组合总和
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    ranges::sort(candidates);
+    vector<vector<int>> ans;
+    vector<int> path;
+    function<void(int, int)> dfs = [&](int i, int left) {
+        if (left == 0) {
+            ans.emplace_back(path);
+            return;
+        }
+        for (int j = i; j < candidates.size() && candidates[j] <= left; j++) {
+            path.push_back(candidates[j]);
+            dfs(j, left - candidates[j]);
+            path.pop_back();
+        }
+    };
+    dfs(0, target);
+    return ans;
+}
+
+// 93复原IP地址
+vector<string> restoreIpAddresses(string s) {
+
+}
 }
 namespace BackTrack_Permutation {
 }
