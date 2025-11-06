@@ -273,12 +273,14 @@ int maxAncestorDiff(TreeNode* root) {
 // 1080根到叶路径的不足节点
 TreeNode* sufficientSubset(TreeNode* root, int limit) {
     limit -= root->val;
-    // 叶子节点
+    // 叶子节点, 走过的路程<给定的限制,就要删除
     if (root->left == nullptr && root->right == nullptr) {
         return limit > 0 ? nullptr : root;
     }
     if (root->left) root->left = sufficientSubset(root->left, limit);
     if (root->right) root->right = sufficientSubset(root->right, limit);
+    // 如果非叶子节点的左右节点都被删除,说明经过node的所有路径(根节点-叶子节点)都小于limit
+    // 所以node也要被删除,
     return root->left == nullptr && root->right == nullptr ? nullptr : root;
 
 }
