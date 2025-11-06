@@ -24,7 +24,7 @@
 | LinkedList_Delete          | 7             | 2        |
 | BinaryTree_Understand      | 7             | 2        |
 | BinaryTree_Apply           | 8             | 2        |
-| BinaryTree_ThreeOrder      | 9             | 1        |
+| BinaryTree_ThreeOrder      | 9             | 2        |
 | BinaryTree_Ancestor        | 3             | 1        |
 | BinaryTree_BFS             | 8             | 1        |
 | BackTrack_Subset           | 4             | 1        |
