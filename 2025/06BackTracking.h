@@ -262,6 +262,29 @@ vector<string> restoreIpAddresses(string s) {
 }
 }
 namespace BackTrack_Permutation {
+// 46全排列
+vector<vector<int>> permute(vector<int>& nums) {
+    int n = nums.size();
+    vector<vector<int>> ans;
+    vector<int> path(n), on_path(n, 0);
+    function<void(int)> dfs = [&](int i) {
+        if (i == n) {
+            ans.emplace_back(path);
+            return;
+        }
+        for (int j = 0; j < n; j++) {
+            // 数字没选过,选一下
+            if (!on_path[j]) {
+                path[i] = nums[j];
+                on_path[j] = true;
+                dfs(i + 1);
+                on_path[j] = false;
+            }
+        }
+    };
+    dfs(0);
+    return ans;
+}
 }
 
 #endif // _6BACKTRACKING_H
