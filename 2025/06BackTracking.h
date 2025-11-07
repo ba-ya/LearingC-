@@ -366,11 +366,11 @@ int minimumMoves(vector<vector<int>>& grid) {
         ans = min(ans, total);
     } while(next_permutation(from.begin(), from.end()));
     // 按字典序进行排列,相同的from不会重复排列
-    // -0 -1 -2 -3 -4 -5
-    // 01 01 01 22 22 22
-    // 01 22 22 01 01 22
-    // 22 01 22 01 22 01
-    // 22 22 01 22 01 01
+    // -0  -1  -2  -3  -4  -5
+    // 01  01  01  22  22  22
+    // 01  22  22  01  01  22
+    // 22  01  22  01  22  01
+    // 22  22  01  22  01  01
     return ans;
 }
 }
