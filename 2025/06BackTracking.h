@@ -285,6 +285,94 @@ vector<vector<int>> permute(vector<int>& nums) {
     dfs(0);
     return ans;
 }
+
+// 51N皇后
+// 棋盘(0, 0)在左上角, 和二维数组的坐标一致
+// amn(m = 行, n = 列)
+// a00, a11, a22所在的线是主对角线(斜下方, r - c),
+// a(n-1)0, a(n-2)1, a(n-3)2所在的线是次对角线(斜下方, r + c)
+vector<vector<string>> solveNQueens(int n) {
+    vector<vector<string>> ans;
+    vector<string> board(n, string(n, '.'));
+    // col, r + c, r - c
+    // true表示当前列,当前主对角线,次对角线已经存在棋子
+    // 不允许在这3条线上放置棋子
+    vector<uint8_t> col(n), diag1(2 * n), diag2(2 * n);
+    function<void(int)> dfs = [&](int r) {
+        if (r == n) {
+            ans.push_back(board);
+            return;
+        }
+        for (int c = 0; c < n; c++) {
+            int rc = r - c + n;
+            if (!col[c] && !diag1[r + c] && !diag2[rc]) {
+                board[r][c] = 'Q';
+                col[c] = diag1[r + c] = diag2[rc] = true;
+                dfs(r + 1);
+                col[c] = diag1[r + c] = diag2[rc] = false;
+                board[r][c] = '.';
+            }
+        }
+    };
+    dfs(0);
+    return ans;
+}
+
+// 52N皇后2
+int totalNQueens(int n) {
+    int ans = 0;
+    vector<uint8_t> col(n), diag1(2 * n), diag2(2 * n);
+    function<void(int)> dfs = [&](int r) {
+        if (r == n) {
+            ans++;
+            return;
+        }
+        for (int c = 0; c < n; c++) {
+            int rc1 = r + c;
+            int rc2 = r - c + n;
+            if (!col[c] && !diag1[rc1] && !diag2[rc2]) {
+                col[c] = diag1[rc1] = diag2[rc2] = true;
+                dfs(r + 1);
+                col[c] = diag1[rc1] = diag2[rc2] = false;
+            }
+        }
+    };
+    dfs(0);
+    return ans;
+}
+
+// 2850将石头分散到网格图的最少移动次数
+int minimumMoves(vector<vector<int>>& grid) {
+    vector<pair<int, int>> from, to;
+    int n = grid.size();
+    int m = grid[0].size();
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (grid[i][j] == 0) {
+                to.emplace_back(i, j);
+            } else {
+                for (int k = 1; k < grid[i][j]; k++) {
+                    from.emplace_back(i, j);
+                }
+            }
+        }
+    }
+    int ans = INT_MAX;
+    do {
+        int total = 0;
+        for (int i = 0; i < from.size(); i++) {
+            total += abs(from[i].first - to[i].first) + abs(from[i].second - to[i].second);
+        }
+        ans = min(ans, total);
+    } while(next_permutation(from.begin(), from.end()));
+    // 按字典序进行排列,相同的from不会重复排列
+    // -0 -1 -2 -3 -4 -5
+    // 01 01 01 22 22 22
+    // 01 22 22 01 01 22
+    // 22 01 22 01 22 01
+    // 22 22 01 22 01 01
+    return ans;
+}
 }
 
 #endif // _6BACKTRACKING_H
