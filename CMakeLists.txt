@@ -6,7 +6,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network)
@@ -24,6 +24,7 @@ set(2025
     2025/04LinkedList.h
     2025/05BinaryTree.h
     2025/06BackTracking.h
+    2025/07DynamicProgramming.h
 )
 
 set(PROJECT_SOURCES
