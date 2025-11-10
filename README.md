@@ -12,7 +12,7 @@
 
 ## [题单](https://github.com/EndlessCheng/codeforces-go/tree/master/leetcode)
 
-| 类型                       | 题目数目(113) | 通过次数 |
+| 类型                       | 题目数目(129) | 通过次数 |
 | -------------------------- | ------------- | -------- |
 | TwoPointersTowards1        | 5             | 2        |
 | TwoPointersTowards2        | 4             | 2        |
@@ -31,9 +31,9 @@
 | BackTrack_CombinationNPrun | 5             | 1        |
 | BackTrack_Permutation      | 4             | 1        |
 | DynamicProgramming         | 9             |          |
-|                            |               |          |
-|                            |               |          |
-|                            |               |          |
+| ZeroOneBackbag             | 6             |          |
+| LCS                        | 4             |          |
+| LIS                        | 6             |          |
 |                            |               |          |
 |                            |               |          |
 |                            |               |          |

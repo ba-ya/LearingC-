@@ -179,6 +179,30 @@ int countTexts(string pressedKeys) {
     return ans;
 
 }
+
+// 231打家劫舍2
+// 环形版本,考虑第一个房子偷不偷
+int rob2(vector<int>& nums) {
+    int n = nums.size();
+    if (n == 0) {
+        return 0;
+    }
+    // dfs(i) = max( dfs(i - 2) + nums[i], dfs(i - 1))
+    // f(i) = max(f(i - 2) + nums[i], f(i - 1))
+    // [start, end)
+    auto rob1 = [&](int start, int end) {
+        int f0 = 0, f1 = 0;
+        for (int i = start; i < end; i++) {
+            int new_f = max(f0 + nums[i], f1);
+            f0 = f1;
+            f1 = new_f;
+        }
+        return f1;
+    };
+    // 第一个房子偷,第二个和最后一个房子不能偷 nums[0] + [2, n - 2]
+    // 第一个房子不偷, [1, n - 1]
+    return max(nums[0] + rob1(2, n - 1), rob1(1, n));
+}
 }
 
 #endif // _7DYNAMICPROGRAMMING_H
