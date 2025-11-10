@@ -141,7 +141,8 @@ int countTexts(string pressedKeys) {
         return 0;
     }
     const int MOD = 1e9+7;
-    vector<int> memo(n + 1, -1);
+    vector<int> memo1(n + 1, -1);
+    vector<int> memo2(n + 1, -1);
     auto dfs = [&](this auto &&dfs, int i, char c) {
         if (i == 0) {
             return 1;
@@ -149,18 +150,18 @@ int countTexts(string pressedKeys) {
         if (i < 0) {
             return 0;
         }
-        int &res = memo[i];
+        int cnt = (c == '7' || c == '9') ? 4 : 3;
+        int &res = cnt == 4 ? memo1[i] : memo2[i];
         if (res != -1) {
             return res;
         }
         res = 0;
-        int cnt = (c == '7' || c == '9') ? 4 : 3;
         for (int j = 1; j <= cnt; j++) {
             res = (res + dfs(i - j, c)) % MOD;
         }
         return res;
     };
-    int ans = 0;
+    long long ans = 0;
     int start_id = 0;
     char start = pressedKeys[0];
     for (int i = 0; i < n; i++) {
@@ -170,7 +171,7 @@ int countTexts(string pressedKeys) {
             if (start == c) {
                 target += 1;
             }
-            ans = (ans + dfs(target, start)) % MOD;
+            ans = (ans + (long long)dfs(target, start)) % MOD;
             start = c;
             start_id = i;
         }
