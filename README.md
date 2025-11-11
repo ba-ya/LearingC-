@@ -30,7 +30,7 @@
 | BackTrack_Subset           | 4             | 1        |
 | BackTrack_CombinationNPrun | 5             | 1        |
 | BackTrack_Permutation      | 4             | 1        |
-| DynamicProgramming         | 9             |          |
+| DynamicProgramming         | 9             | 1        |
 | ZeroOneBackbag             | 6             |          |
 | LCS                        | 4             |          |
 | LIS                        | 6             |          |

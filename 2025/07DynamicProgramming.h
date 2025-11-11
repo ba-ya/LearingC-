@@ -203,6 +203,29 @@ int rob2(vector<int>& nums) {
     // 第一个房子不偷, [1, n - 1]
     return max(nums[0] + rob1(2, n - 1), rob1(1, n));
 }
+
+// 64最小路径和
+int minPathSum(vector<vector<int>>& grid) {
+    int m = grid.size();
+    int n = grid[0].size();
+    vector<vector<int>> memo(m, vector<int>(n, -1));
+    auto dfs = [&](this auto &&dfs, int row, int col) {
+        if (row < 0 || col < 0) {
+            // min, 避免造成影响
+            return INT_MAX;
+        }
+        // 下面覆盖不了这种情况
+        if (row == 0 && col == 0) {
+            return grid[0][0];
+        }
+        int &res = memo[row][col];
+        if (res != -1) {
+            return res;
+        }
+        return res = grid[row][col] + min(dfs(row - 1, col), dfs(row, col - 1));
+    };
+    return dfs(m - 1, n - 1);
+}
 }
 
 #endif // _7DYNAMICPROGRAMMING_H
