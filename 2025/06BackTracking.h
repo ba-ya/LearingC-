@@ -70,23 +70,25 @@ vector<vector<string>> partition(string s) {
     int n = s.size();
     vector<vector<string>> ans;
     vector<string> path;
-    // i表示当前是第几个逗号, 右端点的位置
     // start回文串开始位置
-    function<void(int, int)> dfs = [&](int i, int start) {
-        if (i == n) {
+    // end表示当前是第几个逗号, 右端点的位置
+    // 子串[start, end]
+    function<void(int, int)> dfs = [&](int start, int end) {
+        if (end == n) {
             ans.emplace_back(path);
             return;
         }
-        // FIX ME: don't understand
         // 不加逗号
-        if (i <= n - 2) {
-            dfs(i + 1, start);
+        // i <= n - 2 , i < n - 1 , i + 1 < n
+        if (end <= n - 2) {
+            // 保证end+1在范围内
+            dfs(start, end + 1);
         }
 
         // 加逗号
-        if (check(start, i)) {
-            path.emplace_back(s.substr(start, i - start + 1));
-            dfs(i + 1, i + 1);
+        if (check(start, end)) {
+            path.emplace_back(s.substr(start, end - start + 1));
+            dfs(end + 1, end + 1);
             path.pop_back();
         }
 
@@ -114,6 +116,7 @@ int init = []() {
             }
             return false;
         };
+        // dfs(0, 0)判断当前数字是否满足条件,满足就加上
         pre_sum[i] = pre_sum[i - 1] + (dfs(0, 0) ? i * i : 0);
     }
     return 0;
