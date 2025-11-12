@@ -160,6 +160,7 @@ vector<vector<int>> combinationSum3(int k, int n) {
     function<void(int, int)> dfs = [&](int i, int left_sum) {
         int d = k - path.size();
         // 剪枝操作
+        // 等差数列求和公式, 剩下的最大的d个数之和(2a + (n - 1) * d) * (d / 2)不能小于left_sum
         if (left_sum < 0 || left_sum > (2 * i - d + 1) * d / 2) {
             return;
         }

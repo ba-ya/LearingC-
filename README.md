@@ -28,7 +28,7 @@
 | BinaryTree_Ancestor        | 3             | 2        |
 | BinaryTree_BFS             | 8             | 2        |
 | BackTrack_Subset           | 4             | 2        |
-| BackTrack_CombinationNPrun | 5             | 1        |
+| BackTrack_CombinationNPrun | 5             | 2        |
 | BackTrack_Permutation      | 4             | 1        |
 | DynamicProgramming         | 9             | 1        |
 | ZeroOneBackbag             | 6             | 1        |
