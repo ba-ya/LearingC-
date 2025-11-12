@@ -31,7 +31,7 @@
 | BackTrack_CombinationNPrun | 5             | 1        |
 | BackTrack_Permutation      | 4             | 1        |
 | DynamicProgramming         | 9             | 1        |
-| ZeroOneBackbag             | 6             |          |
+| ZeroOneBackbag             | 6             | 1        |
 | LCS                        | 4             |          |
 | LIS                        | 6             |          |
 | DP_BuyNSellStock           | 6             |          |
