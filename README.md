@@ -32,7 +32,7 @@
 | BackTrack_Permutation      | 4             | 1        |
 | DynamicProgramming         | 9             | 1        |
 | ZeroOneBackbag             | 6             | 1        |
-| LCS                        | 4             |          |
+| LCS                        | 4             | 1        |
 | LIS                        | 6             |          |
 | DP_BuyNSellStock           | 6             |          |
 | DP_Interval                | 6             |          |
