@@ -267,10 +267,12 @@ vector<string> restoreIpAddresses(string s) {
 }
 namespace BackTrack_Permutation {
 // 46全排列
+// 时间复杂度: O(n(n!)) n!个根节点 * n
 vector<vector<int>> permute(vector<int>& nums) {
     int n = nums.size();
     vector<vector<int>> ans;
     vector<int> path(n), on_path(n, 0);
+    // i只关注path
     function<void(int)> dfs = [&](int i) {
         if (i == n) {
             ans.emplace_back(path);
@@ -279,9 +281,12 @@ vector<vector<int>> permute(vector<int>& nums) {
         for (int j = 0; j < n; j++) {
             // 数字没选过,选一下
             if (!on_path[j]) {
+                // 如果j没选过,path可以填一下
                 path[i] = nums[j];
                 on_path[j] = true;
+                // path下一个就是i+1
                 dfs(i + 1);
+                // 再回复现场
                 on_path[j] = false;
             }
         }
@@ -365,6 +370,8 @@ int minimumMoves(vector<vector<int>>& grid) {
     do {
         int total = 0;
         for (int i = 0; i < from.size(); i++) {
+            // first对应的就是row上的差, 上下走
+            // second对应的是col上的差, 左右走
             total += abs(from[i].first - to[i].first) + abs(from[i].second - to[i].second);
         }
         ans = min(ans, total);

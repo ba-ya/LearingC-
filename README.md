@@ -14,8 +14,8 @@
 
 | 类型                       | 题目数目(169) | 通过次数 |
 | -------------------------- | ------------- | -------- |
-| TwoPointersTowards1        | 5             | 2        |
-| TwoPointersTowards2        | 4             | 2        |
+| TwoPointersTowards1        | 5             | 3        |
+| TwoPointersTowards2        | 4             | 3        |
 | SlidingWindow              | 12            | 2        |
 | BinarySearch1              | 11            | 2        |
 | BinarySearch2              | 6             | 2        |
@@ -29,7 +29,7 @@
 | BinaryTree_BFS             | 8             | 2        |
 | BackTrack_Subset           | 4             | 2        |
 | BackTrack_CombinationNPrun | 5             | 2        |
-| BackTrack_Permutation      | 4             | 1        |
+| BackTrack_Permutation      | 4             | 2        |
 | DynamicProgramming         | 9             | 1        |
 | ZeroOneBackbag             | 6             | 1        |
 | LCS                        | 4             | 1        |

@@ -121,8 +121,8 @@ string shortestCommonSupersequence(string str1, string str2) {
 }
 }
 
-/// 最长增长子序列
 namespace LIS {
+
 
 }
 #endif // _9LONGESTSUBSEQUENCE_H

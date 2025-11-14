@@ -27,6 +27,8 @@ set(2025
     2025/07DynamicProgramming.h
     2025/08ZeroOneBackbag.h
     2025/09LongestSubSequence.h
+    2025/10DP.h
+    2025/11Monotonic.h
 )
 
 set(PROJECT_SOURCES

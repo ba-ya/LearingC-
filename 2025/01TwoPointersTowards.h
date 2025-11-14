@@ -204,6 +204,7 @@ int triangleNumber(vector<int>& nums) {
         while (left < right) {
             auto s = nums[left] + nums[right];
             if (s > c) {
+                // right与left, left+1, left+2, ...组合一定大于target
                 res += right - left;
                 right--;
             } else {
