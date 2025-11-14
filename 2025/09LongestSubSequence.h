@@ -122,7 +122,133 @@ string shortestCommonSupersequence(string str1, string str2) {
 }
 
 namespace LIS {
+// 300最长递增子序列
+// 时间复杂度:O(n^2), 空间复杂度:O(n)
+int lengthOfLIS(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> memo(n, -1);
+    // dfs(i)表示已nums[i]为结尾的子序列最长长度
+    auto dfs = [&](this auto &&dfs, int i) {
+        int &res = memo[i];
+        if (res != -1) {
+            return res;
+        }
+        for (int j = 0; j < i; j++) {
+            // nums[j]是nums[i]结尾的子序列的一部分
+            // dfs(i) = dfs(j) + 1
+            // 严格递增,<
+            if (nums[j] < nums[i]) {
+                res = max(res, dfs(j) + 1);
+            }
+        }
+        // 没有更小的,说明子序列只有nums[i]自己,答案是1
+        return res = res == -1 ? 1 : res;
+    };
+    // 没有排序,n-1不一定是最大的,在前面可能存在较大的数,使得子序列更长
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        ans = max(ans, dfs(i));
+    }
+    return ans;
+}
 
+// 300最长递增子序列
+// 贪心+二分
+int lengthOfLIS_2(vector<int>& nums) {
+    vector<int> g;
+    for (auto x : nums) {
+        // 求得第一个>=x的位置
+        auto it = ranges::lower_bound(g, x);
+        // 如果g这个序列没有>=x的数,就假如
+        if (it == g.end()) {
+            g.emplace_back(x);
+        } else {
+            *it = x;
+        }
+    }
+    return g.size();
+}
 
+// 2826将三个组排序
+// 时间复杂度:O(n^2), 空间复杂度:O(n)
+int minimumOperations(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> memo(n, -1);
+    auto dfs = [&](this auto &&dfs, int i) ->int {
+        int &res = memo[i];
+        if (res != -1) {
+            return res;
+        }
+        for (int j = 0; j < i; j++) {
+            if (nums[j] <= nums[i]) {
+                res = max(res, dfs(j) + 1);
+            }
+        }
+        res = res == -1 ? 1 : res;
+        return res;
+    };
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        ans = max(ans, dfs(i));
+    }
+    return n - ans;
+}
+
+// 1671得到山形数组的最小删除次数
+int minimumMountainRemovals(vector<int>& nums) {
+    int n = nums.size();
+    vector<int> memo_pre(n, -1), memo_suf(n, -1);
+    auto dfs_pre = [&](this auto &&dfs_pre, int i) -> int {
+        int &res = memo_pre[i];
+        if (res != -1) {
+            return res;
+        }
+        for (int j = 0; j < i; j++) {
+            if (nums[j] < nums[i]) {
+                res = max(res, dfs_pre(j) + 1);
+            }
+        }
+        return res = res == -1 ? 1 : res;
+    };
+    auto dfs_suf = [&](this auto &&dfs_suf, int i) -> int {
+        int &res = memo_suf[i];
+        if (res != -1) {
+            return res;
+        }
+        for (int j = i + 1; j < n; j++) {
+            if (nums[j] < nums[i]) {
+                res = max(res, dfs_suf(j) + 1);
+            }
+        }
+        return res = res == -1 ? 1 : res;
+    };
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        int pre = dfs_pre(i);
+        int suf = dfs_suf(i);
+        if (pre >= 2 && suf >= 2) {
+            ans = max(ans, pre + suf - 1);
+        }
+    }
+    return n - ans;
+}
+
+// 354俄罗斯套娃信封问题
+int maxEnvelopes(vector<vector<int>>& envelopes) {
+    // w升序排列, h降序排列
+    ranges::sort(envelopes, {},
+                 [](vector<int> e) {return pair{e[0], -e[1]};});
+    vector<int> g;
+    for (auto &e : envelopes) {
+        int h = e[1];
+        auto it = ranges::lower_bound(g, h);
+        if (it == g.end()) {
+            g.emplace_back(h);
+        } else {
+            *it = h;
+        }
+    }
+    return g.size();
+}
 }
 #endif // _9LONGESTSUBSEQUENCE_H
