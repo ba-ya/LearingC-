@@ -22,5 +22,9 @@ int main(int argc, char *argv[])
     vec = {0,1,0,3,2,3};
     // 09
     LIS::lengthOfLIS_2(vec);
+
+    vec = {4,5,6,5};
+    std::vector<int> vec2 = {2,1,2,1};
+    LIS::bestTeamScore(vec, vec2);
     return a.exec();
 }

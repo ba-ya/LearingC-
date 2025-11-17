@@ -133,16 +133,17 @@ int lengthOfLIS(vector<int>& nums) {
         if (res != -1) {
             return res;
         }
+        int ans = 0;
         for (int j = 0; j < i; j++) {
             // nums[j]是nums[i]结尾的子序列的一部分
             // dfs(i) = dfs(j) + 1
             // 严格递增,<
             if (nums[j] < nums[i]) {
-                res = max(res, dfs(j) + 1);
+                ans = max(ans, dfs(j));
             }
         }
         // 没有更小的,说明子序列只有nums[i]自己,答案是1
-        return res = res == -1 ? 1 : res;
+        return res = ans + 1;
     };
     // 没有排序,n-1不一定是最大的,在前面可能存在较大的数,使得子序列更长
     int ans = 0;
@@ -179,13 +180,13 @@ int minimumOperations(vector<int>& nums) {
         if (res != -1) {
             return res;
         }
+        int ans = 0;
         for (int j = 0; j < i; j++) {
             if (nums[j] <= nums[i]) {
-                res = max(res, dfs(j) + 1);
+                ans = max(ans, dfs(j));
             }
         }
-        res = res == -1 ? 1 : res;
-        return res;
+        return res = ans + 1;
     };
     int ans = 0;
     for (int i = 0; i < n; i++) {
@@ -203,24 +204,26 @@ int minimumMountainRemovals(vector<int>& nums) {
         if (res != -1) {
             return res;
         }
+        int ans = 0;
         for (int j = 0; j < i; j++) {
             if (nums[j] < nums[i]) {
-                res = max(res, dfs_pre(j) + 1);
+                ans = max(ans, dfs_pre(j));
             }
         }
-        return res = res == -1 ? 1 : res;
+        return res = ans + 1;
     };
     auto dfs_suf = [&](this auto &&dfs_suf, int i) -> int {
         int &res = memo_suf[i];
         if (res != -1) {
             return res;
         }
+        int ans = 0;
         for (int j = i + 1; j < n; j++) {
             if (nums[j] < nums[i]) {
-                res = max(res, dfs_suf(j) + 1);
+                ans = max(ans, dfs_suf(j));
             }
         }
-        return res = res == -1 ? 1 : res;
+        return res = ans + 1;
     };
     int ans = 0;
     for (int i = 0; i < n; i++) {
@@ -241,6 +244,7 @@ int maxEnvelopes(vector<vector<int>>& envelopes) {
     vector<int> g;
     for (auto &e : envelopes) {
         int h = e[1];
+        // 严格递增
         auto it = ranges::lower_bound(g, h);
         if (it == g.end()) {
             g.emplace_back(h);
@@ -249,6 +253,65 @@ int maxEnvelopes(vector<vector<int>>& envelopes) {
         }
     }
     return g.size();
+}
+
+// 1626无矛盾的最佳球队
+// 贪心+二分用了答案不对, 贪心是长度最长, 这里要求分数最大,两者有矛盾
+// 用动态规划
+int bestTeamScore(vector<int>& scores, vector<int>& ages) {
+    // score, age
+    // 都按照从小到大的顺序排列
+    vector<pair<int, int>> nums;
+    int n = scores.size();
+    for (int i = 0; i < n; i++) {
+        nums.emplace_back(scores[i], ages[i]);
+    }
+    qDebug() << "1:" <<  nums;
+    ranges::sort(nums, {}, [](pair<int, int> p) {return pair{p.first, p.second};} );
+    qDebug() << "2:" << nums;
+
+    // 记忆化搜索, 以i(第几个)为结尾的分数最大的
+    vector<int> memo(n, -1);
+    auto dfs = [&](this auto &&dfs, int i) -> int {
+        int &res = memo[i];
+        if (res != -1) {
+            return res;
+        }
+        int ans = 0;
+        for (int j = 0; j < i; j++) {
+            // 确保了scores是递增的,现在只需要找到age的最大递增序列
+            if (nums[j].second <= nums[i].second) {
+                ans = max(ans, dfs(j));
+            }
+        }
+        // 加上自己
+        return res = ans + nums[i].first;
+    };
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        ans = max(ans, dfs(i));
+    }
+    return ans;
+
+    // // 递推
+    // std::vector<int> f(n);
+    // for (int i = 0; i < n; i++) {
+    //     for (int j = 0; j < i; j++) {
+    //         if (nums[j].second <= nums[i].second) {
+    //             qDebug().noquote()
+    //             << QString("f[%1]: %2").arg(i).arg(f[i])
+    //             << QString(", f[%1]: %2").arg(j).arg(f[j]);
+    //             f[i] = max(f[i], f[j]);
+    //         }
+    //     }
+    //     f[i] += nums[i].first;
+    // }
+    // return *max_element(f.begin(), f.end());
+}
+
+// 1187使数组严格递增
+int makeArrayIncreasing(vector<int>& arr1, vector<int>& arr2) {
+
 }
 }
 #endif // _9LONGESTSUBSEQUENCE_H
