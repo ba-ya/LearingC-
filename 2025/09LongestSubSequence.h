@@ -310,8 +310,32 @@ int bestTeamScore(vector<int>& scores, vector<int>& ages) {
 }
 
 // 1187使数组严格递增
-int makeArrayIncreasing(vector<int>& arr1, vector<int>& arr2) {
+int makeArrayIncreasing(vector<int>& a, vector<int>& b) {
+    ranges::sort(b);
+    int n = a.size();
+    unordered_map<int, int> memo[n];
 
+    auto dfs = [&](this auto &&dfs, int i, int pre) ->int {
+        if (i < 0) {
+            return 0;
+        }
+        if (auto it = memo[i].find(pre); it != memo[i].end()) {
+            return it->second;
+        }
+        // 不替换
+        // 保证a[i] < pre, 如果可以只需要计算[0, i - 1]范围内严格递增许要的操作数
+        int res = a[i] < pre ? dfs(i - 1, a[i]) : INT_MAX / 2;
+        // 替换
+        // a[i](即待替换的b[j])作为[0, i - 1]的pre, 要小于当前pre
+        auto k = ranges::lower_bound(b, a[i]);// >= pre,need k--;
+        if (k != b.begin()) {
+            k--;
+            res = min(res, dfs(i - 1, *k) + 1);
+        }
+        return res;
+    };
+    int res = dfs(n - 1, INT_MAX);
+    return res == INT_MAX / 2 ? -1 : res;
 }
 }
 #endif // _9LONGESTSUBSEQUENCE_H

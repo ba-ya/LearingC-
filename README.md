@@ -33,7 +33,7 @@
 | DynamicProgramming         | 9             | 1        |
 | ZeroOneBackbag             | 6             | 1        |
 | LCS                        | 4             | 1        |
-| LIS                        | 6             |          |
+| LIS                        | 6             | 1        |
 | DP_BuyNSellStock           | 6             |          |
 | DP_Interval                | 6             |          |
 | DP_Tree                    | 7             |          |
