@@ -161,19 +161,14 @@ int countTexts(string pressedKeys) {
         }
         return res;
     };
-    long long ans = 0;
-    int start_id = 0;
-    char start = pressedKeys[0];
+    long long ans = 1;
+    int cnt = 0;
     for (int i = 0; i < n; i++) {
         char &c = pressedKeys[i];
-        if (start != c || i == n - 1) {
-            int target = i - start_id;
-            if (start == c) {
-                target += 1;
-            }
-            ans = (ans + (long long)dfs(target, start)) % MOD;
-            start = c;
-            start_id = i;
+        cnt++;
+        if (i == n - 1 || c != pressedKeys[i + 1]) {
+            ans = (ans * (long long)dfs(cnt, c)) % MOD;
+            cnt = 0;
         }
     }
     return ans;
