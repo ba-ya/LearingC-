@@ -148,10 +148,12 @@ long long countSubarrays(vector<int>& nums, int k) {
     for (long long right = 0; right < nums.size(); ++right) {
         cnt += nums[right] == target;
         // 满足->不满足
-        while (cnt == k) {
+        while (cnt >= k) {
             cnt -= nums[left] == target;
             left++;
         }
+        // 更新ans不一定在满足分支里面,可以间接求, 这里子数组越长越合法
+        // 根据上面while可以得到一个最小的不满足的子数组,在加一个就是满足了
         // 当前[left - 1, right]数组是满足条件的最小数组
         // 前面可以加上0,1,..., left - 2
         // 即0到left-1个
