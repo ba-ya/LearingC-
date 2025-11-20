@@ -34,7 +34,7 @@
 | ZeroOneBackbag             | 6             | 1        |
 | LCS                        | 4             | 1        |
 | LIS                        | 6             | 1        |
-| DP_BuyNSellStock           | 6             |          |
+| DP_BuyNSellStock           | 6             | 1        |
 | DP_Interval                | 6             |          |
 | DP_Tree                    | 7             |          |
 | DP_MaxSet                  | 3             |          |
