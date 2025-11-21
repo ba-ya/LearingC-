@@ -17,7 +17,7 @@
 | TwoPointersTowards1        | 5             | 3        |  |
 | TwoPointersTowards2        | 4             | 3        |          |
 | SlidingWindow              | 12            | 3        |          |
-| BinarySearch1              | 11            | 2 | 275,2439,2517 |
+| BinarySearch1              | 11           | 3        | 275,2439,2517 |
 | BinarySearch2              | 6             | 2        |          |
 | LinkedList_Reverse         | 6             | 2        |          |
 | LinkedList_QuickNSlow      | 5             | 2        |          |
@@ -31,7 +31,7 @@
 | BackTrack_CombinationNPrun | 5             | 2        |          |
 | BackTrack_Permutation      | 4             | 2        |          |
 | DynamicProgramming         | 9             | 2        |          |
-| ZeroOneBackbag             | 6             | 1        |          |
+| ZeroOneBackbag             | 6             | 2        | 494,322 |
 | LCS                        | 4             | 1        |          |
 | LIS                        | 6             | 1        |          |
 | DP_BuyNSellStock           | 6             | 1        |          |

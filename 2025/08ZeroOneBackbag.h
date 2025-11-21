@@ -5,6 +5,7 @@
 
 namespace ZeroOneBackbag {
 // 494目标和
+// 时间复杂度:O(mn), 空间复杂度:O(mn)
 int findTargetSumWays(vector<int>& nums, int target) {
     // 背包容量 (sum - |target|) / 2
     int s = reduce(nums.begin(), nums.end()) - abs(target);
@@ -35,13 +36,14 @@ int findTargetSumWays(vector<int>& nums, int target) {
 }
 
 // 322零钱兑换
+// 时间复杂度:O(n*amount), 空间复杂度:O(n*amount)
 int coinChange(vector<int>& coins, int amount) {
     // 求零钱个数
     int n = coins.size();
     vector<vector<int>> memo(n, vector<int>(amount + 1, -1));
     auto dfs = [&](this auto &&dfs, int i, int c) ->int{
         if (i < 0) {
-            return c == 0 ? 0 : INT_MAX - 1;
+            return c == 0 ? 0 : INT_MAX / 2;
         }
         int &res = memo[i][c];
         if (res != -1) {
@@ -55,10 +57,12 @@ int coinChange(vector<int>& coins, int amount) {
         return res = min(dfs(i - 1, c), dfs(i, c - coins[i]) + 1);
     };
     int ans = dfs(n - 1, amount);
-    return ans == INT_MAX - 1 ? -1 : ans;
+    // 如果不存在,返回的结果是min(INT_MAX / 2, INT_MAX / 2 + 1), 即INT_MAX / 2
+    return ans == INT_MAX / 2 ? -1 : ans;
 }
 
 // 2915和为目标值的最长子序列的长度
+// 时间复杂度:O(n*target), 空间复杂度:O(n*target)
 int lengthOfLongestSubsequence(vector<int>& nums, int target) {
     int n = nums.size();
     vector<vector<int>> memo(n, vector<int>(target + 1, -1));
@@ -77,6 +81,11 @@ int lengthOfLongestSubsequence(vector<int>& nums, int target) {
         return res;
     };
     int ans = dfs(n - 1, target);
+    // cout << INT_MIN << endl;//-2147483648
+    // cout << INT_MIN / 2 << endl;//-1073741824
+    // cout << ans << endl;//-2147483646
+    // 如果不存在,返回的结果是 max(INT_MIN / 2, INT_MIN / 2 + 1), 即INT_MIN / 2 + 1,
+    // 不是确定值了,下面判断就不能用=, 要用<,>之类的
     return ans >= 0 ? ans : -1;
 }
 
@@ -115,6 +124,7 @@ bool canPartition(vector<int>& nums) {
 }
 
 // 518零钱兑换2
+// 时间复杂度:O(n*amount), 空间复杂度:O(n*amount)
 int change(int amount, vector<int>& coins) {
     // 求方案数, 可以重复选
     int n = coins.size();
