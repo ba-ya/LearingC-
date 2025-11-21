@@ -170,11 +170,12 @@ int hIndex(vector<int>& citations) {
     // 循环不变量：
     // left - 1的回答一定为「是」
     // right + 1 的回答一定为「否」
-    int left= 0;// 不满足条件
-    int right = n; // 满足条件
+    int left = 0;// 不满足条件
+    int right = n + 1; // 满足条件
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
         // 至少有mid篇大于mid, 右边较大的mid个数需要大于mid
+        // 如果left从-1开始,需要判断mid = 0的情况,此时n-mid越界了,left = 0
         if (citations[n - mid] >= mid) {
             // 此时可以判断是来,mid左边都是满足条件的,left可以更新
             left = mid;
@@ -223,8 +224,11 @@ long long minimumTime(vector<int>& time, int totalTrips) {
         long long sum = 0;
         for (auto &t : time) {
             sum += k / t;
+            if (sum >= totalTrips) {
+                return true;
+            }
         }
-        return sum >= totalTrips;
+        return false;
     };
 
     long long min = *min_element(time.begin(), time.end());
@@ -310,9 +314,15 @@ int minimizeArrayValue(vector<int>& nums) {
 }
 
 // 2517礼盒的最大甜蜜度, 参考
+// 排序O(nlogn)
+// 二分O(logD), D = (price.back() - price[0]) / (k - 1) + 1
+// check, O(n)
+// 合起来 O(nlogn + nlogD)
 int maximumTastiness(vector<int>& price, int k) {
+    // 甜蜜度:任意两数差的绝对值的最小值
     // 甜蜜度越大, 可选的种类k越小
     auto f = [&](int d) ->int {
+        // 贪心,第一个一定要选
         int cnt = 1, pre = price[0];
         for (auto p : price) {
             if (p - pre >= d) {
@@ -323,7 +333,9 @@ int maximumTastiness(vector<int>& price, int k) {
         return cnt;
     };
 
+    // 二分甜蜜度
     sort(price.begin(), price.end());
+    // f(i)表示甜蜜度至少是i的时候可以选的糖果种类(也就是说甜蜜度可以是i,i+1,i+2)
     // price[0] + (k - 1) * d <= price[n - 1]
     // d <= (price[n - 1] - price[0]) / (k - 1)
     // f(d + 1) < k
