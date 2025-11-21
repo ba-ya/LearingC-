@@ -41,3 +41,4 @@
 | DP_MinSet                  | 1             |          |          |
 | Monotonic_Stack            | 10            |          |          |
 | Monotonic_Queue            | 6             |          |          |
+

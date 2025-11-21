@@ -2,6 +2,8 @@
 #define __DP_H
 
 #include "00solution.h"
+
+/// 动态规划的时间复杂度 = 状态个数 × 单个状态的转移个数
 namespace DP_BuyNSellStock {
 // 122买卖股票的最佳时机2
 int maxProfit(vector<int>& prices) {
@@ -132,7 +134,7 @@ long long maxScore(vector<int>& nums, int x) {
         // [i + 1, n - 1]范围内奇偶性
         if (nums[i] % 2 == j) {
             //奇偶性相同不同管, 奇偶性不同需要-x
-            return res = max(dfs(i + 1, j), nums[i] + dfs(i + 1, j^1) - x) + nums[i];
+            return res = max(dfs(i + 1, j), dfs(i + 1, j^1) - x) + nums[i];
         }
         // 奇偶性不同, 不能选
         return res = dfs(i + 1, j);
@@ -142,6 +144,36 @@ long long maxScore(vector<int>& nums, int x) {
 
 };
 namespace DP_Interval {
+// 516最长回文子序列
+// 时间复杂度:O(n*n), 空间复杂度:O(n*n)
+int longestPalindromeSubseq(string s) {
+    int n = s.size();
+    vector<vector<int>> memo(n, vector<int>(n, -1));
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+        if (i > j) {
+            return 0;// ""
+        }
+        if (i == j) {
+            return 1;// 单一字母
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        // 字母相同都可以前进i+1, j-1
+        if (s[i] == s[j]) {
+            return res = dfs(i + 1, j - 1) + 2;
+        }
+        // 不相同两种选择(i+1, j) || (i, j - 1)
+        return res = max(dfs(i + 1, j), dfs(i, j - 1));
+    };
+    return dfs(0, n - 1);
+}
+
+// 1039多边形三角剖分的最低得分
+int minScoreTriangulation(vector<int>& values) {
+
+}
 
 };
 namespace DP_Tree {
