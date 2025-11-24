@@ -299,29 +299,40 @@ int longestPalindrome(string word1, string word2) {
 
 // 1000合并石头的最低成本
 int mergeStones(vector<int>& stones, int k) {
-    int n = stones.size();
-    if (n % k) {
+    const int n = stones.size();
+    // 总共n堆, 减少n-1堆能变成1堆
+    // 每次合并能减少k-1堆
+    if ((n - 1) % (k - 1)) {
         return  -1;
     }
-    int ans = INT_MAX;
-    vector<vector<int>> memo(n, vector<int>(n, -1));
-    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
-        if (ans == -1) {
-            return -1;
-        }
-        if (j - i < k) {
-            ans = -1;
-            return ans;
-        }
+    // 1堆的时候可以这样算
+    // 倒推回最后一次合成,是k堆加上纯石头成本
+    // dfs(i, j, 1) = dfs(i, j, k) + sum[i, j] //前缀和s[j + 1] - s[i]
+    // s[i]表示[0, i - 1]堆的所有和
+    int s[n + 1];
+    s[0] = 0;
+    for (int i = 0; i < n; i++) {
+        s[i + 1] = s[i] + stones[i];
+    }
+    int memo[n][n];
+    memset(memo, -1, sizeof(memo));
+    auto dfs = [&](this auto &&dfs, int i, int j, int p) -> int {
         int &res = memo[i][j];
         if (res != -1) {
             return res;
         }
-        res = INT_MAX;
-        for (int l = i; l < i + k; l++) {
-            res = min()
+        if (p == 1) {
+            return res = i == j ? 0 : dfs(i, j, k) + s[j + 1] - s[i];
         }
+        // 一般情况, 分两部分, 一个一'堆',一个k-1'堆', 分(k - 1)堆到第一部分
+        // dfs(i, j, k) = dfs(i, m, 1) + dfs(m + 1, j, k - 1)
+        res = INT_MAX;
+        for (int m = i; m < j; m += (k - 1)) {
+            res = min(dfs(i, m, 1) + dfs(m + 1, j, p - 1), res);
+        }
+        return res;
     };
+    return dfs(0, n - 1, 1);
 }
 
 };
