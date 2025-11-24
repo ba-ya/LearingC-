@@ -172,7 +172,156 @@ int longestPalindromeSubseq(string s) {
 
 // 1039多边形三角剖分的最低得分
 int minScoreTriangulation(vector<int>& values) {
+    int n = values.size();
+    vector<vector<int>> memo(n, vector(n, -1));
+    //dfs(i, j)表示从i到j顶点所以三角形的乘积
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+        // 两个点不能构成三角形,返回0
+        if (i + 1 == j) {
+            return 0;
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        res = INT_MAX;
+        // i, k, j
+        // 只能确定以i,k,j为顶点的三角形分数
+        for (int k = i + 1; k <= j - 1; k++) {
+            res = min(res, values[i] * values[k] * values[j] + dfs(i, k) + dfs(k, j));
+        }
+        return res;
+    };
+    return dfs(0, n - 1);
+}
 
+// 3040相同分数的最大操作次数2
+int maxOperations(vector<int>& nums) {
+    int n = nums.size();
+    vector<vector<int>> memo(n, vector<int>(n, -1));
+    auto check = [&](int i, int j, int pre) {
+        int sum = nums[i] + nums[j];
+        return sum == pre;
+    };
+    auto dfs = [&](this auto &&dfs, int i, int j, int pre) -> int {
+        if (i >= j) {
+            return 0;
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        res = 0;
+        if (check(i, i + 1, pre)) {
+            res = max(dfs(i + 2, j, pre) + 1, res);
+        }
+        if (check(j - 1, j, pre)) {
+            res = max(dfs(i, j - 2, pre) + 1, res);
+        }
+        if (check(i, j, pre)) {
+            res = max(dfs(i + 1, j - 1, pre) + 1, res);
+        }
+        return res;
+    };
+    // 初始化不对,应该把第一次操作摘出来
+    // 这样才能确定target
+    int res1 = dfs(2, n - 1, nums[0] + nums[1]);
+    int res2 = dfs(0, n - 3, nums[n - 2] + nums[n - 1]);
+    int res3 = dfs(1, n - 2, nums[0] + nums[n - 1]);
+    return max(res1, max(res2, res3)) + 1;
+}
+
+// 1547切棍子的最小成本
+// 时间复杂度:O(m^3), 空间复杂度:O(m^2)
+// 子问题(状态)数目: ij有多少对,C(m, 2) = m! / (m - 2) ! * 2! = m * (m - 1) / 2 约等于m^2
+// 每个子问题(状态)计算时间: 最差 k从0到m-1,为m
+// 合起来就是 m^2 * m = m^3
+int minCost(int n, vector<int>& cuts) {
+    cuts.emplace_back(0);
+    cuts.emplace_back(n);
+    ranges::sort(cuts);
+    int m = cuts.size();
+    // dfs(i, j)表示以cuts[i], cuts[j]为左右端点切棍子的最小成本
+    vector<vector<int>> memo(m, vector<int>(m, -1));
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+        // 只有左右端点,不能切了
+        if (i + 1 == j) {
+            return 0;
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        res = INT_MAX;
+        for (int k = i + 1; k < j; k++) {
+            res = min(res, dfs(i, k) + dfs(k, j));
+        }
+        res += cuts[j] - cuts[i];
+        return res;
+    };
+    return dfs(0, m - 1);
+}
+
+// 1771由子序列构造的最长回文串的长度
+// 时间复杂度:O((n + m)^2), 空间复杂度:O((n + m)^2)
+int longestPalindrome(string word1, string word2) {
+    string s = word1 + word2;
+    int n = s.size();
+    vector<vector<int>> memo(n, vector<int>(n, -1));
+    // 必须两个子串都含
+    int ans = 0;
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+        int mid = word1.size();
+        if (i > j) {
+            return 0;// null
+        }
+        if (i == j) {
+            return 1;// single character
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        if (s[i] == s[j]) {
+            res = 2 + dfs(i + 1, j - 1);
+            // 等于说求回文子串长度还是按516求
+            // 答案需要筛出来
+            if (i < mid && j >= mid) {
+                ans = max(ans, res);
+            }
+            return res;
+        }
+        return res = max(dfs(i + 1, j), dfs(i, j - 1));
+    };
+    dfs(0, n - 1);
+    return ans;
+}
+
+// 1000合并石头的最低成本
+int mergeStones(vector<int>& stones, int k) {
+    int n = stones.size();
+    if (n % k) {
+        return  -1;
+    }
+    int ans = INT_MAX;
+    vector<vector<int>> memo(n, vector<int>(n, -1));
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+        if (ans == -1) {
+            return -1;
+        }
+        if (j - i < k) {
+            ans = -1;
+            return ans;
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        res = INT_MAX;
+        for (int l = i; l < i + k; l++) {
+            res = min()
+        }
+    };
 }
 
 };
