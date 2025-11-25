@@ -314,10 +314,10 @@ int mergeStones(vector<int>& stones, int k) {
     for (int i = 0; i < n; i++) {
         s[i + 1] = s[i] + stones[i];
     }
-    int memo[n][n];
+    int memo[n][n][k+1];
     memset(memo, -1, sizeof(memo));
     auto dfs = [&](this auto &&dfs, int i, int j, int p) -> int {
-        int &res = memo[i][j];
+        int &res = memo[i][j][p];
         if (res != -1) {
             return res;
         }

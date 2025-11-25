@@ -317,7 +317,7 @@ int minimizeArrayValue(vector<int>& nums) {
 // 排序O(nlogn)
 // 二分O(logD), D = (price.back() - price[0]) / (k - 1) + 1
 // check, O(n)
-// 合起来 O(nlogn + nlogD)
+// 合起来时间复杂度 O(nlogn + nlogD)
 int maximumTastiness(vector<int>& price, int k) {
     // 甜蜜度:任意两数差的绝对值的最小值
     // 甜蜜度越大, 可选的种类k越小
@@ -356,12 +356,14 @@ int findPeakElement(vector<int>& nums) {
     // while里面有mid + 1,所有范围限制为n-2
     int n = nums.size();
     int left = -1;// 不可能是峰值
-    int right = n - 1; // 可能是最大峰值
+    int right = n - 1; // 可能是最大峰值, 单调递增
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
+        // [0, mid]存在峰值
         if (nums[mid] > nums[mid + 1]) {
             right = mid;
         } else {
+            // [mid + 1, n - 1]存在峰值
             left = mid;
         }
     }
@@ -373,7 +375,8 @@ int findMin(vector<int>& nums) {
     // [0, n-2]
     int n = nums.size();
     int left = -1;//不满足
-    int right = n - 1;// 满足, 可能最小值
+    // 因为mid = n - 1的时候,nums[mid] > nums.back()一定不满足,蓝色
+    int right = n - 1; // n - 1可以确定为一定是蓝色
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
         (nums[mid] > nums.back() ? left : right) = mid;
@@ -393,10 +396,10 @@ int search(vector<int>& nums, int target) {
         }
         return right;
     };
-    // [)
-    auto lower_bound = [&](int left, int right, int target) {
+    // []
+    auto lower_bound = [&](int left, int right) {
         int l = left - 1;
-        int r = right;
+        int r = right + 1;
         while (l + 1 < r) {
             int mid = l + (r - l) / 2;
             if (nums[mid] >= target) {
@@ -405,44 +408,46 @@ int search(vector<int>& nums, int target) {
                 l = mid;
             }
         }
-        return nums[r] == target ? r : -1;
+        return r;
     };
     int n = nums.size();
     // 找到最小值对应的下标
     int i = find_min(nums);
     // 判断target在哪一段,之后在段内进行二分查找
-    // 第二段[i, n - 1]
-    if (target <= nums.back()) {
-        return lower_bound(i, n, target);
-        //第一段[0, i - 1]
-    } else {
-        return lower_bound(0, i, target);
+    int id = target > nums.back() ? lower_bound(0, i - 1) : lower_bound(i, n - 1);
+    if (id == n || (id < n && nums[id] != target)) {
+        id = -1;
     }
+    return id;
 }
 
 // 74搜索二维矩阵
 bool searchMatrix(vector<vector<int>>& matrix, int target) {
-    auto lower_bound = [&](int i, int target) {
-        auto &vec = matrix[i];
-        int left = -1;
-        int right = vec.size() - 1;
-        while (left + 1 < right) {
-            int mid = left + (right - left ) / 2;
-            (vec[mid] >= target ? right : left) = mid;
-        }
-        return right;
-    };
-    int m  = matrix.size();
+    // 方法1: 当作一个长数组进行二分
+    // left = -1, right = m * n
+    // int x = matrix[mid / m][mid % m];
+    // 时间复杂度:O(logmn), 空间复杂度:O(1)
+
+    // 方法2:排除法
+    // 时间复杂度:O(m+n), 空间复杂度:O(1)
+    int m = matrix.size();
     int n = matrix[0].size();
-    // [0, m - 1]
-    int left = -1;
-    int right = m - 1;
-    while (left + 1 < right) {
-        int mid = left + (right - left) / 2;
-        (matrix[mid].back() >= target ? right : left) = mid;
+    int i = 0;//row id
+    int j = n - 1;// col id
+    // 从右上角开始
+    while (i < m && j >= 0) {
+        if (matrix[i][j] == target) {
+            return true;
+        }
+        // 当前row都小于target,row++
+        if (matrix[i][j] < target) {
+            i++;
+        } else {
+            // 当前列都大于target
+            j--;
+        }
     }
-    int k = lower_bound(right, target);
-    return k > 0 && k < n && matrix[right][k] == target;
+    return false;
 }
 
 // 1901寻找峰值2
@@ -464,6 +469,7 @@ vector<int> findPeakGrid(vector<vector<int>>& mat) {
 }
 
 // 154寻找旋转排序数组里的最小值, 可能有重复元素
+// 时间复杂度:O(n), 空间复杂度:O(1)
 int findMin2(vector<int>& nums) {
     // 把nums[right]当作最大值
     int n = nums.size();
@@ -474,7 +480,7 @@ int findMin2(vector<int>& nums) {
         // 此时可以知道right颜色是蓝色,二分区间可以减小1个
         if (nums[mid] == nums[right]) {
             right--;
-        } else if (nums[mid] > nums[right]) {
+        } else if (nums[mid] < nums[right]) {
             right = mid;
         } else {
             left = mid;

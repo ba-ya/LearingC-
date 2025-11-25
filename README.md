@@ -17,8 +17,8 @@
 | TwoPointersTowards1        | 5             | 3        |  |
 | TwoPointersTowards2        | 4             | 3        |          |
 | SlidingWindow              | 12            | 3        |          |
-| BinarySearch1              | 11           | 3        | 275,2439,2517 |
-| BinarySearch2              | 6             | 2        |          |
+| BinarySearch1              | 11           | 3        | 275,2439,2517, |
+| BinarySearch2              | 6             | 3        | 162,153,74,1901,154 |
 | LinkedList_Reverse         | 6             | 2        |          |
 | LinkedList_QuickNSlow      | 5             | 2        |          |
 | LinkedList_Delete          | 7             | 2        |          |
