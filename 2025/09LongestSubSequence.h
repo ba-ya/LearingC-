@@ -4,7 +4,8 @@
 #include "00solution.h"
 
 namespace LCS {
-//1143最长公共子序列
+// 1143最长公共子序列
+// 时间复杂度:O(mn), 空间复杂度:O(mn)
 int longestCommonSubsequence(string text1, string text2) {
     int n = text1.size();
     int m = text2.size();
@@ -60,9 +61,9 @@ bool isInterleave(string s1, string s2, string s3) {
         return false;
     }
     vector<vector<int>> memo(n + 1, vector<int>(m + 1, -1));
-    // 下标i, 当前个数i+1
-    // 下标j, 当前个数j+1
-    // 对应s3,个数是i+j+2, 下标是i+j+1
+    // 下标i, 当前剩下的个数i+1
+    // 下标j, 当前剩下的个数j+1
+    // 对应s3,还未确认的个数是i+j+2, 下一个要比较的是s3[i+j+1]
     auto dfs = [&](this auto &&dfs, int i, int j) -> bool {
         // 所有字符都遍历完,都是true
         // 最后结果也是true
@@ -88,7 +89,8 @@ string shortestCommonSupersequence(string str1, string str2) {
     int n = str1.length();
     int m = str2.length();
     vector<vector<int>> memo(n, vector<int>(m, -1));
-    auto dfs = [&](this auto &&dfs, int i, int j) -> int{
+    // 在求什么?
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
         if (i < 0) {
             return j + 1;
         }
@@ -102,8 +104,7 @@ string shortestCommonSupersequence(string str1, string str2) {
         if (str1[i] == str2[j]) {
             return res = dfs(i - 1, j - 1) + 1;
         }
-        int tmp1 = dfs(i - 1, j);
-        int tmp2 = dfs(i, j - 1);
+        // 这里为什么要+1?
         return res = min(dfs(i - 1, j), dfs(i, j - 1)) + 1;
     };
     auto make_ans = [&](this auto &&make_ans, int i, int j) -> string {
@@ -112,7 +113,7 @@ string shortestCommonSupersequence(string str1, string str2) {
         if (str1[i] == str2[j]) {
             return make_ans(i - 1, j - 1) + str1[i];
         }
-        if (dfs(i, j) == dfs(i - 1, j)) {
+        if (dfs(i, j) == dfs(i - 1, j) + 1) {
             return make_ans(i - 1, j) + str1[i];
         }
         return make_ans(i, j - 1) + str2[j];

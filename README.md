@@ -13,7 +13,7 @@
 ## [题单](https://github.com/EndlessCheng/codeforces-go/tree/master/leetcode)
 
 | 类型                       | 题目数目(169) | 通过次数 | 卡壳的题 |
-| -------------------------- | ------------- | -------- | --------- |
+| -------------------------- | ------------- | -------- | :-------: |
 | TwoPointersTowards1        | 5             | 3        |  |
 | TwoPointersTowards2        | 4             | 3        |          |
 | SlidingWindow              | 12            | 3        |          |
@@ -32,7 +32,7 @@
 | BackTrack_Permutation      | 4             | 2        |          |
 | DynamicProgramming         | 9             | 2        |          |
 | ZeroOneBackbag             | 6             | 2        | 494,322 |
-| LCS                        | 4             | 1        |          |
+| LCS                        | 4             | 2        | 72,97,1092 |
 | LIS                        | 6             | 1        |          |
 | DP_BuyNSellStock           | 6             | 1        |          |
 | DP_Interval                | 6             | 1 |          |
