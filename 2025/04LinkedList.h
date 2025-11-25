@@ -25,6 +25,7 @@ struct ListNode {
 
 namespace LinkedList_Reverse {
 // 206反转链表
+// 时间复杂度:O(n), n是节点个数, 空间复杂度:O(1)
 ListNode* reverseList(ListNode* head) {
     ListNode *pre = nullptr;
     ListNode *cur = head;
@@ -38,6 +39,7 @@ ListNode* reverseList(ListNode* head) {
 }
 
 // 92反转链表2
+// 时间复杂度:O(right), 空间复杂度:O(1)
 ListNode* reverseBetween(ListNode* head, int left, int right) {
     ListNode dummy(0, head);
     ListNode * p0 = &dummy;
@@ -61,34 +63,27 @@ ListNode* reverseBetween(ListNode* head, int left, int right) {
 
 // 25k个一组反转链表
 ListNode* reverseKGroup(ListNode* head, int k) {
-    ListNode dummy(0, head);
-    ListNode *p0 = &dummy;
     int cnt = 0;
-    while (p0->next) {
-        p0 = p0->next;
+    for (ListNode *cur = head; cur; cur = cur->next) {
         cnt++;
     }
-
-    p0 = &dummy;
     int groups = cnt / k;
-    ListNode *pre;
-    ListNode *cur;
-    ListNode *p1;
+
+    ListNode dummy(0, head);
+    ListNode *p0 = &dummy;
+    ListNode *pre = nullptr;
+    ListNode *cur = p0->next;
     for (int i = 0; i < groups; i++) {
-        int left = i * k;
-        int right = (i + 1) * k - 1;
-        pre = nullptr;
-        cur = p0->next;
-        p1 = cur;
-        for (int j = 0; j < right - left + 1; j++) {
+        for (int j = 0; j < k; j++) {
             ListNode *next = cur->next;
             cur->next = pre;
             pre = cur;
             cur = next;
         }
+        ListNode *next = p0->next;
         p0->next->next = cur;
         p0->next = pre;
-        p0 = p1;
+        p0 = next;
     }
     return dummy.next;
 }

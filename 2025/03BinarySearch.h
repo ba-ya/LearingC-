@@ -477,7 +477,7 @@ int findMin2(vector<int>& nums) {
     int right = n - 1;
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
-        // 此时可以知道right颜色是蓝色,二分区间可以减小1个
+        // 有相同的就减掉一个,没有重复元素的时候就可以当作普通的findmin做
         if (nums[mid] == nums[right]) {
             right--;
         } else if (nums[mid] < nums[right]) {
