@@ -86,25 +86,27 @@ bool isInterleave(string s1, string s2, string s3) {
 
 // 1092最短公共超序列
 string shortestCommonSupersequence(string str1, string str2) {
+    // 构造的序列要两个string都是它的子序列,每个字母都要包含
     int n = str1.length();
     int m = str2.length();
     vector<vector<int>> memo(n, vector<int>(m, -1));
-    // 在求什么?
+    // 在求什么? 求最短公共超序列的长度
     auto dfs = [&](this auto &&dfs, int i, int j) -> int {
         if (i < 0) {
-            return j + 1;
+            return j + 1;// str1是空串,返回剩下的str2
         }
         if (j < 0) {
-            return i + 1;
+            return i + 1;// str2是空串,返回剩下的str1
         }
         int &res = memo[i][j];
         if (res != -1) {
             return res;
         }
         if (str1[i] == str2[j]) {
-            return res = dfs(i - 1, j - 1) + 1;
+            return res = dfs(i - 1, j - 1) + 1;// str1[i]
         }
         // 这里为什么要+1?
+        // 不相等, str1,str2选一个字母放入目标序列中str1[i] || str2[j]
         return res = min(dfs(i - 1, j), dfs(i, j - 1)) + 1;
     };
     auto make_ans = [&](this auto &&make_ans, int i, int j) -> string {

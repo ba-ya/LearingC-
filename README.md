@@ -20,7 +20,7 @@
 | BinarySearch1              | 11           | 3        | 275,2439,2517, |
 | BinarySearch2              | 6             | 3        | 162,153,74,1901,154 |
 | LinkedList_Reverse         | 6             | 3        | **check** |
-| LinkedList_QuickNSlow      | 5             | 2        |          |
+| LinkedList_QuickNSlow      | 5             | 3        | 142,143 |
 | LinkedList_Delete          | 7             | 2        |          |
 | BinaryTree_Understand      | 7             | 2        |          |
 | BinaryTree_Apply           | 8             | 2        |          |
@@ -33,7 +33,7 @@
 | DynamicProgramming         | 9             | 2        |          |
 | ZeroOneBackbag             | 6             | 2        | 494,322 |
 | LCS                        | 4             | 2        | 72,97,1092 |
-| LIS                        | 6             | 1        |          |
+| LIS                        | 6             | 1        |  |
 | DP_BuyNSellStock           | 6             | 1        |          |
 | DP_Interval                | 6             | 1 |          |
 | DP_Tree                    | 7             |          |          |
