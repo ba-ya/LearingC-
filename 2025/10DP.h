@@ -337,6 +337,76 @@ int mergeStones(vector<int>& stones, int k) {
 
 };
 namespace DP_Tree {
+// 543二叉树的直径
+int diameterOfBinaryTree(TreeNode* root) {
+    // 链长:当前节点到叶子节点的路径, 空节点链长为-1, 叶子节点链长为0
+    // dfs返回的是左右链中最长的链长
+    int ans = 0;
+    auto dfs = [&](this auto &&dfs, TreeNode *root) ->int {
+        if (root == nullptr) {
+            return -1;
+        }
+        int l_len = dfs(root->left) + 1;
+        int r_len = dfs(root->right) + 1;
+        ans = max(ans, l_len + r_len);
+        return max(l_len, r_len);
+    };
+    dfs(root);
+    return ans;
+}
+
+// 124二叉树的最大路径和
+int maxPathSum(TreeNode* root) {
+    // 链长: 下面某个节点(这里可以不用是叶子节点)到当前节点的路径, 节点是负值是时可以不用加入路径
+    // dfsf返回的是最大的链和
+    int ans = INT_MIN;
+    auto dfs = [&](this auto &&dfs, TreeNode *root) -> int {
+        if (root == nullptr) {
+            return 0;// 没有节点,总和是0
+        }
+        int l_len = dfs(root->left);// 左子树最大链和
+        int r_len = dfs(root->right);// 右子树最大链和
+        ans = max(ans, l_len + r_len + root->val);
+        return max(0, max(l_len, r_len) + root->val);// 当前子树最大链和(加上本身)
+    };
+    dfs(root);
+    return ans;
+}
+
+// 2246相邻字符的不同的最长路径
+int longestPath(vector<int>& parent, string s) {
+    // 相邻字符只存在于有父子关系的字符之间
+    int n = parent.size();
+    vector<vector<int>> g(n);
+    // i = 0, 对应的parent[0] = -1, 表示是根节点
+    // 某个父节点下面所有的子节点下标
+    for (int i = 1; i < n; i++) {
+        g[parent[i]].emplace_back(i);
+    }
+
+    // 最长的链长
+    int ans = 0;
+    // x表示传入父节点的下标, 得到的是以x为父节点的最大链长
+    auto dfs = [&](this auto &&dfs, int x) -> int {
+        int max_len = 0;
+        // 枚举所有子节点
+        for (int y : g[x]) {
+            // 子节点y下面的链长 + x到y的路径
+            int len = dfs(y) + 1;
+            if (s[x] != s[y]) {
+                // ans需要的左边链+右边链
+                ans = max(ans, max_len + len);
+                // 维护最长的链
+                max_len = max(max_len, len);
+            }
+        }
+        return max_len;
+    };
+    // 根节点开始
+    dfs(0);
+    return ans + 1;//节点个数
+}
+
 
 };
 namespace DP_MaxSet {

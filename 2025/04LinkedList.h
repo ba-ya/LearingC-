@@ -268,17 +268,12 @@ void reorderList(ListNode* head) {
         }
         return slow;
     };
-    // 1,2,3,4,5 3是mid->val
-    // 1,2,3,4   3是mid->val
     ListNode *mid = find_mid(head);
-    ListNode *head2 = reverse_list(mid->next);
-    mid->next = nullptr;
-    // 把两条链分开,就不会有重复的了,就不需要考虑
-    // ListNode *head2 = reverse_list(mid->next);
-    // while (head2->next) {走到倒数第二个就不能走了
-    // (1,2,3)(4,5)
-    // (1,2,3)(4)
-    while (head2) {
+    ListNode *head2 = reverse_list(mid);
+    // 1,2,3,4,5 -> mid(3) 1,2,3 和 5,4,3
+    // 1,2,3,4   -> mid(3) 1,2,3 和 4,3
+    // head2的中间节点head1已经有了,所有head2走到倒数第二个就行了
+    while (head2->next) {
         ListNode *next1 = head->next;
         ListNode *next2 = head2->next;
         head->next = head2;
