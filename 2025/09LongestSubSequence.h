@@ -315,7 +315,7 @@ int bestTeamScore(vector<int>& scores, vector<int>& ages) {
 // 1187使数组严格递增
 int makeArrayIncreasing(vector<int>& a, vector<int>& b) {
     ranges::sort(b);
-    int n = a.size();
+    const int n = a.size();
     unordered_map<int, int> memo[n];
 
     auto dfs = [&](this auto &&dfs, int i, int pre) ->int {

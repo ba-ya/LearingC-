@@ -5,24 +5,6 @@
 
 #include <unordered_set>
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode() : val(0), next(nullptr) {}
-    ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
-
-    void debug() {
-        QStringList s;
-        ListNode *cur = this;
-        while (cur) {
-            s << QString::number(cur->val);
-            cur = cur->next;
-        }
-        qDebug().noquote() << s.join(",");
-    }
-};
-
 namespace LinkedList_Reverse {
 // 206反转链表
 // 时间复杂度:O(n), n是节点个数, 空间复杂度:O(1)
@@ -442,10 +424,8 @@ ListNode* removeNodes(ListNode* head) {
         }
         return pre;
     };
-    head->debug();
-    ListNode *head2 = reverse_list(head);
-    head2->debug();
-    ListNode *cur = head2;
+    head = reverse_list(head);
+    ListNode *cur = head;
     while (cur->next) {
         ListNode *next = cur->next;
         if (cur->val > cur->next->val) {
@@ -455,9 +435,7 @@ ListNode* removeNodes(ListNode* head) {
             cur = next;
         }
     }
-    ListNode *head3 = reverse_list(head2);
-    head3->debug();
-    return head3;
+    return reverse_list(head);
 }
 }
 
