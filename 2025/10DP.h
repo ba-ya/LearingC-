@@ -388,6 +388,7 @@ int longestPath(vector<int>& parent, string s) {
     int ans = 0;
     // x表示传入父节点的下标, 得到的是以x为父节点的最大链长
     auto dfs = [&](this auto &&dfs, int x) -> int {
+        // 相当于当前节点的链长是0
         int max_len = 0;
         // 枚举所有子节点
         for (int y : g[x]) {
@@ -407,6 +408,160 @@ int longestPath(vector<int>& parent, string s) {
     return ans + 1;//节点个数
 }
 
+// 687最长同值路径
+int longestUnivaluePath(TreeNode* root) {
+    // 自己写对了,但加了两个变量sum 和 max_len
+    // 换成参考的,修改l_len, r_len
+    int ans = 0;
+    auto dfs = [&](this auto &&dfs, TreeNode *node) -> int {
+        if (node == nullptr) {
+            return -1;
+        }
+        int l_len = dfs(node->left) + 1;
+        int r_len = dfs(node->right) + 1;
+        if (node->left && node->val != node->left->val) l_len = 0;
+        if (node->right && node->val != node->right->val) r_len = 0;
+        ans = max(ans, l_len + r_len);
+        return max(l_len, r_len);
+    };
+    dfs(root);
+    return ans;
+}
+
+int diameter(vector<vector<int>>& edges) {
+    // 不懂为啥这里要+1
+    vector<vector<int>> g(edges.size() + 1);
+    for (auto e : edges) {
+        int x = e[0];
+        int y = e[1];
+        // 不知道父子关系,需要都放进来
+        g[x].emplace_back(y);
+        g[y].emplace_back(x);
+    }
+
+    int res = 0;
+    // 返回最大链长
+    auto dfs = [&](this auto &&dfs, int x, int parent) -> int {
+        int max_len = 0;
+        for (auto y : g[x]) {
+            // 不是'父'节点, 求下一级的len
+            if (y != parent) {
+                // 以x作为父母节点,枚举y
+                int sub_len = dfs(y, x) + 1;
+                res = max(res, max_len + sub_len);
+                max_len = max(max_len, sub_len);
+            }
+        }
+        return max_len;
+    };
+    dfs(0, -1);
+    return res;
+}
+// 3203合并两棵树的最小直径
+int minimumDiameterAfterMerge(vector<vector<int>>& edges1, vector<vector<int>>& edges2) {
+    int d1 = diameter(edges1);
+    int d2 = diameter(edges2);
+    // d1, d2, d1 / 2 向上取整 + d2 / 2 向上取整 + 1
+    // d1 / 2 = (d1 - 1) / 2 + 1 = (d1 + 1) / 2
+    return max(max(d1, d2), (d1 + 1) / 2 + (d2 + 1) / 2 + 1 );
+}
+
+// 1617统计子树中城市之间的最大距离
+vector<int> countSubgraphsForEachDiameter(int n, vector<vector<int>>& edges) {
+    vector<vector<int>> g(n);
+    // 编号从1开始, 调整为从0开始
+    for (auto e : edges) {
+        int x = e[0] - 1;
+        int y = e[1] - 1;
+        g[x].emplace_back(y);
+        g[y].emplace_back(x);
+    }
+
+    // vis, 只有对应的is_set存在,才可以参与计算直径
+    // is_set, 选与不选得到的子集
+    vector<int> ans(n - 1), vis(n), is_set(n);
+    int diameter = 0;
+    // 返回最大链长, 更新直径
+    auto dfs = [&](this auto &&dfs, int x) -> int {
+        vis[x] = true;
+        int max_len = 0;
+        for (auto y : g[x]) {
+            // 求其下面子节点的链长
+            if (!vis[y] && is_set[y]) {
+                int len = dfs(y) + 1;
+                diameter = max(diameter, max_len + len);
+                max_len = max(max_len, len);
+            }
+        }
+        return max_len;
+    };
+
+    // 选与不选,枚举子集
+    auto f = [&](this auto &&f, int i) ->void {
+        if (i == n) {
+            // 1. 找到第一个被选中的节点 v（作为 DFS 起点）
+            for (int v = 0; v < n; v++) {
+                if (is_set[v]) {
+                    // 2. 重置访问标记和直径
+                    fill(vis.begin(), vis.end(), 0);
+                    diameter = 0;
+                    // 3. 从 v 开始 DFS，计算该子图的直径
+                    // 为什么只从一个点开始？因为如果子图是连通的，从任意一点 DFS 都能遍历整个子图；
+                    // 如果不连通，则 vis != is_set，会被后续条件过滤掉。
+                    dfs(v);
+                    break;
+                }
+            }
+            // 4. 检查：这个子集是否非空、连通、且直径有效
+            if (diameter && vis == is_set) {
+                // ans[0]对应的是直径为1的情况
+                ans[diameter - 1] += 1;
+            }
+            return;
+        }
+
+        // 不选
+        f(i + 1);
+
+        // 选
+        is_set[i] = true;
+        f(i + 1);
+        is_set[i] = false;
+    };
+    f(0);
+    return ans;
+}
+
+// 2538最大价值与最小价值和的差值
+long long maxOutput(int n, vector<vector<int>>& edges, vector<int>& price) {
+    vector<vector<int>> g(n);
+    for (auto &e : edges) {
+        int x = e[0];
+        int y = e[1];
+        g[x].emplace_back(y);
+        g[y].emplace_back(x);
+    }
+
+    long long ans;
+    auto dfs = [&](this auto &&dfs, int x, int parent) -> pair<long long, long long> {
+        long long p = price[x];
+        // 两个max, 一个有叶子节点,一个不含叶子节点
+        long long max_s1 = p;
+        long long max_s2 = 0;
+        for (auto y : g[x]) {
+            if (y != parent) {
+                auto [s1, s2] = dfs(y, x);
+                ans = max(ans, max(max_s1 + s2, s1 + max_s2));
+                // 此时叶子节点在更底层,与x节点无关
+                max_s1 = max(max_s1, s1 + p);
+                max_s2 = max(max_s2, s2 + p);
+            }
+        }
+        return {max_s1, max_s2};
+    };
+    dfs(0, -1);
+    return ans;
+}
 
 };
 namespace DP_MaxSet {
