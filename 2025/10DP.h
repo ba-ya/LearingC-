@@ -565,7 +565,56 @@ long long maxOutput(int n, vector<vector<int>>& edges, vector<int>& price) {
 
 };
 namespace DP_MaxSet {
+// 337打家劫舍3
+int rob(TreeNode* root) {
+    // {rob, not rob}
+    auto dfs = [&](this auto &&dfs, TreeNode *node) -> pair<int, int> {
+        if (node == nullptr) {
+            return {0, 0};
+        }
+        auto [l_rob, l_not_rob] = dfs(node->left);
+        auto [r_rob, r_not_rob] = dfs(node->right);
+        int rob = l_not_rob + r_not_rob + node->val;
+        int not_rob = max(l_rob, l_not_rob) + max(r_rob, r_not_rob);
+        return {rob, not_rob};
+    };
+    auto [rob, not_rob] = dfs(root);
+    return max(rob, not_rob);
+}
 
+// 1377 T秒后青蛙的位置
+double frogPosition(int n, vector<vector<int>>& edges, int t, int target) {
+    vector<vector<int>> g(n + 1);
+    // 加一个0节点,处理只存在根节点1的情况
+    g[1] = {0};
+    for (auto e : edges) {
+        int x = e[0];
+        int y = e[1];
+        // 与x相连的节点是y
+        g[x].emplace_back(y);
+        // 与y相连的节点是x
+        g[y].emplace_back(x);
+    }
+
+    auto dfs = [&](this auto &&dfs, int x, int parent, int t) -> long long {
+        if (t == 0) return x == target;
+        // 因为跳过上面if,此时一定还有剩余时间,
+        // 只有父节点,x是叶子节点,青蛙会在当前叶子节点等待
+        // 如果不是叶子节点,青蛙不马上跳走,在时间结束的时候不会停在target节点
+        if (x == target) return g[x].size() == 1;
+        for (auto y : g[x]) {
+            // 除开父节点
+            if (y != parent) {
+                long long prod = dfs(y, x, t - 1);
+                // x-y, x有g[x].size() - 1个选择
+                if (prod) return prod * (g[x].size() - 1);//
+            }
+        }
+        return 0;
+    };
+    auto prod = dfs(1, 0, t);
+    return prod ? 1.0 / prod : 0;
+}
 };
 namespace DP_MinSet {
 

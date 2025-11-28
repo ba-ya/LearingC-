@@ -37,7 +37,7 @@
 | DP_BuyNSellStock           | 6             | 1        |          |
 | DP_Interval                | 6             | 1 |          |
 | DP_Tree                    | 7             | 1 |          |
-| DP_MaxSet                  | 3             |          |          |
+| DP_MaxSet                  | 3             | 1 |          |
 | DP_MinSet                  | 1             |          |          |
 | Monotonic_Stack            | 10            |          |          |
 | Monotonic_Queue            | 6             |          |          |
