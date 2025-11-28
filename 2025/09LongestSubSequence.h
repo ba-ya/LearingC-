@@ -161,7 +161,8 @@ int lengthOfLIS(vector<int>& nums) {
 int lengthOfLIS_2(vector<int>& nums) {
     vector<int> g;
     for (auto x : nums) {
-        // 求得第一个>=x的位置
+        // 求得第一个>=x的位置, 严格递增
+        // 非递减应该如何改?换成upper_bound, 返回第一个大于x的位置
         auto it = ranges::lower_bound(g, x);
         // 如果g这个序列没有>=x的数,就假如
         if (it == g.end()) {
