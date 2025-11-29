@@ -201,6 +201,8 @@ int minimumOperations(vector<int>& nums) {
 
 // 1671得到山形数组的最小删除次数
 int minimumMountainRemovals(vector<int>& nums) {
+    // 记忆化搜索写起来清楚一点
+    // 二分的写不清楚
     int n = nums.size();
     vector<int> memo_pre(n, -1), memo_suf(n, -1);
     auto dfs_pre = [&](this auto &&dfs_pre, int i) -> int {
@@ -222,6 +224,7 @@ int minimumMountainRemovals(vector<int>& nums) {
             return res;
         }
         int ans = 0;
+        // nums[i]是最大的
         for (int j = i + 1; j < n; j++) {
             if (nums[j] < nums[i]) {
                 ans = max(ans, dfs_suf(j));
@@ -233,6 +236,7 @@ int minimumMountainRemovals(vector<int>& nums) {
     for (int i = 0; i < n; i++) {
         int pre = dfs_pre(i);
         int suf = dfs_suf(i);
+        // 两个都包含封顶,计算的时候需要减掉一个
         if (pre >= 2 && suf >= 2) {
             ans = max(ans, pre + suf - 1);
         }
@@ -242,6 +246,7 @@ int minimumMountainRemovals(vector<int>& nums) {
 
 // 354俄罗斯套娃信封问题
 int maxEnvelopes(vector<vector<int>>& envelopes) {
+    // 保证宽度和高度都是单独的,不允许多个相同宽度
     // w升序排列, h降序排列
     ranges::sort(envelopes, {},
                  [](vector<int> e) {return pair{e[0], -e[1]};});
@@ -317,7 +322,7 @@ int bestTeamScore(vector<int>& scores, vector<int>& ages) {
 int makeArrayIncreasing(vector<int>& a, vector<int>& b) {
     ranges::sort(b);
     const int n = a.size();
-    unordered_map<int, int> memo[n];
+    vector<unordered_map<int, int>> memo(n);
 
     auto dfs = [&](this auto &&dfs, int i, int pre) ->int {
         if (i < 0) {
@@ -339,7 +344,7 @@ int makeArrayIncreasing(vector<int>& a, vector<int>& b) {
         return res;
     };
     int res = dfs(n - 1, INT_MAX);
-    return res == INT_MAX / 2 ? -1 : res;
+    return res < INT_MAX / 2 ? res : -1;
 }
 }
 #endif // _9LONGESTSUBSEQUENCE_H
