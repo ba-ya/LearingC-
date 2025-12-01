@@ -680,7 +680,31 @@ int minimumTotalPrice(int n,
 
 };
 namespace DP_MinSet {
-
+// 968监控二叉树
+int minCameraCover(TreeNode* root) {
+    // 基础解法, 没看懂变形方法
+    auto dfs = [&](this auto &&dfs, TreeNode *node) -> tuple<int, int, int> {
+        // 边界条件
+        if (node == nullptr) {
+            // 不合法, 返回一个永远取不到的数
+            return {INT_MAX / 2, 0, 0};
+        }
+        auto [l_choose, l_by_parent, l_children] = dfs(node->left);
+        auto [r_choose, r_by_parent, r_children] = dfs(node->right);
+        // 子树根节点安装了,左右儿子3种情况都可以 + 自身
+        int choose = min(l_choose, min(l_by_parent, l_children))
+                     + min(r_choose, min(r_by_parent, r_children))
+                     + 1;
+        // 子树根节点不安装,父节点安装了, 子节点不存在by_parent情况
+        int by_parent = min(l_choose, l_children) + min(r_choose, r_children);
+        // 子树根节点不安装, 左右儿子至少有一个安装了, 不存在by_parent情况,且左右儿子需要组合
+        int by_children = min(l_choose + r_children, min(l_children + r_choose, l_choose + r_choose));
+        return {choose, by_parent, by_children};
+    };
+    // 根节点没有父节点,不存在by_parent情况
+    auto [choose, _, by_children] = dfs(root);
+    return min(choose, by_children);
+}
 };
 
 #endif // __DP_H
