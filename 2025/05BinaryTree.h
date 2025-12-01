@@ -19,44 +19,34 @@ int maxDepth(TreeNode* root) {
 
 // 111二叉树的最小深度
 int minDepth(TreeNode* root) {
-    // 与两个子节点进行比较
-    int ans = INT_MAX;
-    std::function<void(TreeNode*, int)> dfs;
-    dfs = [&](TreeNode* root, int cnt) {
-        if (root == nullptr) {
-            return;
-        }
-        cnt++;
-        if (root->left == nullptr && root->right == nullptr) {
-            ans = min(ans, cnt);
-            return;
-        }
-        dfs(root->left, cnt);
-        dfs(root->right, cnt);
-    };
-    dfs(root, 0);
-    return root ? ans : 0;
+    // 换成自底向上
+    // 空节点返回0
+    if (root == nullptr) {
+        return 0;
+    }
+    // 没有左儿子, 返回右儿子的深度 + 1
+    if (root->left == nullptr) {
+        return minDepth(root->right) + 1;
+    }
+    // 没有右儿子, 返回左儿子的深度 + 1
+    if (root->right == nullptr) {
+        return minDepth(root->left) + 1;
+    }
+    // 两个都有,返回最小的+1
+    return min(minDepth(root->left), minDepth(root->right)) + 1;
+
 }
 
 // 404左叶子之和
 int sumOfLeftLeaves(TreeNode* root) {
-    int ans = 0;
-    std::function<void(TreeNode *)> dfs;
-    dfs = [&](TreeNode *node) {
-        if (node == nullptr) {
-            return;
-        }
-        // 左叶子节点
-        if (node->left != nullptr
-            && node->left->left == nullptr
-            && node->left->right == nullptr) {
-            ans += node->left->val;
-        }
-        dfs(node->left);
-        dfs(node->right);
-    };
-    dfs(root);
-    return ans;
+    if (root == nullptr) {
+        return 0;
+    }
+    int sum = sumOfLeftLeaves(root->left) + sumOfLeftLeaves(root->right);
+    if (root->left != nullptr && root->left->left == nullptr && root->left->right == nullptr) {
+        sum += root->left->val;
+    }
+    return sum;
 }
 
 // 112路径总和
@@ -73,41 +63,31 @@ bool hasPathSum(TreeNode* root, int targetSum) {
 
 // 129求根节点到叶节点数字之和
 int sumNumbers(TreeNode* root) {
-    int ans = 0;
-    std::function<void(TreeNode *, int)> dfs;
-    dfs = [&](TreeNode *root, int x) {
+    auto dfs = [&](this auto &&dfs, TreeNode* root, int x) ->int {
         if (root == nullptr) {
-            return;
+            return 0;
         }
         x = x * 10 + root->val;
         if (root->left == nullptr && root->right == nullptr) {
-            ans += x;
-            return;
+            return x;
         }
-        dfs(root->left, x);
-        dfs(root->right, x);
+        return dfs(root->left, x) + dfs(root->right, x);
     };
-
-    dfs(root, 0);
-    return ans;
+    return dfs(root, 0);
 }
 
 // 1448统计二叉树中好节点的数目
 int goodNodes(TreeNode* root) {
-    int ans = 0;
-    std::function<void(TreeNode *, int)> dfs;
-    dfs = [&](TreeNode *root, int pre_max) {
+    auto dfs = [&](this auto &&dfs, TreeNode* root, int pre_max) -> int {
         if (root == nullptr) {
-            return;
+            return 0;
         }
-        ans += root->val >= pre_max;
         pre_max = max(pre_max, root->val);
-
-        dfs(root->left, pre_max);
-        dfs(root->right, pre_max);
+        int left = dfs(root->left, pre_max);
+        int right = dfs(root->right, pre_max);
+        return left + right + (root->val >= pre_max);
     };
-    dfs(root, INT_MIN);
-    return ans;
+    return dfs(root, INT_MIN);
 }
 
 // 987二叉树的垂序遍历
@@ -127,7 +107,7 @@ vector<vector<int>> verticalTraversal(TreeNode* root) {
 
     vector<vector<int>> ans;
     // col, row, val都是从小到大排序
-    ranges::sort(data);
+    ranges::sort(data, {}, [](auto t) {return tuple{get<0>(t), get<1>(t), get<2>(t)};});
     int cur_col = INT_MIN;
     for (auto &[col, row, val] : data) {
         // 新列的数组
