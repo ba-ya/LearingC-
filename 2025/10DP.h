@@ -615,6 +615,69 @@ double frogPosition(int n, vector<vector<int>>& edges, int t, int target) {
     auto prod = dfs(1, 0, t);
     return prod ? 1.0 / prod : 0;
 }
+
+// 2646最小化旅行的价格总和
+int minimumTotalPrice(int n,
+                      vector<vector<int>>& edges,
+                      vector<int>& price,
+                      vector<vector<int>>& trips) {
+    // 非相邻的两个可以打折, 只考虑有父子关系的节点(一个减半,一个不减半; 一个不减半,另一个都行)
+    // 无根无向树,从i节点到j节点只有一条路径
+
+    // 不确定父子关系,双向建树
+    vector<vector<int>> g(n);
+    for (auto &e : edges) {
+        int x = e[0];
+        int y = e[1];
+        g[x].emplace_back(y);
+        g[y].emplace_back(x);
+    }
+
+    // 计算每个节点经过的次数
+    vector<int> cnt(n);
+    for (auto &t : trips) {
+        int end = t[1];
+        // 返回是否能到达end
+        auto dfs = [&](this auto &&dfs, int x, int parent) -> bool {
+            // end是边界条件
+            if (x == end) {
+                cnt[x]++;
+                return true;
+            }
+            for (auto y : g[x]) {
+                if (y != parent && dfs(y, x)) {
+                    // 存在以x作为起点的路径且只有一条,找到了可以跳出循环了
+                    cnt[x]++;
+                    return true;
+                }
+            }
+            return false;
+        };
+        dfs(t[0], -1);
+    }
+
+    // 类似337
+    // reutn {not_halve, halve}
+    auto dfs = [&](this auto &&dfs, int x, int parent) -> pair<int, int> {
+        if (x == n) {
+            return {0, 0};
+        }
+        int not_halve = price[x] * cnt[x];
+        int halve = not_halve / 2;
+        // for循环把路径走完
+        for (auto y : g[x]) {
+            if (y != parent) {
+                auto [nh, h] = dfs(y, x);
+                not_halve = not_halve + min(nh, h);
+                halve = halve + nh;
+            }
+        }
+        return {not_halve, halve};
+    };
+    auto [not_halve, halve] = dfs(0, -1);
+    return min(not_halve, halve);
+}
+
 };
 namespace DP_MinSet {
 
