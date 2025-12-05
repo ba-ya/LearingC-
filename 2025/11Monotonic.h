@@ -5,7 +5,7 @@
 
 #include <stack>
 namespace Monotonic_Stack {
-// 739每日温度
+// 739每日温度,
 vector<int> dailyTemperatures(vector<int>& temperatures) {
     // 从左到右
     int n = temperatures.size();
@@ -32,7 +32,7 @@ int trap(vector<int>& height) {
     for (int i = 0; i < n; i++) {
         int right_h = height[i];
         // 等号处理重复元素
-        while (!st.empty() && height[st.top()] <= right_h) {
+        while (!st.empty() && right_h >= height[st.top()]) {
             int h = height[st.top()];
             st.pop();
             if (st.empty()) {
@@ -54,7 +54,7 @@ vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
     unordered_map<int, int> values;
     stack<int> st;
     for (auto num : nums2) {
-        while (!st.empty() && st.top() < num) {
+        while (!st.empty() && num > st.top()) {
             values[st.top()] = num;
             st.pop();
         }
@@ -139,7 +139,7 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
     for (int i = n - 1; i >= 0; i--) {
         int h = heights[i];
         // h[j]比h[i]大, 说明h[i]会被h[j]挡住,要停止
-        while (!st.empty() && st.top() < h) {
+        while (!st.empty() && h > st.top()) {
             // 栈顶小于h[i], 满足条件,可以看见
             ans[i] += 1;
             st.pop();
@@ -148,6 +148,149 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
             ans[i] += 1;
         }
         st.push(h);
+    }
+    return ans;
+}
+
+// 84柱状图中最大的矩形
+int largestRectangleArea(vector<int>& heights) {
+    // 枚举每个height,
+    // 找出左边下一个更小, 右边下一个更小
+    int n = heights.size();
+
+    stack<int> st;
+    vector<int> left(n, -1);
+    for (int i = 0; i < n; i++) {
+        int h = heights[i];
+        // 从左往右, 弹出的都是把h当作下个更小元素的,已经可以确定身份了
+        while (!st.empty() && h <= heights[st.top()]) {
+            st.pop();
+        }
+        // 剩下的都是小于h的, 不能作为矩形区域的一部分
+        if (!st.empty()) {
+            left[i] = st.top();
+        }
+        st.push(i);
+    }
+
+    st = stack<int>();
+    vector<int> right(n, n);
+    for (int i = n - 1; i >= 0; i--) {
+        int h = heights[i];
+        while (!st.empty() && h <= heights[st.top()]) {
+            st.pop();
+        }
+        if (!st.empty()) {
+            right[i] = st.top();
+        }
+        st.push(i);
+    }
+    qDebug() << "-------" << __FUNCTION__;
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        ans = max(ans, heights[i] * (right[i] - left[i] - 1));
+        qDebug().noquote() << QString("%1 : %2 * (%3 - %4 - 1) = %5")
+                                  .arg(i).arg(heights[i]).arg(right[i]).arg(left[i])
+                                  .arg(heights[i] * (right[i] - left[i] - 1));
+    }
+    return ans;
+}
+int largestRectangleArea_2(vector<int>& heights) {
+    int n = heights.size();
+    vector<int> left(n, -1);
+    vector<int> right(n, n);
+    stack<int> st;
+    for (int i = 0; i < n; i++) {
+        int h = heights[i];
+        while (!st.empty() && h <= heights[st.top()]) {
+            // 如果heights存在元素,第一个元素的right对应的下标会是重复元素下标
+            // 计算面积的时候会小一个条
+            // 但走到其他重复元素,会得到正确的面积
+            right[st.top()] = i;
+            st.pop();
+        }
+        if (!st.empty()) {
+            left[i] = st.top();
+        }
+        st.push(i);
+    }
+    qDebug() << "-------" << __FUNCTION__;
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        ans = max(ans, heights[i] * (right[i] - left[i] - 1));
+        qDebug().noquote() << QString("%1 : %2 * (%3 - %4 - 1) = %5")
+                                  .arg(i).arg(heights[i]).arg(right[i]).arg(left[i])
+                                  .arg(heights[i] * (right[i] - left[i] - 1));
+    }
+    return ans;
+}
+
+// 1793好子数组的最大分数
+int maximumScore(vector<int>& nums, int k) {
+    int n = nums.size();
+    vector<int> left(n, -1);
+    vector<int> right(n, n);
+    stack<int> st;
+    for (int i = 0; i < n; i++) {
+        int x = nums[i];
+        while (!st.empty() && x <= nums[st.top()]) {
+            right[st.top()] = i;
+            st.pop();
+        }
+        if (!st.empty()) {
+            left[i] = st.top();
+        }
+        st.push(i);
+    }
+
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        // left 和 right 是矩形区域外的坐标, k是在(left, right)开区间里面
+        if (left[i] < k && k < right[i]) {
+            ans = max(ans, nums[i] * (right[i] - left[i] - 1));
+        }
+    }
+    return ans;
+}
+
+// 85最大矩形
+int maximalRectangle(vector<vector<char>>& matrix) {
+    auto get_max_rectangle = [&](vector<int> heights) {
+        int n = heights.size();
+        stack<int> st;
+        vector<int> left(n, -1);
+        vector<int> right(n, n);
+        for (int i = 0; i < n; i++) {
+            int h = heights[i];
+            while (!st.empty() && h <= heights[st.top()]) {
+                right[st.top()] = i;
+                st.pop();
+            }
+            if (st.size()) {
+                left[i] = st.top();
+            }
+            st.push(i);
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            ans = max(ans, heights[i] * (right[i] - left[i] -1));
+        }
+        return ans;
+    };
+    int ans = 0;
+    int m = matrix.size();
+    int n = matrix[0].size();
+    // 每一行按照84求一次最大矩形面积
+    vector<int> heights(n, 0);
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] != '0') {
+                heights[j]++;
+            } else {
+                heights[j] = 0;
+            }
+        }
+        ans = max(ans, get_max_rectangle(heights));
     }
     return ans;
 }

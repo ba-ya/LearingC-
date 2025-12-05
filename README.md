@@ -39,6 +39,6 @@
 | DP_Tree                    | 7             | 1 |          |
 | DP_MaxSet                  | 3             | 1 |          |
 | DP_MinSet                  | 1             | 1 |          |
-| Monotonic_Stack            | 10            |          |          |
+| Monotonic_Stack            | 10            | 1 |          |
 | Monotonic_Queue            | 6             |          |          |
 

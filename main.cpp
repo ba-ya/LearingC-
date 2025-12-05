@@ -1,5 +1,5 @@
 ﻿#include <QApplication>
-#include "09LongestSubSequence.h"
+#include "11Monotonic.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,7 +18,6 @@ int main(int argc, char *argv[])
     delete cur;
     // 08
     ZeroOneBackbag::numSquares(1e4);
-*/
     vec = {0,1,0,3,2,3};
     // 09
     LIS::lengthOfLIS_2(vec);
@@ -26,5 +25,10 @@ int main(int argc, char *argv[])
     vec = {4,5,6,5};
     std::vector<int> vec2 = {2,1,2,1};
     LIS::bestTeamScore(vec, vec2);
+*/
+    // 11
+    vec = {1,3,4,3,2};
+    Monotonic_Stack::largestRectangleArea(vec);
+    Monotonic_Stack::largestRectangleArea_2(vec);
     return a.exec();
 }
