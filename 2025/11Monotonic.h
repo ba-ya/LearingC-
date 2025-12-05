@@ -139,7 +139,7 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
     for (int i = n - 1; i >= 0; i--) {
         int h = heights[i];
         // h[j]比h[i]大, 说明h[i]会被h[j]挡住,要停止
-        while (!st.empty() && h > st.top()) {
+        while (!st.empty() && st.top() < h) {
             // 栈顶小于h[i], 满足条件,可以看见
             ans[i] += 1;
             st.pop();
@@ -163,7 +163,7 @@ int largestRectangleArea(vector<int>& heights) {
     for (int i = 0; i < n; i++) {
         int h = heights[i];
         // 从左往右, 弹出的都是把h当作下个更小元素的,已经可以确定身份了
-        while (!st.empty() && h <= heights[st.top()]) {
+        while (!st.empty() && heights[st.top()] >= h) {
             st.pop();
         }
         // 剩下的都是小于h的, 不能作为矩形区域的一部分
@@ -202,7 +202,7 @@ int largestRectangleArea_2(vector<int>& heights) {
     stack<int> st;
     for (int i = 0; i < n; i++) {
         int h = heights[i];
-        while (!st.empty() && h <= heights[st.top()]) {
+        while (!st.empty() && heights[st.top()] >= h) {
             // 如果heights存在元素,第一个元素的right对应的下标会是重复元素下标
             // 计算面积的时候会小一个条
             // 但走到其他重复元素,会得到正确的面积
@@ -233,7 +233,7 @@ int maximumScore(vector<int>& nums, int k) {
     stack<int> st;
     for (int i = 0; i < n; i++) {
         int x = nums[i];
-        while (!st.empty() && x <= nums[st.top()]) {
+        while (!st.empty() && nums[st.top()] >= x) {
             right[st.top()] = i;
             st.pop();
         }
@@ -262,7 +262,7 @@ int maximalRectangle(vector<vector<char>>& matrix) {
         vector<int> right(n, n);
         for (int i = 0; i < n; i++) {
             int h = heights[i];
-            while (!st.empty() && h <= heights[st.top()]) {
+            while (!st.empty() && heights[st.top() >= h]) {
                 right[st.top()] = i;
                 st.pop();
             }
@@ -296,6 +296,88 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 }
 };
 namespace Monotonic_Queue {
+// 239滑动窗口最大值
+vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+    int n = nums.size();
+    vector<int> ans(n - k + 1);
+    deque<int> q;
+    for (int i = 0; i < n; i++) {
+        int x = nums[i];
+        // 1.右边入
+        while (!q.empty() && nums[q.back()] <= x) {
+            q.pop_back();
+        }
+        q.push_back(i);
+        // 2.左边出
+        int left = i - k + 1;
+        if (q.front() < left) {
+            q.pop_front();
+        }
+        // 3.填入答案
+        if (left >= 0) {
+            ans[left] = nums[q.front()];
+        }
+    }
+    return ans;
+}
 
+// 2398预算内最多的机器人数量
+int maximumRobots(vector<int>& chargeTimes, vector<int>& runningCosts, long long budget) {
+    int n = chargeTimes.size();
+    deque<int> q;
+    int ans = 0, left = 0;
+    long long sum = 0;
+    for (int right = 0; right < n; right++) {
+        // 入,
+        while (q.size() && chargeTimes[q.back()] <= chargeTimes[right]) {
+            q.pop_back();
+        }
+        q.push_back(right);
+        sum += runningCosts[right];
+
+        // 出
+        while (q.size() && chargeTimes[q.front()] + (right - left + 1) * sum > budget) {
+            if (q.front() == left) {
+                q.pop_front();
+            }
+            sum -= runningCosts[left++];
+        }
+
+        // 答案
+        ans = max(ans, right - left + 1);
+    }
+    return ans;
+}
+
+// 862和至少为k的最短子数组
+int shortestSubarray(vector<int>& nums, int k) {
+    // 求和小于target的最长子数组(X)
+    // 有负数,并不是数越多,sum越大,不能这样写
+    int n = nums.size();
+    // 前缀和
+    long s[n + 1];
+    s[0] = 0L;
+    for (int i = 0; i < n; i++) {
+        s[i + 1] = s[i] + nums[i];
+    }
+
+    int ans = n + 1;
+    deque<int> q;
+    // [left, right), 个数是right - left
+    for (int i = 0; i < n; i++) {
+        long x = s[i];
+        while (q.size() && x - s[q.front()] >= k) {
+            ans = min(ans, i - q.front());
+            q.pop_front();
+        }
+        while (q.size() && s[q.back()] >= x) {
+            q.pop_back();
+        }
+        q.push_back(i);
+    }
+    return ans > n ? -1 : ans;
+
+
+}
 };
 #endif // _1MONOTONIC_H
