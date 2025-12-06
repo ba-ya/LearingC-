@@ -354,8 +354,10 @@ int shortestSubarray(vector<int>& nums, int k) {
     // 求和小于target的最长子数组(X)
     // 有负数,并不是数越多,sum越大,不能这样写
     int n = nums.size();
-    // 前缀和
-    long s[n + 1];
+    // 前缀和s[i] = 表示[0, i-1]所有数字的和
+    // [0, i - 1] - [0, j - 1]
+    // s[i] - s[j] 表示[j, i)
+    vector<long> s(n + 1);
     s[0] = 0L;
     for (int i = 0; i < n; i++) {
         s[i + 1] = s[i] + nums[i];
