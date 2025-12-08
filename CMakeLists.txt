@@ -29,6 +29,7 @@ set(2025
     2025/09LongestSubSequence.h
     2025/10DP.h
     2025/11Monotonic.h
+    2025/12hot100.h
 )
 
 set(PROJECT_SOURCES

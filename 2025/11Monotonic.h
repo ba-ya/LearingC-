@@ -366,7 +366,8 @@ int shortestSubarray(vector<int>& nums, int k) {
     int ans = n + 1;
     deque<int> q;
     // [left, right), 个数是right - left
-    for (int i = 0; i < n; i++) {
+    // 这里位置可以取到n
+    for (int i = 0; i <= n; i++) {
         long x = s[i];
         while (q.size() && x - s[q.front()] >= k) {
             ans = min(ans, i - q.front());
@@ -378,8 +379,86 @@ int shortestSubarray(vector<int>& nums, int k) {
         q.push_back(i);
     }
     return ans > n ? -1 : ans;
+}
 
+// 1499满足不等式的最大值
+int findMaxValueOfEquation(vector<vector<int>>& points, int k) {
+    int ans = INT_MIN;
+    // yi + yj + |xi - xj|
+    // = yi + yj + xj - xi
+    // = xj + yj + (yi - xi), 枚举j,
+    deque<pair<int, int>> q;
+    for (auto &p : points) {
+        int x = p[0];
+        int y = p[1];
+        // 处理front, front < x - k, 出界了
+        while (q.size() && q.front().first < x - k) {
+            q.pop_front();
+        }
+        if (q.size()) {
+            ans = max(ans, x + y + q.front().second);
+        }
+        // 处理back, 栈顶比不过(<=)新来的就要出栈
+        while (q.size() && q.back().second <= y - x) {
+            q.pop_back();
+        }
+        q.push_back({x, y - x});
+    }
+    return ans;
+}
 
+// 1696跳跃游戏4
+int maxResult(vector<int>& nums, int k) {
+    // 爬楼梯, 不同情况加起来
+    // 但这个数据量比较大,需要优化一点, 改成单调队列
+    int n = nums.size();
+    vector<int> f(n);
+    f[0] = nums[0];
+    deque<int> q{0};// 队列里也有个下标0
+    // f[0]已经有值了,下面从1开始算
+    for (int i = 1; i < n; i++) {
+        // 递推
+        // f[i] = *max_element(f.begin() + max(i - k, 0), f.begin() + i) + nums[i];
+
+        // 出
+        while (q.size() && q.front() < i - k) {
+            q.pop_front();
+        }
+        // 更新, q的首元素是最大的情况,且合法(存在front元素)
+        f[i] = f[q.front()] + nums[i];
+        // 入
+        while (q.size() && f[q.back()] <= f[i]) {
+            q.pop_back();
+        }
+        q.push_back(i);
+    }
+    return f[n - 1];
+}
+
+// 2944购买水果需要的最少金币数
+int minimumCoins(vector<int>& prices) {
+    int n = prices.size();
+    vector<int> memo(n, -1);
+    // dfs(i)表示购买第i个水果,获得第i个水果与其后面所有水果的金币数
+    // i从1开始
+    auto dfs = [&](this auto &&dfs, int i) -> int {
+        // 购买i,能获得[i, 2i]之间所有水果
+        // 2i >= n 即 i >= n/2向上取整 = (n - 1) / 2 + 1
+        if (i >= (n + 1) / 2) {
+            return prices[i - 1];
+        }
+        int &res = memo[i];
+        if (res != -1) {
+            return res;
+        }
+        int mn = INT_MAX;
+        for (int j = i + 1; j <= 2 * i + 1; j++) {
+            mn = min(mn, dfs(j));
+        }
+        res = mn + prices[i - 1];
+        return res;
+    };
+    return dfs(1);
 }
 };
 #endif // _1MONOTONIC_H
