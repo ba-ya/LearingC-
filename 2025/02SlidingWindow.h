@@ -4,7 +4,7 @@
 #include "00solution.h"
 
 namespace SlidingWindow {
-// 209长度最小的子数组(>=target)
+// 209,长度最小的子数组(>=target)
 int minSubArrayLen(int target, vector<int>& nums) {
     int n = nums.size();
     int ans = n + 1;
@@ -23,7 +23,7 @@ int minSubArrayLen(int target, vector<int>& nums) {
     return ans <= n ? ans : 0;
 }
 
-// 3无重复字符的最长子串长度
+// 3,无重复字符的最长子串长度
 int lengthOfLongestSubstring(string s) {
     int ans = 0;
     int n = s.size();
@@ -41,7 +41,7 @@ int lengthOfLongestSubstring(string s) {
     return ans;
 }
 
-// 713乘积小于K的子数组数目, 都是正数
+// 713,乘积小于K的子数组数目, 都是正数
 int numSubarrayProductLessThanK(vector<int>& nums, int k) {
     // 或者while (prod >= k) {->while (left <= right && prod >= k)
     if (k <= 1) {
@@ -62,7 +62,7 @@ int numSubarrayProductLessThanK(vector<int>& nums, int k) {
     return ans;
 }
 
-// 2958最多K个重复元素的最长子数组
+// 2958,最多K个重复元素的最长子数组
 int maxSubarrayLength(vector<int>& nums, int k) {
     int ans = 0;
     int n = nums.size();
@@ -82,7 +82,7 @@ int maxSubarrayLength(vector<int>& nums, int k) {
     return ans;
 }
 
-// 2730找到最长的半重复子字符串, 参考
+// 2730,找到最长的半重复子字符串, 参考
 int longestSemiRepetitiveSubstring(string s) {
     // 至少有一个字符
     int ans = 1;
@@ -102,7 +102,7 @@ int longestSemiRepetitiveSubstring(string s) {
     return ans;
 }
 
-// 2779数组的最大美丽值,参考
+// 2779,数组的最大美丽值,参考
 int maximumBeauty(vector<int>& nums, int k) {
     int ans = 0;
     sort(nums.begin(), nums.end());
@@ -119,7 +119,7 @@ int maximumBeauty(vector<int>& nums, int k) {
     return ans;
 }
 
-// 1004最大连续1的个数, 参考
+// 1004,最大连续1的个数, 参考
 int longestOnes(vector<int>& nums, int k) {
     int ans = 0;
     int cnt0 = 0;
@@ -135,7 +135,7 @@ int longestOnes(vector<int>& nums, int k) {
     return ans;
 }
 
-// 2962统计最大元素出现至少K次的子数组,
+// 2962,统计最大元素出现至少K次的子数组,
 // 思路有,但while和ans+的地方一开始写错了
 long long countSubarrays(vector<int>& nums, int k) {
     long long ans = 0;
@@ -162,7 +162,7 @@ long long countSubarrays(vector<int>& nums, int k) {
     return ans;
 }
 
-// 2302统计得分小于K的子数组数目
+// 2302,统计得分小于K的子数组数目
 long long countSubarrays(vector<int>& nums, long long k) {
     long long ans = 0;
     long long left = 0;
@@ -178,7 +178,7 @@ long long countSubarrays(vector<int>& nums, long long k) {
     return ans;
 }
 
-// 1658将x减到0的最小操作数, 参考
+// 1658,将x减到0的最小操作数, 参考
 int minOperations(vector<int>& nums, int x) {
     int n = nums.size();
     // 逆向思考,求满足 nums之和 - x 的最长子数组
@@ -203,7 +203,7 @@ int minOperations(vector<int>& nums, int x) {
     return ans < 0 ? -1 : n - ans;
 }
 
-// 1234最小替换子串得到平衡字符串, 参考(不太懂)
+// 1234,最小替换子串得到平衡字符串, 参考(不太懂)
 int balancedString(string s) {
     // 记录的是待替换子串的出现次数
     int cnt['W' + 1]{};
@@ -233,7 +233,7 @@ int balancedString(string s) {
 
 }
 
-// 76最小覆盖子串,参考,
+// 76,最小覆盖子串,参考,
 // 写了版错误的,测试用例能通过144 / 268
 string minWindow(string s, string t) {
     auto is_covered = [](int cnt_s[], int cnt_t[]) {

@@ -12,25 +12,13 @@ vector<vector<int>> threeSum(vector<int>& nums) {
     int n = nums.size();
     for (int i = 0; i < n - 2; ++i) {
         int target = nums[i];
-        // 跳过重复数字, 排过序了,只需要和上一个比较就好
-        if (i > 0 && target == nums[i - 1]) {
-            continue;
-        }
-
-        // 优化
-        auto s = target + nums[i + 1] + nums[i + 2];
-        if (s > 0) {
-            break;
-        }
-
-        s = target + nums[n - 1] + nums[n - 2];
-        if (s < 0) {
-            continue;
-        }
-
-
+        if (i && target == nums[i - 1]) continue; // 去重
+        // 优化1, 最小值大于0,不可能存在合法组合
+        if (target + nums[i + 1] + nums[i + 2] > 0) break;
+        // 优化2, 最大值小于0, 当前target不能存在合法组合, 但之后更大的target可能存在合法的
+        if (target + nums[n - 2] + nums[n - 1] < 0) continue;
         int left = i + 1;
-        int right = nums.size() - 1;
+        int right = n - 1;
         while (left < right) {
             auto s = target + nums[left] + nums[right];
             if (s > 0) {
@@ -39,22 +27,16 @@ vector<vector<int>> threeSum(vector<int>& nums) {
                 left++;
             } else {
                 res.push_back({target, nums[left], nums[right]});
-                //  for (left++; left < right && nums[left] == nums[left - 1]; left++);
-                left += 1;
-                while (left < right && nums[left] == nums[left - 1]) {
-                    left += 1;
-                }
-                right -=1;
-                while (left < right && nums[right] == nums[right + 1]) {
-                    right -=1;
-                }
+                // 需要继续推进left和right,要不然会超出内存限制
+                for (left++; left < right && nums[left] == nums[left - 1]; left++);
+                for (right--; left < right && nums[right] == nums[right + 1]; right--);
             }
         }
     }
     return res;
 }
 
-// 16 给你一个长度为 n 的整数数组 nums 和 一个目标值 target。请你从 nums 中选出三个整数，使它们的和与 target 最接近。
+// 16,给你一个长度为 n 的整数数组 nums 和 一个目标值 target。请你从 nums 中选出三个整数，使它们的和与 target 最接近。
 // 返回这三个数的和。
 // 假定每组输入只存在恰好一个解。
 int threeSumClosest(vector<int>& nums, int target) {
@@ -112,7 +94,7 @@ int threeSumClosest(vector<int>& nums, int target) {
     return res;
 }
 
-// 2824.给你一个下标从 0 开始长度为 n 的整数数组 nums 和一个整数 target ，
+// 2824,给你一个下标从 0 开始长度为 n 的整数数组 nums 和一个整数 target ，
 // 请你返回满足 0 <= i < j < n 且 nums[i] + nums[j] < target 的下标对 (i, j) 的数目。
 int countPairs(vector<int>& nums, int target) {
     sort(nums.begin(), nums.end());
@@ -181,7 +163,7 @@ vector<vector<int>> fourSum(vector<int>& nums, int target) {
     return res;
 }
 
-// 611三角形数量
+// 611,三角形数量
 int triangleNumber(vector<int>& nums) {
     int res = 0;
     sort(nums.begin(), nums.end());
@@ -217,20 +199,21 @@ int triangleNumber(vector<int>& nums) {
 }
 
 namespace TwoPointersTowards2 {
-// 11给定一个长度为 n 的整数数组 height 。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i]) 。
+// 11,盛最多水的容器
 int maxArea(vector<int>& height) {
     int ans = 0;
     int left = 0;
     int right = height.size() - 1;
     while (left < right) {
-        int area = (right - left) * min(height[left], height[right]);
-        ans = max(ans, area);
+        ans = max(ans, (right - left) * min(height[left], height[right]));
+        // 小边确定了高,大边再怎么挪也不可能获得更大面积,
+        // 所以应该移动小边
         height[left] < height[right] ? left++ : right--;
     }
     return ans;
 }
 
-// 42接雨水
+// 42,接雨水
 int trap(vector<int>& height ) {
     // 变量存储前后缀
     // 空间复杂度O(1)
@@ -256,7 +239,7 @@ int trap(vector<int>& height ) {
     return ans;
 }
 
-// 125验证回文串
+// 125,验证回文串
 bool isPalindrome(string s) {
     // remove space
     auto new_end = remove_if(s.begin(), s.end(), [](unsigned char c) {
@@ -281,7 +264,7 @@ bool isPalindrome(string s) {
     return flag;
 }
 
-// 1105给植物浇水
+// 1105,给植物浇水
 int minimumRefill(vector<int>& plants, int capacityA, int capacityB) {
     int ans = 0;
     int n = plants.size();
