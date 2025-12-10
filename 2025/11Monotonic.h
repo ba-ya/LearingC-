@@ -296,7 +296,7 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 }
 };
 namespace Monotonic_Queue {
-// 239滑动窗口最大值
+// 239, 滑动窗口最大值
 vector<int> maxSlidingWindow(vector<int>& nums, int k) {
     int n = nums.size();
     vector<int> ans(n - k + 1);
