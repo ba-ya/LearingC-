@@ -318,17 +318,26 @@ vector<int> spiralOrder(vector<vector<int>>& matrix) {
 // 48旋转图像
 void rotate(vector<vector<int>>& matrix) {
     int n = matrix.size();
-    vector<int> back_col(n);
-    for (int i = 0; i < n; i++) {
-        back_col[i] = matrix[i][n - 1];
-    }
-    for (int i = 0; i < n; i++) {
-        auto &row = matrix[i];
-        for (int j = 0; j < n - 1; j++) {
-            matrix[j][n - i - 1] = row[j];
+    // target: (i, j) -> (j, n - i - 1)
+    // 线性代数, 转置(i, j)->(j, i)+行翻转(j, i)->(j, n - i - 1)
+    auto reverse = [&](vector<int> &row) {
+        int i = 0;
+        int j = n - 1;
+        while (i < j) {
+            swap(row[i++], row[j--]);
         }
-        matrix[n - 1][n - i - 1] = back_col[i];
+    };
+
+    // 翻转对角线上方的
+    for (int i = 0; i < n; i++) {
+        for (int j = i; j < n; j++) {
+            swap(matrix[i][j], matrix[j][i]);
+        }
     }
+    for (auto &row : matrix) {
+        reverse(row);
+    }
+
 }
 /// 链表
 
