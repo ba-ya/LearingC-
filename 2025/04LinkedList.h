@@ -6,7 +6,7 @@
 #include <unordered_set>
 
 namespace LinkedList_Reverse {
-// 206反转链表
+// 206, 反转链表
 // 时间复杂度:O(n), n是节点个数, 空间复杂度:O(1)
 ListNode* reverseList(ListNode* head) {
     ListNode *pre = nullptr;
@@ -20,7 +20,7 @@ ListNode* reverseList(ListNode* head) {
     return pre;
 }
 
-// 92反转链表2
+// 92, 反转链表2
 // 时间复杂度:O(right), 空间复杂度:O(1)
 ListNode* reverseBetween(ListNode* head, int left, int right) {
     ListNode dummy(0, head);
@@ -43,7 +43,7 @@ ListNode* reverseBetween(ListNode* head, int left, int right) {
     return dummy.next;
 }
 
-// 25k个一组反转链表
+// 25, k个一组反转链表
 ListNode* reverseKGroup(ListNode* head, int k) {
     int cnt = 0;
     for (ListNode *cur = head; cur; cur = cur->next) {
@@ -70,7 +70,7 @@ ListNode* reverseKGroup(ListNode* head, int k) {
     return dummy.next;
 }
 
-// 24两两交换链表中的节点
+// 24, 两两交换链表中的节点
 ListNode* swapPairs(ListNode* head) {
     int n = 0;
     for (ListNode *cur = head; cur; cur = cur->next) {
@@ -97,7 +97,7 @@ ListNode* swapPairs(ListNode* head) {
     return dummy.next;
 }
 
-// 445两数相加2
+// 445, 两数相加2
 ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
     auto reverse_list = [](ListNode* head) {
         ListNode dummy(0, head);
@@ -140,7 +140,7 @@ ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
     return reverse_list(l3);
 }
 
-// 2816翻倍以链表形式
+// 2816, 翻倍以链表形式
 ListNode* doubleIt(ListNode* head) {
     auto reverse_list = [](ListNode *head) {
         ListNode *pre = nullptr;
@@ -176,7 +176,7 @@ ListNode* doubleIt(ListNode* head) {
 }
 
 namespace LinkedList_QuickNSlow {
-// 876链表的中间节点
+// 876, 链表的中间节点
 ListNode* middleNode(ListNode* head) {
     ListNode *slow = head;
     ListNode *fast = head;
@@ -187,7 +187,7 @@ ListNode* middleNode(ListNode* head) {
     return slow;
 }
 
-// 141环形链表
+// 141, 环形链表
 bool hasCycle(ListNode *head) {
     ListNode *slow = head;
     ListNode *fast = head;
@@ -201,7 +201,7 @@ bool hasCycle(ListNode *head) {
     return false;
 }
 
-// 142环形链表2
+// 142, 环形链表2
 ListNode *detectCycle(ListNode *head) {
     // 假设
     // a = head到环入口的距离
@@ -228,7 +228,7 @@ ListNode *detectCycle(ListNode *head) {
     return nullptr;
 }
 
-// 143重排链表
+// 143, 重排链表
 void reorderList(ListNode* head) {
     auto reverse_list = [](ListNode* head) {
         ListNode *pre = nullptr;
@@ -265,7 +265,7 @@ void reorderList(ListNode* head) {
     }
 }
 
-// 234回文链表, 参考
+// 234, 回文链表, 参考
 bool isPalindrome(ListNode* head) {
     auto reverse_list = [](ListNode* head) {
         ListNode *pre = nullptr;
@@ -304,7 +304,7 @@ bool isPalindrome(ListNode* head) {
 }
 
 namespace LinkedList_Delete {
-// 237删除链表中的节点
+// 237, 删除链表中的节点
 void deleteNode(ListNode* node) {
     ListNode *next = node->next;
     // 解引用, 把值和指针都给node了
@@ -313,7 +313,7 @@ void deleteNode(ListNode* node) {
     delete next;
 }
 
-// 19删除链表倒数第N个节点
+// 19, 删除链表的倒数第N个节点
 ListNode* removeNthFromEnd(ListNode* head, int n) {
     // need dummy
     // 如果遇到需要删除头节点的题目，添加哨兵节点可以简化代码逻辑
@@ -338,7 +338,7 @@ ListNode* removeNthFromEnd(ListNode* head, int n) {
     return dummy.next;
 }
 
-// 83删除排序链表中的重复元素
+// 83, 删除排序链表中的重复元素
 ListNode* deleteDuplicates(ListNode* head) {
     if (head == nullptr) {
         return nullptr;
@@ -356,7 +356,7 @@ ListNode* deleteDuplicates(ListNode* head) {
     return head;
 }
 
-// 82删除排序链表中的重复元素2
+// 82, 删除排序链表中的重复元素2
 ListNode* deleteDuplicates2(ListNode* head) {
     ListNode dummy(0, head);
     ListNode *cur = &dummy;
@@ -376,7 +376,7 @@ ListNode* deleteDuplicates2(ListNode* head) {
     return dummy.next;
 }
 
-// 203移除链表元素
+// 203, 移除链表元素
 ListNode* removeElements(ListNode* head, int val) {
     ListNode dummy(0, head);
     ListNode *cur = &dummy;
@@ -392,7 +392,7 @@ ListNode* removeElements(ListNode* head, int val) {
     return dummy.next;
 }
 
-// 3217从链表中移除在数组中存在的节点
+// 3217, 从链表中移除在数组中存在的节点
 ListNode* modifiedList(vector<int>& nums, ListNode* head) {
     // set查找时间复杂度是O(1)
     unordered_set<int> st(nums.begin(), nums.end());
@@ -411,7 +411,7 @@ ListNode* modifiedList(vector<int>& nums, ListNode* head) {
     return dummy.next;
 }
 
-// 2487从链表中移除节点
+// 2487, 从链表中移除节点
 ListNode* removeNodes(ListNode* head) {
     auto reverse_list = [](ListNode* head) {
         ListNode *pre = nullptr;

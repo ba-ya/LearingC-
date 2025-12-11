@@ -315,7 +315,7 @@ vector<int> spiralOrder(vector<vector<int>>& matrix) {
     return ans;
 }
 
-// 48旋转图像
+// 48, 旋转图像
 void rotate(vector<vector<int>>& matrix) {
     int n = matrix.size();
     // target: (i, j) -> (j, n - i - 1)
@@ -337,9 +337,117 @@ void rotate(vector<vector<int>>& matrix) {
     for (auto &row : matrix) {
         reverse(row);
     }
-
 }
+// 顺时针180
+void rotate_2(vector<vector<int>>& matrix) {
+    int n = matrix.size();
+    // 行沿中心线翻转(i, j)->(n - i - 1, j)
+    for (int i = 0; i < n / 2; i++) {
+        for (int j = 0; j < n; j++) {
+            swap(matrix[i][j], matrix[n - i - 1][j]);
+        }
+    }
+    for (auto &row : matrix) {
+        // 列翻转(n - i - 1, j) -> (n - i - 1, n - j - 1)
+        ranges::reverse(row);
+    }
+}
+// 逆时针90
+void rotate_3(vector<vector<int>>& matrix) {
+    int n = matrix.size();
+    // 转置(i, j) -> (n - j - 1, n - i - 1)
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            swap(matrix[i][j], matrix[n - j - 1][n - i - 1]);
+        }
+    }
+    // 列翻转 (n - j - 1, n - i - 1) ->  (n - i - 1, n - j - 1)
+    for (auto &row : matrix) {
+        ranges::reverse(row);
+    }
+}
+
+// 240, 搜索二维矩阵2
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
+    int m = matrix.size();
+    int n = matrix[0].size();
+    // 右上角开始
+    int i = 0, j = n - 1;
+    while (i < m && j >= 0) {
+        if (matrix[i][j] == target) {
+            return true;
+        }
+        // 这一列都大于target, 可以排除
+        if (matrix[i][j] > target) {
+            j--;
+        } else {
+            // 这一行都小于target, 可以排除
+            i++;
+        }
+    }
+    return false;
+}
+
 /// 链表
+// 160, 相交链表
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    // x + y + z路程一样
+    ListNode *p = headA;
+    ListNode *q = headB;
+    // 把空节点也当作路程中一个节点,
+    // 如果链表不相交,循环会在q = p = nullptr跳出
+    while (p != q) {
+        p = p ? p->next : headB;
+        q = q ? q->next : headA;
+    }
+    return p;
+}
+
+// 206, 反转链表 LinkedList_Reverse
+// 234, 回文链表 LinkedList_QuickNSlow
+// 141, 环形链表 LinkedList_QuickNSlow
+// 142, 环形链表2 LinkedList_QuickNSlow
+
+// 21, 合并两个有序链表
+ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+    ListNode dummy;
+    ListNode *cur = &dummy;
+    while (list1 && list2) {
+        if (list1->val <= list2->val) {
+            cur->next = list1;
+            list1 = list1->next;
+        } else {
+            cur->next = list2;
+            list2 = list2->next;
+        }
+        cur = cur->next;
+    }
+    cur->next = list1 ? list1 : list2;
+    return dummy.next;
+}
+
+// 2, 两数相加 LinkedList_Reverse
+// 19, 删除链表的倒数第N个结点 LinkedList_Delete
+// 24, 两两交换链表中的节点 LinkedList_Reverse
+// 25, K个一组翻转链表 LinkedList_Reverse
+
+// 138, 随机链表的复制
+Node* copyRandomList(Node* head) {
+    Node dummy(0);
+    unordered_map<Node*, Node*> idx;
+    Node *p0 = &dummy;
+    for (Node *cur = head; cur; cur = cur->next) {
+        p0->next = new Node(cur->val);
+        p0 = p0->next;
+        idx[cur] = p0;
+    }
+    p0 = dummy.next;
+    for (Node *cur = head; cur; cur = cur->next) {
+        p0->random = idx.contains(cur->random) ? idx[cur->random] : nullptr;
+        p0 = p0->next;
+    }
+    return dummy.next;
+}
 
 /// 二叉树
 
