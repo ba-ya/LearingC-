@@ -431,25 +431,190 @@ ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
 // 24, 两两交换链表中的节点 LinkedList_Reverse
 // 25, K个一组翻转链表 LinkedList_Reverse
 
+// 328, 奇偶链表
+ListNode* oddEvenList(ListNode* head) {
+    if (head == nullptr) {
+        return nullptr;
+    }
+    ListNode *odd = head;
+    ListNode *even = head->next;
+    for (; odd && odd->next && odd->next->next; odd = odd->next) {
+        ListNode *copy = odd->next;
+        odd->next = odd->next->next;
+        copy->next = copy->next->next;
+    }
+    // odd此时所处位置就是第一条链的end,next应该置空
+    odd->next = nullptr;
+    // 再接上even链
+    odd->next = even;
+    return even;
+}
 // 138, 随机链表的复制
 Node* copyRandomList(Node* head) {
-    Node dummy(0);
-    unordered_map<Node*, Node*> idx;
-    Node *p0 = &dummy;
-    for (Node *cur = head; cur; cur = cur->next) {
-        p0->next = new Node(cur->val);
-        p0 = p0->next;
-        idx[cur] = p0;
+    if (head == nullptr) {
+        return nullptr;
     }
-    p0 = dummy.next;
-    for (Node *cur = head; cur; cur = cur->next) {
-        p0->random = idx.contains(cur->random) ? idx[cur->random] : nullptr;
-        p0 = p0->next;
+    // 每个节点复制一个节点
+    // 遍历原节点
+    for (Node *cur = head; cur; cur = cur->next->next) {
+        Node *next = cur->next;
+        cur->next = new Node(cur->val, cur->next, nullptr);
+        cur->next = next;
     }
-    return dummy.next;
+
+    // 填充random节点
+    for (Node *cur = head; cur; cur = cur->next->next) {
+        if (cur->random) {
+            cur->next->random = cur->random->next;
+        }
+    }
+
+    // 拆开两条链
+    Node *odd = head;
+    Node *even = head->next;
+    for (; odd && odd->next && odd->next->next; odd = odd->next) {
+        Node *copy = odd->next;
+        odd->next = odd->next->next;
+        copy->next = copy->next->next;
+    }
+    // odd是奇数链结尾,断开多余的链接
+    odd->next = nullptr;
+    return even;
 }
+
+// 148, 排序链表
+ListNode* sortList(ListNode* head) {
+    // 找到中间节点, 同时把前一个链表的最后一个节点端口
+    // 不存在重复节点了
+    auto find_mid = [&](ListNode *head) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+        ListNode *pre = head;
+        while (fast && fast->next) {
+            pre = slow;
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        pre->next = nullptr;
+        return slow;
+    };
+
+    // merge, 把两个链表合并成一个有序链表
+    auto merge_lists = [&](ListNode *list1, ListNode *list2) {
+        ListNode dummy(0);
+        ListNode *cur = &dummy;
+        while (list1 && list2) {
+            if (list1->val <= list2->val) {
+                cur->next = list1;
+                list1 = list1->next;
+            } else {
+                cur->next = list2;
+                list2 = list2->next;
+            }
+            cur = cur->next;
+        }
+        cur->next = list1 ? list1 : list2;
+        return dummy.next;
+    };
+    auto sorted = [&](this auto &&sorted, ListNode *head) {
+        if (head == nullptr || head->next == nullptr) {
+            return head;
+        }
+        auto mid = find_mid(head);
+        auto head1 = sorted(head);
+        auto head2 = sorted(mid);
+        return merge_lists(head1, head2);
+    };
+    return sorted(head);
+}
+
+// 23, 合并K个升序链表
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+    auto merge_two_lists = [&](ListNode *list1, ListNode *list2) {
+        ListNode dummy(0);
+        ListNode *cur = &dummy;
+        while (list1 && list2) {
+            if (list1->val <= list2->val) {
+                cur->next = list1;
+                list1 = list1->next;
+            } else {
+                cur->next = list2;
+                list2 = list2->next;
+            }
+            cur = cur->next;
+        }
+        cur->next = list1 ? list1 : list2;
+        return dummy.next;
+    };
+    // [i, j)
+    auto merge_k_lists = [&](this auto &&merge_k_lists, int i, int j) -> ListNode* {
+        int m = j - i;
+        if (m == 0) {
+            return nullptr;
+        }
+        if (m == 1) {
+            return lists[i];
+        }
+        auto left = merge_k_lists(i, i + m / 2);
+        auto right = merge_k_lists(i + m / 2, j);
+        return merge_two_lists(left, right);
+    };
+    return merge_k_lists(0, lists.size());
+}
+
+// 146, LRU缓存
+class LRUCache {
+    int capacity;
+    // key, value
+    list<pair<int, int>> cache_list;
+    // key, iterator
+    unordered_map<int, list<pair<int, int>>::iterator> key_to_iter;
+public:
+    // 不是按次数算最少使用, 是最久没被用
+    // get和put都会把当前key作为最新的
+    LRUCache(int capacity) {
+        this->capacity = capacity;
+    }
+
+    int get(int key) {
+        // 没有这本书, 返回-1
+        auto umap_iter = key_to_iter.find(key);
+        if (umap_iter == key_to_iter.end()) {
+            return -1;
+        }
+        // 有这本书,把迭代器放最上面
+        auto list_iter = umap_iter->second;
+        cache_list.splice(cache_list.begin(), cache_list, list_iter);
+        return list_iter->second;
+    }
+
+    void put(int key, int value) {
+        // 有这本书,更新一下;放到最上面
+        auto umap_iter = key_to_iter.find(key);
+        if (umap_iter != key_to_iter.end()) {
+            auto list_iter = umap_iter->second;
+            // 更新值
+            list_iter->second = value;
+            // 把迭代器放到最前面
+            // cache_list中list_iter迭代器,放到begin()之前
+            // void splice( const_iterator pos, list& other, const_iterator it);
+            cache_list.splice(cache_list.begin(), cache_list, list_iter);
+            return;
+        }
+        // 没有这本书,插入到最前面
+        cache_list.push_front({key, value});
+        key_to_iter.insert({key, cache_list.begin()});
+        // 超过capacity,就把最旧的pop出去
+        if (cache_list.size() > capacity) {
+            int old_key = cache_list.back().first;
+            cache_list.pop_back();
+            key_to_iter.erase(old_key);
+        }
+    }
+};
+};
 
 /// 二叉树
 
-}
+
 #endif // _2HOT1___H

@@ -41,9 +41,10 @@ public:
     Node* random;
 
     Node() : val(0), left(NULL), right(NULL), next(NULL), random(NULL) {}
+    Node(int _val, Node* _next, Node* _random)
+        : val(_val), next(_next), random(_random) {}
 
     Node(int _val) : val(_val), left(NULL), right(NULL), next(NULL), random(NULL) {}
-
     Node(int _val, Node* _left, Node* _right, Node* _next)
         : val(_val), left(_left), right(_right), next(_next) {}
 };
