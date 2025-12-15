@@ -7,7 +7,7 @@
 #include <unordered_set>
 
 namespace BinaryTree_Understand {
-// 104二叉树的最大深度
+// 104, 二叉树的最大深度
 int maxDepth(TreeNode* root) {
     if (root == nullptr) {
         return 0;
@@ -17,7 +17,7 @@ int maxDepth(TreeNode* root) {
     return max(depth_l, depth_r) + 1;
 }
 
-// 111二叉树的最小深度
+// 111, 二叉树的最小深度
 int minDepth(TreeNode* root) {
     // 换成自底向上
     // 空节点返回0
@@ -37,7 +37,7 @@ int minDepth(TreeNode* root) {
 
 }
 
-// 404左叶子之和
+// 404, 左叶子之和
 int sumOfLeftLeaves(TreeNode* root) {
     if (root == nullptr) {
         return 0;
@@ -49,7 +49,7 @@ int sumOfLeftLeaves(TreeNode* root) {
     return sum;
 }
 
-// 112路径总和
+// 112, 路径总和
 bool hasPathSum(TreeNode* root, int targetSum) {
     if (root == nullptr) {
         return false;
@@ -61,7 +61,7 @@ bool hasPathSum(TreeNode* root, int targetSum) {
     return hasPathSum(root->left, targetSum) || hasPathSum(root->right, targetSum);
 }
 
-// 129求根节点到叶节点数字之和
+// 129, 求根节点到叶节点数字之和
 int sumNumbers(TreeNode* root) {
     auto dfs = [&](this auto &&dfs, TreeNode* root, int x) ->int {
         if (root == nullptr) {
@@ -76,7 +76,7 @@ int sumNumbers(TreeNode* root) {
     return dfs(root, 0);
 }
 
-// 1448统计二叉树中好节点的数目
+// 1448, 统计二叉树中好节点的数目
 int goodNodes(TreeNode* root) {
     auto dfs = [&](this auto &&dfs, TreeNode* root, int pre_max) -> int {
         if (root == nullptr) {
@@ -90,7 +90,7 @@ int goodNodes(TreeNode* root) {
     return dfs(root, INT_MIN);
 }
 
-// 987二叉树的垂序遍历
+// 987, 二叉树的垂序遍历
 vector<vector<int>> verticalTraversal(TreeNode* root) {
     // col, row, val
     vector<tuple<int, int, int>> data;
@@ -121,7 +121,7 @@ vector<vector<int>> verticalTraversal(TreeNode* root) {
 }
 }
 namespace BinaryTree_Apply {
-// 100相同的树
+// 100, 相同的树
 bool isSameTree(TreeNode* p, TreeNode* q) {
     if (p == nullptr || q == nullptr) {
         return p == q;
@@ -131,11 +131,8 @@ bool isSameTree(TreeNode* p, TreeNode* q) {
            && isSameTree(p->right, q->right);
 }
 
-// 101对称二叉树
+// 101, 对称二叉树
 bool isSymmetric(TreeNode* root) {
-    if (root == nullptr) {
-        return false;
-    }
     function<bool(TreeNode *, TreeNode *)> is_same =
         [&](TreeNode *p, TreeNode *q) {
             if (p == nullptr || q == nullptr) {
@@ -146,7 +143,7 @@ bool isSymmetric(TreeNode* root) {
     return is_same(root->left, root->right);
 }
 
-// 110平衡二叉树
+// 110, 平衡二叉树
 bool isBalanced(TreeNode* root) {
     function<int(TreeNode* root)> get_height = [&](TreeNode* root) {
         if (root == nullptr) {
@@ -165,7 +162,7 @@ bool isBalanced(TreeNode* root) {
     return get_height(root) != -1;
 }
 
-// 199二叉树的右视图
+// 199, 二叉树的右视图
 vector<int> rightSideView(TreeNode* root) {
     vector<int> ans;
     function<void(TreeNode *root, int dep)> dfs = [&](TreeNode *root, int dep) {
@@ -182,7 +179,7 @@ vector<int> rightSideView(TreeNode* root) {
     return ans;
 }
 
-// 226翻转二叉树
+// 226, 翻转二叉树
 TreeNode* invertTree(TreeNode* root) {
     if (root == nullptr) {
         return root;
@@ -193,7 +190,7 @@ TreeNode* invertTree(TreeNode* root) {
     return root;
 }
 
-// 617合并二叉树
+// 617, 合并二叉树
 TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
     if (root1 == nullptr) {
         return root2;
@@ -206,7 +203,7 @@ TreeNode* mergeTrees(TreeNode* root1, TreeNode* root2) {
     }
 }
 
-// 1026 节点与祖父之间的最大差值
+// 1026, 节点与祖父之间的最大差值
 int maxAncestorDiff(TreeNode* root) {
     int ans = 0;
     // 以node为根的最小值和最大值
@@ -227,7 +224,7 @@ int maxAncestorDiff(TreeNode* root) {
     return ans;
 }
 
-// 1080根到叶路径的不足节点
+// 1080, 根到叶路径的不足节点
 TreeNode* sufficientSubset(TreeNode* root, int limit) {
     limit -= root->val;
     // 叶子节点, 走过的路程<给定的限制,就要删除
@@ -243,7 +240,7 @@ TreeNode* sufficientSubset(TreeNode* root, int limit) {
 }
 }
 namespace BinaryTree_ThreeOrder {
-// 98验证二叉搜索树
+// 98, 验证二叉搜索树
 bool isValidBST(TreeNode* root) {
     function<pair<long long, long long>(TreeNode *node)> dfs = [&](TreeNode *node) -> pair<long long, long long> {
         if (node == nullptr) {
@@ -260,11 +257,12 @@ bool isValidBST(TreeNode* root) {
         // 二叉搜索树, 左边小于根小于右边
         return {min(l_min, x), max(r_max, x)};
     };
+    // 答案有可能是INT_MIN, 所以范围要用long long
     // 根据结果与{LLONG_MIN, LLONG_MAX}不匹配就是二叉搜索树
     return dfs(root).first != LLONG_MIN;
 }
 
-// 938二叉搜索树的范围和
+// 938, 二叉搜索树的范围和
 int rangeSumBST(TreeNode* root, int low, int high) {
     if (root == nullptr) {
         return 0;
@@ -277,7 +275,7 @@ int rangeSumBST(TreeNode* root, int low, int high) {
     }
 }
 
-// 2476二叉搜索树最近节点查询
+// 2476, 二叉搜索树最近节点查询
 vector<vector<int>> closestNodes(TreeNode* root, vector<int>& queries) {
     vector<int> a;
     long long pre = LLONG_MAX;
@@ -323,24 +321,25 @@ vector<vector<int>> closestNodes(TreeNode* root, vector<int>& queries) {
     return ans;
 }
 
-// 230二叉搜索树中第K小的元素
+// 230, 二叉搜索树中第K小的元素
 int kthSmallest(TreeNode* root, int k) {
-    vector<int> nums;
+    int ans;
     function<void(TreeNode*)> dfs = [&](TreeNode *node) {
-        if (node == nullptr) {
+        if (node == nullptr || k == 0) {
             return;
         }
         dfs(node->left);
-        nums.push_back(node->val);
+        k--;
+        if (k == 0) {
+            ans = node->val;
+        }
         dfs(node->right);
     };
     dfs(root);
-    int n = nums.size() - 1;
-    int id = min(k - 1, n);
-    return nums[id];
+    return ans;
 }
 
-// 1373 二叉搜索子树的最大键值和
+// 1373, 二叉搜索子树的最大键值和
 int maxSumBST(TreeNode* root) {
     int ans = 0;
     // 后序遍历, 最小值, 最大值, 总和
@@ -364,7 +363,7 @@ int maxSumBST(TreeNode* root) {
     return ans;
 }
 
-// 105从前序与中序遍历序列构造二叉树
+// 105, 从前序与中序遍历序列构造二叉树
 TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
     if (preorder.empty()) {
         return nullptr;
@@ -380,7 +379,7 @@ TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
     return new TreeNode(preorder[0], left, right);
 }
 
-// 106从中序与后序遍历序列构造二叉树
+// 106, 从中序与后序遍历序列构造二叉树
 TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder) {
     if (postorder.empty()) {
         return nullptr;
@@ -415,7 +414,7 @@ TreeNode* constructFromPrePost(vector<int>& preorder, vector<int>& postorder) {
     return new TreeNode(preorder.front(), left, right);
 }
 
-// 1110删点成林
+// 1110, 删点成林
 vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
     unordered_set<int> s;
     for (auto a : to_delete) {
@@ -446,7 +445,7 @@ vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
 }
 }
 namespace BinaryTree_Ancestor {
-// 236二叉树的最近公共祖先
+// 236, 二叉树的最近公共祖先
 TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     if (root == nullptr || root == p || root == q) {
         return root;
@@ -460,7 +459,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     return left ? left : right;
 }
 
-// 235二叉搜索树的最近公共祖先
+// 235, 二叉搜索树的最近公共祖先
 TreeNode* lowestCommonAncestor2(TreeNode* root, TreeNode* p, TreeNode* q) {
     if (root == nullptr) {
         return nullptr;
@@ -475,7 +474,7 @@ TreeNode* lowestCommonAncestor2(TreeNode* root, TreeNode* p, TreeNode* q) {
     return root;
 }
 
-// 1123最深叶节点的最近公共祖先
+// 1123, 最深叶节点的最近公共祖先
 TreeNode* lcaDeepestLeaves(TreeNode* root) {
     function<pair<int, TreeNode*>(TreeNode *)> dfs = [&](TreeNode *node) -> pair<int, TreeNode*> {
         if (node == nullptr) {
@@ -497,7 +496,7 @@ TreeNode* lcaDeepestLeaves(TreeNode* root) {
 }
 }
 namespace BinaryTree_BFS {
-// 102二叉树的层序遍历
+// 102, 二叉树的层序遍历
 vector<vector<int>> levelOrder(TreeNode* root) {
     if (root ==nullptr) {
         return {};
@@ -519,7 +518,7 @@ vector<vector<int>> levelOrder(TreeNode* root) {
     return ans;
 }
 
-// 103二叉树的锯齿形层序遍历
+// 103, 二叉树的锯齿形层序遍历
 vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
     if (root == nullptr) {
         return {};
@@ -542,7 +541,7 @@ vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
     return ans;
 }
 
-// 513找树左下角的值
+// 513, 找树左下角的值
 int findBottomLeftValue(TreeNode* root) {
     TreeNode * node;
     queue<TreeNode *> q;
@@ -577,13 +576,14 @@ vector<vector<int>> levelOrderBottom(TreeNode* root) {
             if (node->left) q.push(node->left);
             if (node->right) q.push(node->right);
         }
-        ans.push_back(val);
+        // 0拷贝开销
+        ans.push_back(std::move(val));
     }
     ranges::reverse(ans);
     return ans;
 }
 
-// 116填充每个节点的下一个右侧节点指针
+// 116, 填充每个节点的下一个右侧节点指针
 Node* connect(Node* root) {
     if (root == nullptr) {
         return nullptr;
@@ -606,7 +606,7 @@ Node* connect(Node* root) {
     return root;
 }
 
-// 117填充每个节点的下一个右侧节点指针
+// 117, 填充每个节点的下一个右侧节点指针
 Node* connect2(Node* root) {
     if (root == nullptr) {
         return nullptr;
@@ -637,7 +637,7 @@ Node* connect2(Node* root) {
     return root;
 }
 
-// 2415反转二叉树的奇数层
+// 2415, 反转二叉树的奇数层
 TreeNode* reverseOddLevels(TreeNode* root) {
     if (root == nullptr) {
         return nullptr;
@@ -671,7 +671,7 @@ TreeNode* reverseOddLevels(TreeNode* root) {
     return root;
 }
 
-// 2641二叉树的堂兄弟节点2
+// 2641, 二叉树的堂兄弟节点2
 TreeNode* replaceValueInTree(TreeNode* root) {
     if (root == nullptr) {
         return nullptr;

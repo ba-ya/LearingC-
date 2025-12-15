@@ -337,7 +337,7 @@ int mergeStones(vector<int>& stones, int k) {
 
 };
 namespace DP_Tree {
-// 543二叉树的直径
+// 543, 二叉树的直径
 int diameterOfBinaryTree(TreeNode* root) {
     // 链长:当前节点到叶子节点的路径, 空节点链长为-1, 叶子节点链长为0
     // dfs返回的是左右链中最长的链长
@@ -348,6 +348,7 @@ int diameterOfBinaryTree(TreeNode* root) {
         }
         int l_len = dfs(root->left) + 1;
         int r_len = dfs(root->right) + 1;
+        // 直径是左链长+右, 不需要再加1
         ans = max(ans, l_len + r_len);
         return max(l_len, r_len);
     };
@@ -358,7 +359,7 @@ int diameterOfBinaryTree(TreeNode* root) {
 // 124二叉树的最大路径和
 int maxPathSum(TreeNode* root) {
     // 链长: 下面某个节点(这里可以不用是叶子节点)到当前节点的路径, 节点是负值是时可以不用加入路径
-    // dfsf返回的是最大的链和
+    // dfs返回的是最大的链和
     int ans = INT_MIN;
     auto dfs = [&](this auto &&dfs, TreeNode *root) -> int {
         if (root == nullptr) {

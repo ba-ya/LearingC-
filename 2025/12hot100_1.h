@@ -146,8 +146,9 @@ public:
 };
 // 560, 和为k的子数组
 int subarraySum(vector<int>& nums, int k) {
-    // 如果不要求连续就是01背包, 求方案数
+    // 如果不要求连续就是  01背包求方案数
     // 这题是前缀和+两数之和
+    // 枚举右端点,统计左端点
     int n = nums.size();
     vector<int> sum(n + 1);
     sum[0] = 0;
@@ -612,9 +613,102 @@ public:
         }
     }
 };
-};
 
 /// 二叉树
+// 94, 二叉树的中序遍历
+vector<int> inorderTraversal(TreeNode* root) {
+    // 左根右
+    vector<int> vals;
+    auto dfs = [&](this auto &&dfs, TreeNode *root) {
+        if (root == nullptr) {
+            return;
+        }
+        dfs(root->left);
+        vals.emplace_back(root->val);
+        dfs(root->right);
+    };
+    dfs(root);
+    return vals;
+}
+
+// 104, 二叉树的最大深度
+// 226, 翻转二叉树
+// 101, 对称二叉树
+// 543, 二叉树的直径
+// 102, 二叉树的层序遍历
+
+// 108, 将有序数组转换为二叉搜索树
+TreeNode* sortedArrayToBST(vector<int>& nums) {
+    // [left, right)
+    auto dfs = [&](this auto &&dfs, int left, int right) -> TreeNode* {
+        if (left == right) {
+            return nullptr;
+        }
+        int mid = left + (right - left) / 2;
+        // 左:[left, mid), 中:mid, 右:[mid+1, right)
+        return new TreeNode(nums[mid], dfs(left, mid), dfs(mid + 1, right));
+    };
+    return dfs(0, nums.size());
+}
+
+// 98, 验证二叉搜索树
+// 230, 二叉搜索树中第K小的元素
+// 199, 二叉树的右视图
+
+// 114, 二叉树展开为链表
+void flatten(TreeNode* root) {
+    // 尾巴节点, 右左根
+    auto dfs = [&](this auto &&dfs, TreeNode *root) -> TreeNode* {
+        if (root == nullptr) {
+            return nullptr;
+        }
+        auto left_tail = dfs(root->left);
+        auto right_tail = dfs(root->right);
+        if (left_tail) {
+            // 左子树链表的尾巴节点的右子树 -> 右子树
+            left_tail->right = root->right;
+            // 右子树 = 左子树
+            root->right = root->left;
+            // 左子树 = 空
+            root->left = nullptr;
+        }
+        // 如果有右尾巴,返回右尾巴
+        // 没有就返回左尾巴,如果左尾巴也没有就返回root
+        return right_tail ? right_tail : left_tail ? left_tail : root;
+    };
+    dfs(root);
+}
+
+// 105, 从前序与中序遍历序列构造二叉树
+
+// 437, 路径总和3
+int pathSum(TreeNode* root, int targetSum) {
+    int ans = 0;
+    // 类似560, 连续子数组,适合用前缀和
+    // 枚举路径终点, 统计路口起点
+    // <值, 出现次数>
+    // 初始化一个出现1一次的0,类似dummy node
+    unordered_map<long long, int> cnts{{0, 1}};
+    // s表示根节点到node节点的所有和, 不包含node
+    auto dfs = [&](this auto &&dfs, TreeNode *node, long long s) {
+        if (node == nullptr) {
+            return;
+        }
+        // s是根节点到当前节点完整路径
+        // targetSum是固定当前节点,有一些起点可能满足这个路径
+        s += node->val;
+        long long x = s - targetSum;
+        ans += cnts.contains(x) ? cnts[x] : 0;
+
+        cnts[s]++;
+        dfs(node->left, s);
+        dfs(node->right, s);
+        cnts[s]--;
+    };
+    dfs(root, 0);
+    return ans;
 
 
+}
+};
 #endif // _2HOT1___H
