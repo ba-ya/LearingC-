@@ -707,8 +707,10 @@ int pathSum(TreeNode* root, int targetSum) {
     };
     dfs(root, 0);
     return ans;
-
-
 }
+
+// 236, 二叉树的最近公共祖先
+// 124, 二叉树的最大路径和
+
 };
 #endif // _2HOT1___H

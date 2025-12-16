@@ -447,6 +447,8 @@ vector<TreeNode*> delNodes(TreeNode* root, vector<int>& to_delete) {
 namespace BinaryTree_Ancestor {
 // 236, 二叉树的最近公共祖先
 TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    // 最外层返回值是最近公共祖先
+    // 内部的返回值是 最近公共祖先的候选项, 辅助用(空节点, p, q)
     if (root == nullptr || root == p || root == q) {
         return root;
     }
