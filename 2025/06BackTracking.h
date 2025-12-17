@@ -8,9 +8,6 @@ namespace BackTrack_Subset {;
 vector<string> letterCombinations(string digits) {
     vector<string> ans;
     int n = digits.size();
-    if (n == 0) {
-        return {};
-    }
     string path(n, 0);
     string MAPPING[10]{"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
     function<void(int)> dfs = [&](int i) {
@@ -28,12 +25,9 @@ vector<string> letterCombinations(string digits) {
     return ans;
 }
 
-// 78子集
+// 78, 子集
 vector<vector<int>> subsets(vector<int>& nums) {
     int n = nums.size();
-    if (n == 0) {
-        return {};
-    }
     vector<vector<int>> ans;
     vector<int> path;
     function<void(int)> dfs = [&](int i) {
@@ -178,7 +172,7 @@ vector<vector<int>> combinationSum3(int k, int n) {
     return ans;
 }
 
-// 22括号生成
+// 22, 括号生成
 vector<string> generateParenthesis(int n) {
     vector<string> ans;
     // 长度固定为2n,可以先给path一个长度
@@ -203,22 +197,70 @@ vector<string> generateParenthesis(int n) {
     dfs(0, 0);
     return ans;
 }
+vector<string> generateParenthesis_2(int n) {
+    // 记录左括号位置
+    vector<string> ans;
+    vector<int> path;//左括号位置
+    // 这里i和balance表示个数
+    // dfs(i, balance)表示已经填了i个括号,这i个括号中左括号 - 右括号 = balance
+    auto dfs = [&](this auto &&dfs, int i, int balance) {
+        if (path.size() == n) {
+            string s(n * 2, ')');
+            for (int i : path) {
+                s[i] = '(';
+            }
+            ans.push_back(s);
+            return;
+        }
+        for (int right = 0; right <= balance; right++) {
+            // 先填right个右括号, 再填1个括号
+            path.push_back(i + right);
+            dfs(i + right + 1, balance + 1 - right);
+            path.pop_back();
+        }
+    };
+    dfs(0, 0);
+    return ans;
+}
 
-// 39组合总和
+// 39, 组合总和
 vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
     ranges::sort(candidates);
     vector<vector<int>> ans;
     vector<int> path;
-    function<void(int, int)> dfs = [&](int i, int left) {
-        if (left == 0) {
+    function<void(int, int)> dfs = [&](int i, int capacity) {
+        if (capacity == 0) {
             ans.emplace_back(path);
             return;
         }
-        for (int j = i; j < candidates.size() && candidates[j] <= left; j++) {
+        for (int j = i; j < candidates.size() && candidates[j] <= capacity; j++) {
             path.push_back(candidates[j]);
-            dfs(j, left - candidates[j]);
+            dfs(j, capacity - candidates[j]);
             path.pop_back();
         }
+    };
+    dfs(0, target);
+    return ans;
+}
+vector<vector<int>> combinationSum_2(vector<int>& candidates, int target) {
+    int n = candidates.size();
+    vector<vector<int>> ans;
+    vector<int> path;
+    auto dfs = [&](this auto &&dfs, int i, int capacity) {
+        if (capacity == 0) {
+            ans.push_back(path);
+            return;
+        }
+        if (i >= n || capacity < 0) {
+            return;
+        }
+        // 不选
+        dfs(i + 1, capacity);
+
+        // 选
+        path.push_back(candidates[i]);
+        dfs(i, capacity - candidates[i]);
+        path.pop_back();
     };
     dfs(0, target);
     return ans;
@@ -266,13 +308,13 @@ vector<string> restoreIpAddresses(string s) {
 }
 }
 namespace BackTrack_Permutation {
-// 46全排列
+// 46, 全排列
 // 时间复杂度: O(n(n!)) n!个根节点 * n
 vector<vector<int>> permute(vector<int>& nums) {
     int n = nums.size();
     vector<vector<int>> ans;
     vector<int> path(n), on_path(n, 0);
-    // i只关注path
+    // dfs(i), 表示要构造排列>=i的路径
     function<void(int)> dfs = [&](int i) {
         if (i == n) {
             ans.emplace_back(path);
