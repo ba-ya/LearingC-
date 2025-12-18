@@ -50,7 +50,7 @@ vector<vector<int>> subsets(vector<int>& nums) {
 
 // 131分割回文串
 vector<vector<string>> partition(string s) {
-    // 是否回文
+    // 选或不选
     auto check = [&](int left, int right) {
         while (left < right) {
             if (s[left] != s[right]) {
@@ -89,7 +89,36 @@ vector<vector<string>> partition(string s) {
     };
     dfs(0, 0);
     return ans;
-
+}
+vector<vector<string>> partition_2(string s) {
+    // 枚举选哪个
+    auto is_palindrome = [&](int left, int right) ->bool {
+        while (left < right) {
+            if (s[left++] != s[right--]) {
+                return false;
+            }
+        }
+        return true;
+    };
+    int n = s.length();
+    vector<vector<string>> ans;
+    vector<string> path;
+    // dfs(i),表示把i当start, 枚举end
+    auto dfs = [&](this auto &&dfs, int i) {
+        if (i == n) {
+            ans.push_back(path);
+            return;
+        }
+        for (int j = i; j < n; j++) {
+            if (is_palindrome(i, j)) {
+                path.emplace_back(s.substr(i, j - i + 1));
+                dfs(j + 1);
+                path.pop_back();
+            }
+        }
+    };
+    dfs(0);
+    return ans;
 }
 
 int pre_sum[1001];
@@ -337,7 +366,7 @@ vector<vector<int>> permute(vector<int>& nums) {
     return ans;
 }
 
-// 51N皇后
+// 51, N皇后
 // 棋盘(0, 0)在左上角, 和二维数组的坐标一致
 // amn(m = 行, n = 列)
 // a00, a11, a22所在的线是主对角线(斜下方, r - c),
@@ -369,7 +398,7 @@ vector<vector<string>> solveNQueens(int n) {
     return ans;
 }
 
-// 52N皇后2
+// 52, N皇后2
 int totalNQueens(int n) {
     int ans = 0;
     vector<uint8_t> col(n), diag1(2 * n), diag2(2 * n);

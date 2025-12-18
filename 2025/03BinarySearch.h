@@ -4,13 +4,14 @@
 #include "00solution.h"
 
 namespace BinarySearch1 {
-// 34在排序数组查找元素第一个和最后一个位置
+// 34, 在排序数组查找元素的第一个和最后一个位置
 vector<int> searchRange(vector<int>& nums, int target) {
+    int n = nums.size();
     // 返回 >= target的一个元素id
-    auto lower_bound = [](vector<int>& nums, int target) {
+    auto lower_bound = [&](int target) {
         // 双开区间(left, right)
         int left = -1;
-        int right = nums.size();
+        int right = n;
         while (left + 1 < right) {
             int mid = left + (right - left) / 2;
             if (nums[mid] >= target) {
@@ -21,18 +22,24 @@ vector<int> searchRange(vector<int>& nums, int target) {
         }
         return right;
     };
+    auto upper_bound = [&](int target) {
+        return lower_bound(target) + 1;
+    };
+    auto check = [&](int x) {
+        return x < 0 || x >= n || nums[x] != target;
+    };
     // >= target
-    int start = lower_bound(nums, target);
-    if (start == nums.size() || nums[start] != target) {
+    int start = lower_bound(target);
+    if (check(start)) {
         return {-1, -1};
     }
     // <= target 即 >target 即 >= (target + 1) 对应id的左边一个元素
     // 有start,end必存在,不用判断end == -1
-    int end = lower_bound(nums, target + 1) - 1;
+    int end = upper_bound(target) - 1;
     return {start, end};
 }
 
-// 2529正整数和负整数的最大计数
+// 2529, 正整数和负整数的最大计数
 int maximumCount(vector<int>& nums) {
     // (left, right), >= target
     auto lower_bound = [](vector<int>& nums, int target) {
@@ -379,12 +386,15 @@ int findMin(vector<int>& nums) {
     int right = n - 1; // n - 1可以确定为一定是蓝色
     while (left + 1 < right) {
         int mid = left + (right - left) / 2;
+        // > 的情况, mid一定在第一部分,在最小值的左边
+        // <= 的情况, mid在第二部分, 在最小值的右边或者等于最小值
+        // 所以返回right
         (nums[mid] > nums.back() ? left : right) = mid;
     }
     return nums[right];
 }
 
-// 33搜索旋转排序数组
+// 33, 搜索旋转排序数组
 int search(vector<int>& nums, int target) {
     auto find_min = [&](vector<int> &nums) {
         int left = -1;
@@ -421,7 +431,7 @@ int search(vector<int>& nums, int target) {
     return id;
 }
 
-// 74搜索二维矩阵
+// 74, 搜索二维矩阵
 bool searchMatrix(vector<vector<int>>& matrix, int target) {
     // 方法1: 当作一个长数组进行二分
     // left = -1, right = m * n

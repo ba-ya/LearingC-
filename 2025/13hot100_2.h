@@ -3,6 +3,8 @@
 
 #include "00solution.h"
 
+#include <stack>
+
 namespace hot100_2 {
 /// 图论
 // 200, 岛屿数量
@@ -179,11 +181,206 @@ public:
 // 39, 组合总和
 // 22, 括号生成
 
+// 79, 单词搜索
+bool exist(vector<vector<char>>& board, string word) {
+    // board中字母出现次数
+    unordered_map<char, int> cnt_b;
+    for (auto &row : board) {
+        for (char c : row) {
+            cnt_b[c]++;
+        }
+    }
+
+    // 优化1
+    // board某个字母个数<word中某个字母个数, 一定没有路径满足word
+    unordered_map<char, int> cnt_w;
+    for (char c : word) {
+        cnt_w[c]++;
+        if (cnt_w[c] > cnt_b[c]) {
+            return false;
+        }
+    }
+
+    // 优化2
+    // 如果word结尾的字母在board中出现次数更少,翻转过来更快
+    if (cnt_b[word.back()] < cnt_b[word.front()]) {
+        ranges::reverse(word);
+    }
+
+    // 上下左右
+    static int DIR[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int m = board.size();
+    int n = board[0].size();
+    // dfs(i, j, k)表示从board[i][j]出发,能不能满足接下来的路径能走到k = word.size()
+    auto dfs = [&](this auto &&dfs, int i, int j, int k) -> bool {
+        if (board[i][j] != word[k]) {
+            return false;
+        }
+        if (k == word.size() - 1) {
+            return true;
+        }
+        // 当前位置插旗
+        board[i][j] = 0;
+        // 4个方向前进
+        for (auto &[dx, dy] : DIR) {
+            int row = i + dx;
+            int col = j + dy;
+            if (row >= 0 && row < m && col >= 0 && col < n && dfs(row, col, k + 1)) {
+                return true;
+            }
+        }
+        // 恢复现场
+        board[i][j] = word[k];
+        return false;
+    };
+    // 每个位置都有可能
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (dfs(i, j, 0)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+// 131, 分割回文串
+// 51, N皇后
 
 /// 二分查找
+// 35, 搜索插入位置
+int searchInsert(vector<int>& nums, int target) {
+    // 二分查找
+    int n = nums.size();
+    int left = -1;
+    int right = n;
+    while (left + 1 < right) {
+        int mid = left + (right - left) / 2;
+        (nums[mid] >= target ? right : left) = mid;
+    }
+    return right;
+}
+
+// 74, 搜索二维矩阵
+// 34, 在排序数组查找元素的第一个和最后一个位置
+// 33, 搜索旋转排序数组
+// 153, 寻找旋转排序数组中的最小值
+
+// 4, 寻找两个正序数组的中位数
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    if (nums1.size() > nums2.size()) {
+        swap(nums1, nums2);
+    }
+    int m = nums1.size();
+    int n = nums2.size();
+    // 有插入,时间复杂度是O(m+n)
+    nums1.insert(nums1.begin(), INT_MIN);
+    nums2.insert(nums2.begin(), INT_MIN);
+    nums1.push_back(INT_MAX);
+    nums2.push_back(INT_MAX);
+
+    // j = (m + n + 1) / 2 - i;
+    int i = 0;
+    int j = (m + n + 1) / 2;
+    // 可以判断a[i+1]和b[j]大小来跳出循环
+    // 跳出循环的上一个就可以满足a[i] <= b[j+1] 且 a[i+1] > b[j]
+    while (nums1[i + 1] <= nums2[j + 1]) {
+        i++;
+        j--;
+    }
+    int mx = max(nums1[i], nums2[j]);
+    int mn = min(nums1[i + 1], nums2[j + 1]);
+    // 奇数取第一组最大的, 偶数平分第一组最大和第二组最小的
+    return (m + n) % 2 ? mx : (mx + mn) / 2.0;
+}
+double findMedianSortedArrays_2(vector<int>& nums1, vector<int>& nums2) {
+    // 二分确定i位置, 不能插入INT_MIN和INT_MAX辅助
+    // 时间复杂度达到O(log(min(m, n)))
+    if (nums1.size() > nums2.size()) {
+        swap(nums1, nums2);
+    }
+    // 原来 j = (m + n + 1) / 2 - i;
+    // 现在 (j + 1) = (m + n + 1) / 2 - (i + 1);
+    int m = nums1.size();
+    int n = nums2.size();
+
+    // 循环不变量,
+    // nums1[left] <= nums2[j + 1]
+    // nums1[right] > nums2[j + 1]
+    int left = -1;
+    int right = m;
+    while (left + 1 < right) {
+        int i = left + (right - left) / 2;
+        int j = (m + n + 1) / 2 - i - 2;
+        (nums1[i] > nums2[j + 1] ? right : left) = i;
+    }
+    int i = left;
+    int j = (m + n + 1) / 2 - i - 2;
+    int ai = i >= 0 ? nums1[i] : INT_MIN;
+    int bj = j >= 0 ? nums2[j] : INT_MIN;
+    int ai1 = i + 1 < m ? nums1[i + 1] : INT_MAX;
+    int bj1 = j + 1 < n ? nums2[j + 1] : INT_MAX;
+    int mx = max(ai, bj);
+    int mn = min(ai1, bj1);
+    return (m + n) % 2 ? mx : (mx + mn) / 2.0;
+}
 
 /// 栈
+// 20, 有效的括号
+bool isValid(string s) {
+    if (s.size() % 2 != 0) {
+        return false;
+    }
+    unordered_map<char, char> match = {{')', '('},
+                                       {'}', '{'},
+                                       {']', '['}};
+    stack<char> st;
+    for (char c : s) {
+        // 左括号, 入栈
+        if (!match.contains(c)) {
+            st.push(c);
+        } else {
+            // 不匹配, 返回false
+            if (st.empty() || st.top() != match[c]) {
+                return false;
+            }
+            st.pop();
+        }
+    }
+    return st.empty();
+}
 
+// 155, 最小栈
+class MinStack {
+    // 不是手写栈, 可以用标库
+    // value, 所有val的最小值
+    stack<pair<int, int>> st;
+public:
+    MinStack() {
+        st.emplace(0, INT_MAX);
+    }
+
+    void push(int val) {
+        st.push({val, min(getMin(), val)});
+    }
+
+    void pop() {
+        st.pop();
+    }
+
+    int top() {
+        return st.top().first;
+    }
+
+    int getMin() {
+        return st.top().second;
+    }
+};
+
+// 394, 字符串解码
+string decodeString(string s) {
+
+}
 /// 堆
 
 /// 贪心算法
