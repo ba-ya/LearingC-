@@ -3,6 +3,7 @@
 
 #include "00solution.h"
 
+#include <queue>
 #include <stack>
 
 namespace hot100_2 {
@@ -379,10 +380,188 @@ public:
 
 // 394, 字符串解码
 string decodeString(string s) {
-
+    int n = s.size();
+    int i = 0;
+    auto decode = [&](this auto &&decode) ->string {
+        // 从i位置开始的res
+        string res;
+        int k = 0;
+        while (i < n) {
+            char c = s[i];
+            i++;
+            if (isalpha(c)) {
+                res += c;
+            } else if (isdigit(c)) {
+                k = k * 10 + c - '0';
+            } else if (c == '[') {
+                // 递归得到[]内的字符
+                string t = decode();
+                for (; k > 0; k--) {
+                    res += t;
+                }
+            } else {
+                // ']'
+                break;
+            }
+        }
+        return res;
+    };
+    return decode();
 }
-/// 堆
+string decodeString_2(string s) {
+    // 用栈模拟递归
+    // 字符串,对应出现次数
+    stack<pair<string, int>> st;
+    string res;
+    int k = 0;
+    for (char c : s) {
+        if (isalpha(c)) {
+            res += c;
+        } else if (isdigit(c)) {
+            k = k * 10 + c - '0';
+        } else if (c == '[') {
+            // move后, res为空了
+            st.emplace(std::move(res), k);
+            k = 0;
+        } else {
+            // 此时res是[]内的字符串
+            auto [pre_res, pre_k] = st.top();
+            st.pop();
+            for (; pre_k > 0; pre_k--) {
+                pre_res += res;
+            }
+            res = std::move(pre_res);
+            // cout << res << ", " << pre_res<< ", " << pre_k << endl;
+            // "3[a]2[bc]"  "3[a2[c]]"
+            // a, , 3       c, a, 2
+            // bc, aaa, 2   acc, , 3
+        }
+    }
+    return res;
+}
 
+// 739, 每日温度
+// 84, 柱状图中最大的矩形
+
+/// 堆
+// 215, 数组中第K个最大元素
+int findKthLargest(vector<int>& nums, int k) {
+    // 快速选择算法
+    srand(time(NULL));
+    // 分区,将[left, right]按照随机选择的pivot,
+    // nums[i]<=pivot, pivot>=nums[i]
+    // 返回pivot的下标
+    auto partition = [&](int left, int right) -> int {
+        int i = left + rand() % (right - left + 1);
+        int pivot = nums[i];
+
+        // 将pivot与第一个元素交换
+        // 剩下的排完序,把pivot与j位置的元素交换
+        swap(nums[left], nums[i]);
+
+        // 双指针
+        i = left + 1;// pivot不算
+        int j = right;
+        while (true) {
+            // 这里<, 不能带=
+            while (i <= j && nums[i] < pivot) {
+                i++;
+            }
+            // 此时 nums[i] >= pivot
+
+            while (i <= j && nums[j] > pivot) {
+                j--;
+            }
+            // 此时 nums[j] <= pivot
+
+            if (i >= j) {
+                break;
+            }
+            // 不满足条件, 交换
+            swap(nums[i++], nums[j--]);
+        }
+
+        // pivot放到对应位置,
+        swap(nums[left], nums[j]);
+        return j;
+    };
+
+    int n = nums.size();
+    int left = 0;
+    int right = n - 1;
+    while (true) {
+        int index = partition(left, right);
+        if (index == n - k) {
+            return nums[index];
+        }
+        if (index > n - k) {
+            // index对应的值大了,右边界可以缩小
+            right = index - 1;
+        } else {
+            left = index + 1;
+        }
+    }
+    return 0;
+}
+
+// 347, 前K个高频元素
+vector<int> topKFrequent(vector<int>& nums, int k) {
+    // 统计次数
+    unordered_map<int, int> cnts;
+    int max_cnt = 0;
+    for (auto x : nums) {
+        cnts[x]++;
+        max_cnt = max(max_cnt, cnts[x]);
+    }
+
+    // 出现次数相同的元素,放到一个桶里
+    // 最大有[0, max_cnt] max_cnt + 1种桶
+    vector<vector<int>> buckets(max_cnt + 1);
+    for (auto it : cnts) {
+        buckets[it.second].push_back(it.first);
+    }
+
+    // 前k个是答案个数是k个
+    vector<int> ans;
+    for (int i = max_cnt; i >= 0 && ans.size() < k; i--) {
+        ans.insert(ans.end(), buckets.at(i).begin(), buckets.at(i).end());
+    }
+    return ans;
+}
+
+// 295, 数据流的中位数
+class MedianFinder {
+    // 最大堆, 堆顶是最大值
+    priority_queue<int> left;
+    // 最小堆, 堆顶是最小值
+    priority_queue<int, vector<int>, greater<>> right;
+public:
+    MedianFinder() {
+
+    }
+
+    void addNum(int num) {
+        // 中位数, 将数值集合划分为相等的两个部分
+        // 奇数, 把多的一个放到第一个
+        if (left.size() == right.size()) {
+            // 相等,就把num先放入right
+            // 再把right最小值放入left
+            right.push(num);
+            left.push(right.top());
+            right.pop();
+        } else {
+            // left多一个, 先把num放入left
+            // 再把left最大值放入right中
+            left.push(num);
+            right.push(left.top());
+            left.pop();
+        }
+    }
+
+    double findMedian() {
+        return left.size() == right.size() ? (left.top() + right.top()) / 2.0 : left.top();
+    }
+};
 /// 贪心算法
 
 /// 动态规划

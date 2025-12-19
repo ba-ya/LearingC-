@@ -5,7 +5,7 @@
 
 #include <stack>
 namespace Monotonic_Stack {
-// 739每日温度,
+// 739, 每日温度,
 vector<int> dailyTemperatures(vector<int>& temperatures) {
     // 从左到右
     int n = temperatures.size();
@@ -152,7 +152,7 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
     return ans;
 }
 
-// 84柱状图中最大的矩形
+// 84, 柱状图中最大的矩形
 int largestRectangleArea(vector<int>& heights) {
     // 枚举每个height,
     // 找出左边下一个更小, 右边下一个更小
@@ -206,10 +206,12 @@ int largestRectangleArea_2(vector<int>& heights) {
             // 如果heights存在元素,第一个元素的right对应的下标会是重复元素下标
             // 计算面积的时候会小一个条
             // 但走到其他重复元素,会得到正确的面积
+            // 对st.top()来说, i是下一个更小的
             right[st.top()] = i;
             st.pop();
         }
         if (!st.empty()) {
+            // 对i来说, st.top是上一个更小的
             left[i] = st.top();
         }
         st.push(i);
@@ -221,6 +223,27 @@ int largestRectangleArea_2(vector<int>& heights) {
         qDebug().noquote() << QString("%1 : %2 * (%3 - %4 - 1) = %5")
                                   .arg(i).arg(heights[i]).arg(right[i]).arg(left[i])
                                   .arg(heights[i] * (right[i] - left[i] - 1));
+    }
+    return ans;
+}
+int largestRectangleArea_3(vector<int>& heights) {
+    int ans = 0;
+    // 枚举height,作为矩形最右边的根
+    heights.push_back(-1);
+    int n = heights.size();
+    stack<int> st;
+    st.push(-1);
+    for (int right = 0; right < n; right++) {
+        int r_h = heights[right];
+        // right必须是st栈顶下一个更小的
+        while (st.size() > 1 && r_h < heights[st.top()]) {
+            int i = st.top();
+            int h = heights[i];// 矩形的高
+            st.pop();
+            int left = st.top();
+            ans = max(ans, h * (right - left - 1));
+        }
+        st.push(right);
     }
     return ans;
 }
