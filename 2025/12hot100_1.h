@@ -188,6 +188,20 @@ int maxSubArray(vector<int>& nums) {
     }
     return ans;
 }
+int maxSubArray_2(vector<int>& nums) {
+    // 仿照152,
+    int n = nums.size();
+    vector<int> f(n);
+    f[0] = nums[0];
+    for (int i = 1; i < n; i++) {
+        // 最长子数组和,
+        // nums[i]单数组
+        // nums[i]与前面拼起来
+        int x = nums[i];
+        f[i] = max(f[i - 1] + x, x);
+    }
+    return ranges::max(f);
+}
 
 // 56, 合并区间
 vector<vector<int>> merge(vector<vector<int>>& intervals) {

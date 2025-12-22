@@ -446,6 +446,7 @@ int minimumMoves(vector<vector<int>>& grid) {
             total += abs(from[i].first - to[i].first) + abs(from[i].second - to[i].second);
         }
         ans = min(ans, total);
+        // 下一个排列
     } while(next_permutation(from.begin(), from.end()));
     // 按字典序进行排列,相同的from不会重复排列
     // -0  -1  -2  -3  -4  -5

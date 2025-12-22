@@ -5,6 +5,7 @@
 
 #include <queue>
 #include <stack>
+#include <unordered_set>
 
 namespace hot100_2 {
 /// 图论
@@ -563,12 +564,248 @@ public:
     }
 };
 /// 贪心算法
+// 121, 买卖股票的最佳时机
+int maxProfit(vector<int>& prices) {
+    // 不能当天买,当天卖
+    // 枚举卖出价格, 维护买入最小值
+    int min_price = prices[0];
+    int ans = INT_MIN;
+    for (int p : prices) {
+        ans = max(ans, p - min_price);
+        min_price = min(min_price, p);
+    }
+    return ans;
+}
 
+// 55, 跳跃游戏
+bool canJump(vector<int>& nums) {
+    // 维护最右可到达位置, 保证下一个i在区间内
+    int mx = 0;
+    for (int i = 0; i < nums.size(); i++) {
+        // 跳不到下一个坐标
+        if (i > mx) {
+            return false;
+        }
+        // nums[i]是非负数
+        mx = max(mx, i + nums[i]);
+    }
+    return true;
+}
+
+// 45, 跳跃游戏2
+int jump(vector<int>& nums) {
+    int ans = 0;
+    int cur_right = 0;
+    int next_right = 0;
+    // [0, n - 1], i < cur_right
+    for (int i = 0; i < nums.size() - 1; i++) {
+        next_right = max(next_right, i + nums[i]);
+        if (i == cur_right) {
+            // 无路可走,造桥
+            cur_right = next_right;
+            ans++;
+        }
+    }
+    return ans;
+}
+
+// 763, 划分字母区间
+vector<int> partitionLabels(string s) {
+    int n = s.size();
+    int last[26];
+    // 记录每个字母的最右下标
+    for (int i = 0; i < n; i++) {
+        last[s[i] - 'a'] = i;
+    }
+
+    vector<int> ans;
+    int start = 0, end = 0;
+    for (int i = 0; i < n; i++) {
+        end = max(end, last[s[i] - 'a']);
+        if (i == end) {
+            ans.push_back(end - start + 1);
+            start = end + 1;
+        }
+    }
+    return ans;
+}
 /// 动态规划
+// 70, 爬楼梯
+
+// 118, 杨辉三角
+vector<vector<int>> generate(int numRows) {
+    // [1]
+    // [1, 1]
+    // [1, 2, 1]
+    // [1, 3, 3, 1]
+    // [1, 4, 6, 4, 1]
+    vector<vector<int>> c(numRows);
+    for (int i = 0; i < numRows; i++) {
+        c[i].resize(i + 1, 1);
+        for (int j = 1; j < i; j++) {
+            c[i][j] = c[i - 1][j - 1] + c[i - 1][j];
+        }
+    }
+    return c;
+}
+
+// 198, 打家劫舍
+// 279, 完全平方数
+// 322, 零钱兑换
+
+// 139, 单词拆分
+bool wordBreak(string s, vector<string>& wordDict) {
+    // 划分型DP
+    // 限制最大长度(string种类有最多20种, wordDict字典个数最多1000个)
+    // 知道最大长度就好, [j, i)尾巴字符串最长只能是max_len
+    // j = i - 1, i - 2, i - 3, max(i - max_len, 0), 列举到这里就行
+    int max_len = ranges::max(wordDict, {}, &string::length).length();
+    unordered_set<string> st(wordDict.begin(), wordDict.end());
+    int n = s.length();
+    vector<int> memo(n + 1, -1);
+    auto dfs = [&](this auto &&dfs, int i) -> bool {
+        if (i == 0) {
+            // 还剩0个字符串需要划分, 拆分成功
+            return true;
+        }
+        int &res = memo[i];
+        if (res != -1) {
+            return res;
+        }
+        // 所有情况中存在某个字符串在字典中,当前拆分成功,继续递归
+        for (int j = i - 1; j >= max(0, j - max_len); j--) {
+            if (st.contains(s.substr(j, i - j)) && dfs(j)) {
+                return res = true;
+            }
+        }
+        return res = false;
+    };
+    return dfs(n);
+}
+
+// 300, 最长递增子序列
+
+// 152, 乘积最大子数组
+int maxProduct(vector<int>& nums) {
+    // 连续性子集问题
+    int n = nums.size();
+    // 以nums[i]为结尾的最大子数组乘积,最小子数组乘积
+    // 三种情况,
+    // nums[i]单数组,
+    // 与前面的拼起来(nums[i]>0, 与前面最大的拼起来
+    // <0, 与前面最小的拼起来)
+    vector<int> f_max(n), f_min(n);
+    f_max[0] = f_min[0] = nums[0];
+    for (int i = 1; i < n; i++) {
+        int x = nums[i];
+        f_max[i] = max({f_min[i - 1] * x, f_max[i - 1] * x ,x});
+        f_min[i] = min({f_min[i - 1] * x, f_max[i - 1] * x, x});
+    }
+    return ranges::max(f_max);
+}
+
+// 416, 分割等和子集
+
+// 32, 最长有效括号
+int longestValidParentheses(string s) {
+    stack<int> st;
+    st.push(-1);// 作为红线
+    int n = s.size();
+    int ans = 0;
+    for (int i = 0; i < n; i++) {
+        // '('作为炸弹入栈
+        if (s[i] == '(') {
+            st.push(i);
+        } else if (st.size() > 1) {
+            // ')', 可以正常拆弹
+            st.pop();
+            // (st.top(), i]是正常的括号子串长度
+            ans = max(ans, i - st.top());
+        } else {
+            // ')', 只有红线,拆不了,更新红线
+            st.top() = i;
+        }
+    }
+    return ans;
+}
 
 /// 多维动态规划
+// 62, 不同路径
+int uniquePaths(int m, int n) {
+    vector<vector<int>> memo(m, vector<int>(n, -1));
+    // dfs(i, j)表示从(i, j)->(0, 0)的路径数(反过来看)
+    auto dfs = [&](this auto &&dfs, int i, int j) -> int {
+        if (i < 0 || j < 0) {
+            return 0;
+        }
+        if (i == 0 && j == 0) {
+            return 1;
+        }
+        int &res = memo[i][j];
+        if (res != -1) {
+            return res;
+        }
+        return res = dfs(i - 1, j) + dfs(i, j - 1);
+    };
+    return dfs(m - 1, n - 1);
+}
+// 64, 最小路径和
+
+// 5, 最长回文子串
+string longestPalindrome(string s) {
+    int n = s.size();
+    // 开区间更通用一点,不会忽略一个字符的情况
+    // [ans_left, ans_right)
+    int ans_left = 0, ans_right = 0;
+    // 奇回文串
+    // 枚举i = 0, 1, 2,..., n - 1
+    for (int i = 0; i < n; i++) {
+        int l = i;
+        int r = i;
+        // 中心扩展,左边向左走,右边向右走
+        while (l >= 0  && r < n && s[l] == s[r]) {
+            l--;
+            r++;
+        }
+        // 循环结束后[l+1, r-1]是回文串
+        if (ans_right - ans_left < r - l - 1) {
+            ans_left = l + 1;
+            ans_right = r;
+        }
+    }
+
+    // 偶回文串
+    // 枚举i = 0, 1, 2, ..., n - 2,
+    // j = i + 1
+    for (int i = 0; i < n - 1; i++) {
+        int l = i;
+        int r = i + 1;
+        while (l >= 0  && r < n && s[l] == s[r]) {
+            l--;
+            r++;
+        }
+        // 循环结束, [l+1, r-1]是回文串
+        if (ans_right - ans_left < r - l - 1) {
+            ans_left = l + 1;
+            ans_right = r;
+        }
+    }
+    return s.substr(ans_left, ans_right - ans_left);
+}
+
+// 1143, 最长公共子序列
+// 72, 编辑距离
 
 /// 技巧
+// 136, 只出现一次的数字
+
+// 169, 多数元素
+
+// 75, 颜色分类
+
+// 31, 下一个排列
+
+// 287, 寻找重复数
 }
 
 #endif // _3HOT1___2_H

@@ -4,7 +4,7 @@
 #include "00solution.h"
 
 namespace DynamicProgramming {
-// 198打家劫舍
+// 198, 打家劫舍
 int rob(vector<int>& nums) {
     int n = nums.size();
     vector<int> memo(n, -1);
@@ -23,7 +23,7 @@ int rob(vector<int>& nums) {
     return dfs(n - 1);
 }
 
-// 70爬楼梯
+// 70, 爬楼梯
 int climbStairs(int n) {
     vector<int> memo(n + 1, -1);
     // 分类讨论,
@@ -45,7 +45,7 @@ int climbStairs(int n) {
     return dfs(n);
 }
 
-// 746使用最小花费爬楼梯
+// 746, 使用最小花费爬楼梯
 int minCostClimbingStairs(vector<int>& cost) {
     int n = cost.size();
     vector<int> memo(n + 1, -1);
@@ -65,7 +65,7 @@ int minCostClimbingStairs(vector<int>& cost) {
     return dfs(n);
 }
 
-// 3693爬楼梯2
+// 3693, 爬楼梯2
 int climbStairs(int n, vector<int>& costs) {
     vector<int> memo(n + 1, -1);
     // c++20, 有开销,一直超时, 1000ms左右
@@ -175,7 +175,7 @@ int countTexts(string pressedKeys) {
 
 }
 
-// 231打家劫舍2
+// 231, 打家劫舍2
 // 环形版本,考虑第一个房子偷不偷
 int rob2(vector<int>& nums) {
     int n = nums.size();
@@ -199,7 +199,7 @@ int rob2(vector<int>& nums) {
     return max(nums[0] + rob1(2, n - 1), rob1(1, n));
 }
 
-// 64最小路径和
+// 64, 最小路径和
 int minPathSum(vector<vector<int>>& grid) {
     int m = grid.size();
     int n = grid[0].size();

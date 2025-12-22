@@ -35,15 +35,17 @@ int findTargetSumWays(vector<int>& nums, int target) {
     return dfs(n - 1, m);
 }
 
-// 322零钱兑换
+// 322, 零钱兑换
 // 时间复杂度:O(n*amount), 空间复杂度:O(n*amount)
 int coinChange(vector<int>& coins, int amount) {
     // 求零钱个数
+    // 不需要sort, 当前金额不够,向下枚举即可
     int n = coins.size();
     vector<vector<int>> memo(n, vector<int>(amount + 1, -1));
     auto dfs = [&](this auto &&dfs, int i, int c) ->int{
+        // 这里不需要判=, 在i = 0的时候还有硬币可以选
         if (i < 0) {
-            return c == 0 ? 0 : INT_MAX / 2;
+            return c == 0 ? 0 : INT_MAX / 2;// 防止下面+1出界
         }
         int &res = memo[i][c];
         if (res != -1) {
@@ -89,7 +91,7 @@ int lengthOfLongestSubsequence(vector<int>& nums, int target) {
     return ans >= 0 ? ans : -1;
 }
 
-// 416分隔等和子集
+// 416, 分割等和子集
 bool canPartition(vector<int>& nums) {
     // p = q = sum / 2
     // 背包容量是sum / 2
@@ -97,12 +99,10 @@ bool canPartition(vector<int>& nums) {
     if (sum % 2) {
         return false;
     }
-    int MOD = 1e9+7;
     int n = nums.size();
     int target = sum / 2;
     vector<vector<int>> memo(n, vector<int>(target + 1, -1));
-    // 求方案数, (判断有没有,)
-    auto dfs = [&](this auto &&dfs, int i, int c) -> int {
+    auto dfs = [&](this auto &&dfs, int i, int c) -> bool {
         if (i < 0) {
             return c == 0;
         }
@@ -110,20 +110,18 @@ bool canPartition(vector<int>& nums) {
         if (res != -1) {
             return res;
         }
-        // 不选
-        res = dfs(i - 1, c) % MOD;
-        if (c >= nums[i]) {
-            // 不选 + 选
-            // res = (res + dfs(i - 1, c - nums[i])) % MOD;// 方案数
-            res = res || dfs(i - 1, c - nums[i]); // 判断有没有
+        // 容量不够, 不选
+        if (c < nums[i]) {
+            return res = dfs(i - 1, c);
         }
-        return res;
+        // 不选 + 选
+        // res = (dfs(i - 1, c) + dfs(i - 1, c - nums[i])) % MOD;// 方案数
+        return res = dfs(i - 1, c) || dfs(i - 1, c - nums[i]);
     };
-    int ans = dfs(n - 1, target);
-    return ans > 0;
+    return dfs(n - 1, target);
 }
 
-// 518零钱兑换2
+// 518, 零钱兑换2
 // 时间复杂度:O(n*amount), 空间复杂度:O(n*amount)
 int change(int amount, vector<int>& coins) {
     // 求方案数, 可以重复选
@@ -149,7 +147,7 @@ int change(int amount, vector<int>& coins) {
     return ans;
 }
 
-// 279完全平方数
+// 279, 完全平方数
 int numSquares(int n) {
     // 方案里面所选的数字最少的
     vector<int> nums;
@@ -160,19 +158,22 @@ int numSquares(int n) {
     vector<vector<int>> memo(size, vector<int>(n + 1, -1));
     auto dfs = [&](this auto &&dfs, int i, int c) -> int {
         if (i < 0) {
-            return c == 0 ? 0 : INT_MAX - 1;
+            // 为了不影响下面的min判断,不合法情况需要添加一个INT_MAX / 2
+            return c == 0 ? 0 : INT_MAX / 2;
         };
         int &res = memo[i][c];
         if (res != -1) {
             return res;
         }
+        // 容量不够,只能不选
         if (c < nums[i]) {
             return res = dfs(i - 1, c);
         }
+        // 不选 || 选(可以重复选)
         return res = min(dfs(i - 1, c), dfs(i, c - nums[i]) + 1);
     };
     int ans = dfs(size - 1, n);
-    return ans == INT_MAX - 1 ? 0 : ans;
+    return ans == INT_MAX / 2 ? 0 : ans;
 }
 }
 
