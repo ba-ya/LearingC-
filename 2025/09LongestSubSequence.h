@@ -4,7 +4,7 @@
 #include "00solution.h"
 
 namespace LCS {
-// 1143最长公共子序列
+// 1143, 最长公共子序列
 // 时间复杂度:O(mn), 空间复杂度:O(mn)
 int longestCommonSubsequence(string text1, string text2) {
     int n = text1.size();
@@ -18,15 +18,17 @@ int longestCommonSubsequence(string text1, string text2) {
         if (res != -1) {
             return res;
         }
+        // 相同字符,都跳过
         if (text1[i] == text2[j]) {
             return res = dfs(i - 1, j - 1) + 1;
         }
+        // 没有相同的,要没text1跳,要么text2跳
         return res = max(dfs(i, j - 1), dfs(i - 1, j));
     };
     return dfs(n - 1, m - 1);
 }
 
-// 72编辑距离
+// 72, 编辑距离
 int minDistance(string s, string t) {
     int n = s.size();
     int m = t.size();
@@ -53,7 +55,7 @@ int minDistance(string s, string t) {
     return dfs(n - 1, m - 1);
 }
 
-// 97交错字符串
+// 97, 交错字符串
 bool isInterleave(string s1, string s2, string s3) {
     int n = s1.size();
     int m = s2.size();
@@ -84,7 +86,7 @@ bool isInterleave(string s1, string s2, string s3) {
     return dfs(n - 1, m - 1);
 }
 
-// 1092最短公共超序列
+// 1092, 最短公共超序列
 string shortestCommonSupersequence(string str1, string str2) {
     // 构造的序列要两个string都是它的子序列,每个字母都要包含
     int n = str1.length();

@@ -798,14 +798,108 @@ string longestPalindrome(string s) {
 
 /// 技巧
 // 136, 只出现一次的数字
+int singleNumber(vector<int>& nums) {
+    // 异或, 相同为0, 不相同为1
+    // 任何值与自身异或的结果为0，任何值与 0 异或的结果为其本身
+    int ans = 0;
+    for (int a : nums) {
+        ans ^= a;
+    }
+    return ans;
+}
 
 // 169, 多数元素
+int majorityElement(vector<int>& nums) {
+    // 严格众数
+    int ans = 0, hp = 0;
+    for (int x : nums) {
+        if (hp == 0) {
+            // 初始化擂台主
+            ans = x;
+            hp = 1;
+        } else {
+            // 同门加血, 敌人扣血
+            hp += x == ans ? 1 : -1;
+        }
+    }
+    return ans;
+}
 
 // 75, 颜色分类
+void sortColors(vector<int>& nums) {
+    //      0, 0, 1, 1, 2, 2
+    // +2   0, 0, 1, 1, 2, 2, 2
+    // +1   0, 0, 1, 1, 1, 2, 2
+    // +0   0, 0, 0, 1, 1, 2, 2
+    //            p0    p1    i
+    int p0 = 0;// 0的个数
+    int p1 = 0;// 0和1的个数
+    for (int i = 0; i < nums.size(); i++) {
+        // x作为新加入的数字
+        int x = nums[i];
+        nums[i] = 2;
+        // 如果是0或1, 修改1
+        if (x <= 1) {
+            nums[p1++] = 1;
+        }
+        // 如果是0
+        if (x == 0) {
+            nums[p0++] = 0;
+        }
+    }
+    // 1, 0
+    // 1    --> p0=0, p1=1
+    // 0, 1 --> p0=1, p1=2
+}
 
 // 31, 下一个排列
+void nextPermutation(vector<int>& nums) {
+    // 2850, next_permutation(...)这个函数
+    // next_permutation(nums.begin(), nums.end());
+
+    // 和库函数一样,需要按照字典排序, 返回的是下一个排列
+    int n = nums.size();
+    int i = n - 2;
+    while (i >= 0 && nums[i] >= nums[i + 1]) {
+        i--;
+    }
+
+    // 找到最小的大于nums[i]的nums[j],交换位置
+    if (i >= 0) {
+        int j = n - 1;
+        while (nums[j] <= nums[i]) {
+            j--;
+        }
+        swap(nums[i], nums[j]);
+    }
+
+    // 翻转[i+1, n-1]
+    ranges::reverse(nums.begin() + i + 1, nums.end());
+}
 
 // 287, 寻找重复数
+int findDuplicate(vector<int>& nums) {
+    // 一开始想到之前有个题目41,每个人根据学号坐到自己的位置上,
+    // 但这题要求不修改nums元素, 当作有环的图做, 类似142
+
+    // nums所有值都大于0
+    int n = nums.size();
+    int slow = 0, fast = 0;
+    while (fast < n && nums[fast] < n) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+        if (slow == fast) {
+            int head = 0;
+            while (head != slow) {
+                head = nums[head];
+                slow = nums[slow];
+            }
+            return nums[slow];
+        }
+    }
+    return -1;
+}
+
 }
 
 #endif // _3HOT1___2_H

@@ -421,7 +421,7 @@ int totalNQueens(int n) {
     return ans;
 }
 
-// 2850将石头分散到网格图的最少移动次数
+// 2850, 将石头分散到网格图的最少移动次数
 int minimumMoves(vector<vector<int>>& grid) {
     vector<pair<int, int>> from, to;
     int n = grid.size();
