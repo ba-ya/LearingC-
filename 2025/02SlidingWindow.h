@@ -36,6 +36,7 @@ int lengthOfLongestSubstring(string s) {
             hash[s[left]] -= 1;
             left++;
         }
+        // [left, right]
         ans = max(ans, right - left + 1);
     }
     return ans;

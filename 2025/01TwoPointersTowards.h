@@ -10,6 +10,7 @@ vector<vector<int>> threeSum(vector<int>& nums) {
     // 递增
     sort(nums.begin(), nums.end());
     int n = nums.size();
+    // 至少留两个元素给left和right
     for (int i = 0; i < n - 2; ++i) {
         int target = nums[i];
         if (i && target == nums[i - 1]) continue; // 去重
@@ -19,6 +20,7 @@ vector<vector<int>> threeSum(vector<int>& nums) {
         if (target + nums[n - 2] + nums[n - 1] < 0) continue;
         int left = i + 1;
         int right = n - 1;
+        // 循环
         while (left < right) {
             auto s = target + nums[left] + nums[right];
             if (s > 0) {
@@ -201,6 +203,7 @@ int triangleNumber(vector<int>& nums) {
 namespace TwoPointersTowards2 {
 // 11,盛最多水的容器
 int maxArea(vector<int>& height) {
+    // 这题不需要记录最大前缀
     int ans = 0;
     int left = 0;
     int right = height.size() - 1;
@@ -213,10 +216,11 @@ int maxArea(vector<int>& height) {
     return ans;
 }
 
-// 42,接雨水
+// 42, 接雨水
 int trap(vector<int>& height ) {
     // 变量存储前后缀
     // 空间复杂度O(1)
+    // 前后缀是竖着看
     int n = height.size();
     int ans = 0;
     int left = 0;
@@ -228,13 +232,7 @@ int trap(vector<int>& height ) {
     while (left < right) {
         pre_max = max(pre_max, height[left]);
         suf_max = max(suf_max, height[right]);
-        if (pre_max < suf_max) {
-            ans += pre_max - height[left];
-            left++;
-        } else {
-            ans += suf_max - height[right];
-            right--;
-        }
+        ans += pre_max < suf_max ? pre_max - height[left++] : suf_max - height[right--];
     }
     return ans;
 }

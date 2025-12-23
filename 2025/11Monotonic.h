@@ -7,6 +7,7 @@
 namespace Monotonic_Stack {
 // 739, 每日温度,
 vector<int> dailyTemperatures(vector<int>& temperatures) {
+    // 下一个更大, 递减栈
     // 从左到右
     int n = temperatures.size();
     vector<int> ans(n);
@@ -23,15 +24,17 @@ vector<int> dailyTemperatures(vector<int>& temperatures) {
     return ans;
 }
 
-// 42接雨水
+// 42, 接雨水
 int trap(vector<int>& height) {
+    // 前后缀是竖着看, 单调栈是横着看
     // 从左到右,横着一条条看
     int n = height.size();
     stack<int> st;
     int ans = 0;
     for (int i = 0; i < n; i++) {
         int right_h = height[i];
-        // 等号处理重复元素
+        // 等号处理重复元素, 有相等的就会把旧值pop出来,新值push进去,
+        // 从而保存栈中没有下标连续的重复元素
         while (!st.empty() && right_h >= height[st.top()]) {
             int h = height[st.top()];
             st.pop();

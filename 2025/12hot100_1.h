@@ -42,8 +42,10 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
 
 // 128,最长连续序列
 int longestConsecutive(vector<int>& nums) {
+    // set会去掉重复元素
     unordered_set<int> st(nums.begin(), nums.end());
     int ans = 0;
+    // 这里要遍历哈希集合
     for (auto x : st) {
         // x不是序列起点,跳过
         if (st.contains(x - 1)) {
@@ -77,8 +79,7 @@ void moveZeroes_2(vector<int>& nums) {
     int i0 = 0;
     for (auto &x : nums) {
         if (x) {
-            swap(x, nums[i0]);
-            i0++;
+            swap(x, nums[i0++]);
         }
     }
 }
@@ -107,7 +108,7 @@ vector<int> findAnagrams(string s, string p) {
     }
     vector<int> ans;
     int cnt_s[26]{0};
-    // 定长滑动窗口
+    // 定长滑动窗口[left, right]
     for (int right = 0; right < s.size(); right++) {
         cnt_s[s[right] - 'a']++;
         int left = right - p.size() + 1;
@@ -118,6 +119,7 @@ vector<int> findAnagrams(string s, string p) {
         if (check(cnt_s, cnt_p)) {
             ans.push_back(left);
         }
+        // 定长窗口, 满了之后要一直右移
         cnt_s[s[left] - 'a']--;// 左端点离开窗口
     }
     return ans;
