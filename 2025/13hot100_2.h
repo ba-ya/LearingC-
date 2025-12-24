@@ -894,7 +894,7 @@ int findDuplicate(vector<int>& nums) {
                 head = nums[head];
                 slow = nums[slow];
             }
-            return nums[slow];
+            return slow;
         }
     }
     return -1;

@@ -237,6 +237,7 @@ int balancedString(string s) {
 // 76,最小覆盖子串,参考,
 // 写了版错误的,测试用例能通过144 / 268
 string minWindow(string s, string t) {
+    // lambda放最上面
     auto is_covered = [](int cnt_s[], int cnt_t[]) {
         for (int i = 'a'; i <= 'z'; ++i) {
             if (cnt_s[i] < cnt_t[i]) {

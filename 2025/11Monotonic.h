@@ -7,6 +7,7 @@
 namespace Monotonic_Stack {
 // 739, 每日温度,
 vector<int> dailyTemperatures(vector<int>& temperatures) {
+    // 单调栈是用来找上/下一个最大(小)的元素
     // 下一个更大, 递减栈
     // 从左到右
     int n = temperatures.size();
@@ -355,6 +356,8 @@ int maximalRectangle(vector<vector<char>>& matrix) {
 namespace Monotonic_Queue {
 // 239, 滑动窗口最大值
 vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+    // 单调队列是求最值
+    // 最大值,递减队列
     int n = nums.size();
     vector<int> ans(n - k + 1);
     deque<int> q;
