@@ -51,7 +51,7 @@ int trap(vector<int>& height) {
     return ans;
 }
 
-// 496下一个更大的元素1
+// 496, 下一个更大的元素1
 vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
     // <nums,下一个更大的元素>
     unordered_map<int, int> values;
@@ -75,7 +75,7 @@ vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
     return ans;
 }
 
-// 503下一个更大元素2
+// 503, 下一个更大元素2
 vector<int> nextGreaterElements(vector<int>& nums) {
     int n = nums.size();
     stack<int> st;
@@ -93,9 +93,9 @@ vector<int> nextGreaterElements(vector<int>& nums) {
     return ans;
 }
 
-// 901股票价格跨度
+// 901, 股票价格跨度
 class StockSpanner {
-    // 上一个更大元素(不能相等)的位置, stack里面只存大值
+    // 上一个更大元素(不能相等)的位置, stack里面只存大值, 递减栈
     // 天数下标, 该天价格
     stack<pair<int, int>> st;
     int cur_day = -1;
@@ -105,6 +105,7 @@ public:
     }
 
     int next(int price) {
+        // 求上一个更大或相等的元素， 这里是>=
         while (price >= st.top().second) {
             st.pop();
         }
@@ -115,10 +116,11 @@ public:
     }
 };
 
-// 1019链表中的下一个更大节点
+// 1019, 链表中的下一个更大节点
 vector<int> nextLargerNodes(ListNode* head) {
+    // 递减栈
     vector<int> ans;
-    // 下标, 对应的值
+    // 下标, 对应的值, 缺少信息就可以向st里放pair
     stack<pair<int, int>> st;
     for (auto cur = head; cur; cur = cur->next) {
         int x = cur->val;
@@ -133,7 +135,7 @@ vector<int> nextLargerNodes(ListNode* head) {
     return ans;
 }
 
-// 1944队列中可以看到的人数
+// 1944, 队列中可以看到的人数
 vector<int> canSeePersonsCount(vector<int>& heights) {
     // 从右往左看
     int n = heights.size();
@@ -151,6 +153,28 @@ vector<int> canSeePersonsCount(vector<int>& heights) {
             ans[i] += 1;
         }
         st.push(h);
+    }
+    return ans;
+}
+vector<int> canSeePersonsCount_2(vector<int>& heights) {
+    // 从左往右看
+    // 下一个更大元素
+    int n = heights.size();
+    vector<int> ans(n, 0);
+    stack<int> st;
+    for (int i = 0; i < n; i++) {
+        int h = heights[i];
+        while (!st.empty() && heights[st.top()] < h) {
+            // h对应的可以看见
+            ans[st.top()] += 1;
+            st.pop();
+        }
+        // 特殊情况, 栈顶 > h > 中间
+        // 虽然此时栈顶比h大,但因为中间都小,所以可以看见h
+        if (!st.empty()) {
+            ans[st.top()] += 1;
+        }
+        st.push(i);
     }
     return ans;
 }
@@ -238,6 +262,7 @@ int largestRectangleArea_3(vector<int>& heights) {
     st.push(-1);
     for (int right = 0; right < n; right++) {
         int r_h = heights[right];
+        // 计算多次,每个可能的答案都算一次ans
         // right必须是st栈顶下一个更小的
         while (st.size() > 1 && r_h < heights[st.top()]) {
             int i = st.top();
@@ -251,14 +276,18 @@ int largestRectangleArea_3(vector<int>& heights) {
     return ans;
 }
 
-// 1793好子数组的最大分数
+// 1793, 好子数组的最大分数
 int maximumScore(vector<int>& nums, int k) {
+    // 上/下一个更小的, 递增栈
+    // left和right是开区间更小的,对于中间区间nums[i]是最小的
     int n = nums.size();
     vector<int> left(n, -1);
     vector<int> right(n, n);
     stack<int> st;
     for (int i = 0; i < n; i++) {
         int x = nums[i];
+        // 新来的x小,说明栈顶的下一个更小就找到了,可以弹出
+        // >= 可以让栈内元素无重复元素
         while (!st.empty() && nums[st.top()] >= x) {
             right[st.top()] = i;
             st.pop();
@@ -271,15 +300,17 @@ int maximumScore(vector<int>& nums, int k) {
 
     int ans = 0;
     for (int i = 0; i < n; i++) {
-        // left 和 right 是矩形区域外的坐标, k是在(left, right)开区间里面
-        if (left[i] < k && k < right[i]) {
-            ans = max(ans, nums[i] * (right[i] - left[i] - 1));
+        // (left, right) -> [l, r]
+        int l = left[i] + 1;
+        int r = right[i] - 1;
+        if (l <= k && k <= r) {
+            ans = max(ans, nums[i] * (r - l + 1));
         }
     }
     return ans;
 }
 
-// 85最大矩形
+// 85, 最大矩形
 int maximalRectangle(vector<vector<char>>& matrix) {
     auto get_max_rectangle = [&](vector<int> heights) {
         int n = heights.size();

@@ -39,7 +39,7 @@
 | DP_Tree                    | 7             | 1 |          |
 | DP_MaxSet                  | 3             | 1 |          |
 | DP_MinSet                  | 1             | 1 |          |
-| Monotonic_Stack            | 10            | 1(do 496) |          |
+| Monotonic_Stack            | 10            | 2 | 901,1944,1793 |
 | Monotonic_Queue            | 6             | 1 |          |
 
 ## [HOT100](https://leetcode.cn/studyplan/top-100-liked/)
