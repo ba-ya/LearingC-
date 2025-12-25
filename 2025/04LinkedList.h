@@ -43,7 +43,7 @@ ListNode* reverseBetween(ListNode* head, int left, int right) {
     return dummy.next;
 }
 
-// 25, k个一组反转链表
+// 25, K个一组翻转链表
 ListNode* reverseKGroup(ListNode* head, int k) {
     int cnt = 0;
     for (ListNode *cur = head; cur; cur = cur->next) {
@@ -313,7 +313,7 @@ void deleteNode(ListNode* node) {
     delete next;
 }
 
-// 19, 删除链表的倒数第N个节点
+// 19, 删除链表的倒数第N个结点
 ListNode* removeNthFromEnd(ListNode* head, int n) {
     // need dummy
     // 如果遇到需要删除头节点的题目，添加哨兵节点可以简化代码逻辑

@@ -22,7 +22,7 @@ int longestCommonSubsequence(string text1, string text2) {
         if (text1[i] == text2[j]) {
             return res = dfs(i - 1, j - 1) + 1;
         }
-        // 没有相同的,要没text1跳,要么text2跳
+        // 没有相同的,要么text1跳,要么text2跳
         return res = max(dfs(i, j - 1), dfs(i - 1, j));
     };
     return dfs(n - 1, m - 1);

@@ -447,7 +447,7 @@ string decodeString_2(string s) {
 /// 堆
 // 215, 数组中第K个最大元素
 int findKthLargest(vector<int>& nums, int k) {
-    // 快速选择算法
+    // 快速选择算法, random
     srand(time(NULL));
     // 分区,将[left, right]按照随机选择的pivot,
     // nums[i]<=pivot, pivot>=nums[i]

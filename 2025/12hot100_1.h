@@ -256,6 +256,21 @@ vector<int> productExceptSelf(vector<int>& nums) {
     }
     return ans;
 }
+vector<int> productExceptSelf_2(vector<int>& nums) {
+    // 把suf当作输出, 空间复杂度O(n)->O(1)
+    int n =  nums.size();
+    vector<int> suf(n, 1);
+    for (int i = n - 2; i >= 0; i--) {
+        suf[i] = suf[i + 1] * nums[i + 1];
+    }
+
+    int pre = 1;
+    for (int i = 0; i < n; i++) {
+        suf[i] *= pre;
+        pre *= nums[i];
+    }
+    return suf;
+}
 
 // 41, 缺失的第一个正数
 int firstMissingPositive(vector<int>& nums) {
@@ -293,6 +308,7 @@ void setZeroes(vector<vector<int>>& matrix) {
             }
         }
     }
+    // 遍历置零
     for (int i = 1; i < m; i++) {
         // 列倒着遍历, 避免matrix[i][0]提前置零造成误会
         for (int j = n - 1; j >= 0; j--) {
@@ -302,6 +318,7 @@ void setZeroes(vector<vector<int>>& matrix) {
         }
     }
 
+    // 处理第一行
     if (first_row_has_zero) {
         ranges::fill(matrix[0], 0);
     }
@@ -336,7 +353,6 @@ vector<int> spiralOrder(vector<vector<int>>& matrix) {
 void rotate(vector<vector<int>>& matrix) {
     int n = matrix.size();
     // target: (i, j) -> (j, n - i - 1)
-    // 线性代数, 转置(i, j)->(j, i)+行翻转(j, i)->(j, n - i - 1)
     auto reverse = [&](vector<int> &row) {
         int i = 0;
         int j = n - 1;
@@ -346,17 +362,20 @@ void rotate(vector<vector<int>>& matrix) {
     };
 
     // 翻转对角线上方的
+    // 线性代数, 转置(i, j)->(j, i)
     for (int i = 0; i < n; i++) {
         for (int j = i; j < n; j++) {
             swap(matrix[i][j], matrix[j][i]);
         }
     }
+    // 行翻转(j, i)->(j, n - i - 1)
     for (auto &row : matrix) {
         reverse(row);
     }
 }
 // 顺时针180
 void rotate_2(vector<vector<int>>& matrix) {
+    // (i, j) -> (n - i - 1, n - j - 1)
     int n = matrix.size();
     // 行沿中心线翻转(i, j)->(n - i - 1, j)
     for (int i = 0; i < n / 2; i++) {
@@ -371,6 +390,7 @@ void rotate_2(vector<vector<int>>& matrix) {
 }
 // 逆时针90
 void rotate_3(vector<vector<int>>& matrix) {
+    // (i, j) -> (n - j - 1, i)
     int n = matrix.size();
     // 转置(i, j) -> (n - j - 1, n - i - 1)
     for (int i = 0; i < n; i++) {
@@ -378,7 +398,7 @@ void rotate_3(vector<vector<int>>& matrix) {
             swap(matrix[i][j], matrix[n - j - 1][n - i - 1]);
         }
     }
-    // 列翻转 (n - j - 1, n - i - 1) ->  (n - i - 1, n - j - 1)
+    // 列翻转 (n - j - 1, n - i - 1) ->  (n - i - 1, i)
     for (auto &row : matrix) {
         ranges::reverse(row);
     }
@@ -425,6 +445,20 @@ ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
 // 141, 环形链表 LinkedList_QuickNSlow
 // 142, 环形链表2 LinkedList_QuickNSlow
 
+// 88, 合并两个有序数组
+void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+    int p = m + n - 1;
+    int p1 = m - 1;
+    int p2 = n - 1;
+    while (p2 >= 0) {
+        if (p1 >= 0 && nums1[p1] > nums2[p2]) {
+            nums1[p--] = nums1[p1--];
+        }  else {
+            nums1[p--] = nums2[p2--];
+        }
+    }
+
+}
 // 21, 合并两个有序链表
 ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
     ListNode dummy;
@@ -481,8 +515,10 @@ Node* copyRandomList(Node* head) {
 
     // 填充random节点
     for (Node *cur = head; cur; cur = cur->next->next) {
+        Node *copy = cur->next;
         if (cur->random) {
-            cur->next->random = cur->random->next;
+            Node *random_copy = cur->random->next;
+            copy->random = random_copy;
         }
     }
 
@@ -566,20 +602,22 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
     // [i, j)
     auto merge_k_lists = [&](this auto &&merge_k_lists, int i, int j) -> ListNode* {
         int m = j - i;
-        if (m == 0) {
+        if (m == 0) { // 空区间
             return nullptr;
         }
-        if (m == 1) {
+        if (m == 1) { // 只有一个链表
             return lists[i];
         }
-        auto left = merge_k_lists(i, i + m / 2);
-        auto right = merge_k_lists(i + m / 2, j);
+        int mid = i + (j - i) / 2;
+        auto left = merge_k_lists(i, mid);
+        auto right = merge_k_lists(mid, j);
         return merge_two_lists(left, right);
     };
     return merge_k_lists(0, lists.size());
 }
 
 // 146, LRU缓存
+// 标准库实现
 class LRUCache {
     int capacity;
     // key, value
@@ -629,6 +667,8 @@ public:
         }
     }
 };
+// 手写链表
+
 
 /// 二叉树
 // 94, 二叉树的中序遍历
