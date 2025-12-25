@@ -668,6 +668,65 @@ public:
     }
 };
 // 手写链表
+class LRUCache_2 {
+    struct Node {
+        int key;
+        int value;
+        Node *prev;
+        Node *next;
+
+        Node(int k, int v) : key(k), value(v) {}
+    };
+
+    int capacity;
+    Node *dummy; //哨兵节点
+    unordered_map<int, Node*> key_to_node;
+
+    // 移除最后一个节点
+    void remove(Node *node) {
+        Node *pre = node->prev;
+        Node *nxt = node->next;
+        pre->next = nxt;
+        nxt->prev = pre;
+    }
+    // 添加Node到首位置
+    void push_front(Node *node) {
+        // 移动到dummy的下一个
+        Node *nxt = dummy->next;
+        dummy->next = node;
+        node->prev = dummy;
+        node->next = nxt;
+        nxt->prev = node;
+    }
+    // 如果不存在对应Node,返回空
+    // 如果存在就把当前node放到最前面
+    Node *get_node(int key) {
+        auto umap_iter = key_to_node.find(key);
+        if (umap_iter == key_to_node.end()) {
+            return nullptr;
+        }
+        Node *node = umap_iter->second;
+        remove(node);
+        push_front(node);
+        return node;
+    }
+
+public:
+    LRUCache_2(int capacity) {
+        this->capacity = capacity;
+        dummy = new Node(0,0);
+        dummy->next = dummy;
+        dummy->prev = dummy;
+    }
+
+    int get(int key) {
+
+    }
+
+    void put(int key, int value) {
+
+    }
+};
 
 
 /// 二叉树
