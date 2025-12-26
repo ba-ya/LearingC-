@@ -346,6 +346,8 @@ int diameterOfBinaryTree(TreeNode* root) {
         if (root == nullptr) {
             return -1;
         }
+        // 加一表示这两个链长是站在当前节点,看左右子树
+        // 加上了自身节点
         int l_len = dfs(root->left) + 1;
         int r_len = dfs(root->right) + 1;
         // 直径是左链长+右, 不需要再加1
@@ -356,7 +358,7 @@ int diameterOfBinaryTree(TreeNode* root) {
     return ans;
 }
 
-// 124二叉树的最大路径和
+// 124, 二叉树的最大路径和
 int maxPathSum(TreeNode* root) {
     // 链长: 下面某个节点(这里可以不用是叶子节点)到当前节点的路径, 节点是负值是时可以不用加入路径
     // dfs返回的是最大的链和

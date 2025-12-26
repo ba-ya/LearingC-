@@ -720,14 +720,29 @@ public:
     }
 
     int get(int key) {
-
+        // 不存在,返回-1
+        Node *node = get_node(key);
+        return node ? node->value : -1;
     }
 
     void put(int key, int value) {
-
+        // 存在就更新值,再放到最上面
+        if (Node *node = get_node(key)) {
+            // get_node会自动放最上面
+            node->value = value;
+            return;
+        }
+        Node *node = new Node(key, value);
+        push_front(node);
+        key_to_node[key] = node;
+        if (key_to_node.size() > capacity) {
+            Node *old = dummy->prev;
+            remove(old);
+            key_to_node.erase(old->key);
+            delete old;
+        }
     }
 };
-
 
 /// 二叉树
 // 94, 二叉树的中序遍历

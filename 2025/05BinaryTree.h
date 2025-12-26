@@ -169,9 +169,11 @@ vector<int> rightSideView(TreeNode* root) {
         if (root == nullptr) {
             return;
         }
+        // 第一次遇到这个深度
         if (ans.size() == dep) {
             ans.emplace_back(root->val);
         }
+        // 先右再左
         dfs(root->right, dep + 1);
         dfs(root->left, dep + 1);
     };
@@ -242,15 +244,16 @@ TreeNode* sufficientSubset(TreeNode* root, int limit) {
 namespace BinaryTree_ThreeOrder {
 // 98, 验证二叉搜索树
 bool isValidBST(TreeNode* root) {
-    function<pair<long long, long long>(TreeNode *node)> dfs = [&](TreeNode *node) -> pair<long long, long long> {
+    // min, max
+    auto dfs = [&](this auto &&dfs, TreeNode *node) -> pair<long long, long long> {
         if (node == nullptr) {
-            // 是二叉搜索树
+            // 返回(max, min), 不会影响结果
             return {LLONG_MAX, LLONG_MIN};
         }
         auto [l_min, l_max] = dfs(node->left);
         auto [r_min, r_max] = dfs(node->right);
         long long x = node->val;
-        // 这种情况下不是二叉搜索树
+        // 这种情况下不是二叉搜索树, 不合法
         if (x <= l_max || x >= r_min) {
             return {LLONG_MIN, LLONG_MAX};
         }
@@ -324,6 +327,7 @@ vector<vector<int>> closestNodes(TreeNode* root, vector<int>& queries) {
 // 230, 二叉搜索树中第K小的元素
 int kthSmallest(TreeNode* root, int k) {
     int ans;
+    // 中序遍历,加个条件
     function<void(TreeNode*)> dfs = [&](TreeNode *node) {
         if (node == nullptr || k == 0) {
             return;
@@ -515,7 +519,7 @@ vector<vector<int>> levelOrder(TreeNode* root) {
             if (node->right) next.push_back(node->right);
         }
         cur = std::move(next);
-        ans.emplace_back(val);
+        ans.emplace_back(std::move(val));
     }
     return ans;
 }
