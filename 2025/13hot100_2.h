@@ -96,10 +96,13 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         colors[x] = 1;
         // 遍历x的邻居y
         for (auto &y : g[x]) {
+            // y也是正在访问
+            // 或者 y没有被访问但其他位置存在环
             if (colors[y] == 1 || (colors[y] == 0 && dfs(y))) {
                 return true;
             }
         }
+        // 访问过
         colors[x] = 2;
         return false;
     };
