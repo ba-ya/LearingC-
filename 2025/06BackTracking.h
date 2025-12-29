@@ -4,7 +4,7 @@
 #include "00solution.h"
 
 namespace BackTrack_Subset {;
-// 17电话号码的数字组合
+// 17, 电话号码的字母组合
 vector<string> letterCombinations(string digits) {
     vector<string> ans;
     int n = digits.size();
@@ -43,6 +43,22 @@ vector<vector<int>> subsets(vector<int>& nums) {
         dfs(i + 1);
         // 恢复现场
         path.pop_back();
+    };
+    dfs(0);
+    return ans;
+}
+vector<vector<int>> subsets_2(vector<int>& nums) {
+    // 枚举选哪个
+    int n = nums.size();
+    vector<vector<int>> ans;
+    vector<int> path;
+    auto dfs = [&](this auto &&dfs, int i) -> void {
+        ans.emplace_back(path);
+        for (int j = i; j < n; j++) {
+            path.emplace_back(nums[j]);
+            dfs(j + 1);
+            path.pop_back();
+        }
     };
     dfs(0);
     return ans;
@@ -207,8 +223,11 @@ vector<string> generateParenthesis(int n) {
     // 长度固定为2n,可以先给path一个长度
     string path(n * 2, 0);
     // left个左括号,right个右括号
+    // 在递归过程中, 必须满足下面两个条件:
+    // 左括号个数小于等于总个数
+    // 右括号个数小于等于左括号个数
     function<void(int, int)> dfs = [&](int left, int right) {
-        if (right ==  n) {
+        if (right == n) {
             ans.emplace_back(path);
             return;
         }
@@ -254,7 +273,9 @@ vector<string> generateParenthesis_2(int n) {
 
 // 39, 组合总和
 vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    // 这里sort是必要的
     ranges::sort(candidates);
+    int n = candidates.size();
     vector<vector<int>> ans;
     vector<int> path;
     function<void(int, int)> dfs = [&](int i, int capacity) {
@@ -262,8 +283,9 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
             ans.emplace_back(path);
             return;
         }
-        for (int j = i; j < candidates.size() && candidates[j] <= capacity; j++) {
+        for (int j = i; j < n && candidates[j] <= capacity; j++) {
             path.push_back(candidates[j]);
+            // 可重复选取, 这里可以是j
             dfs(j, capacity - candidates[j]);
             path.pop_back();
         }
