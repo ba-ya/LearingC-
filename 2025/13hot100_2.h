@@ -255,7 +255,7 @@ bool exist(vector<vector<char>>& board, string word) {
 /// 二分查找
 // 35, 搜索插入位置
 int searchInsert(vector<int>& nums, int target) {
-    // 二分查找
+    // 二分查找, >= target
     int n = nums.size();
     int left = -1;
     int right = n;
@@ -284,12 +284,15 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
     nums1.push_back(INT_MAX);
     nums2.push_back(INT_MAX);
 
+    // 这里i表示nums1中在第一组的个数,
+    // j表示nums2中在第一组的个数
+    // 规定如果是奇数,则多的一个放在第一组
     // j = (m + n + 1) / 2 - i;
     int i = 0;
     int j = (m + n + 1) / 2;
     // 可以判断a[i+1]和b[j]大小来跳出循环
     // 跳出循环的上一个就可以满足a[i] <= b[j+1] 且 a[i+1] > b[j]
-    while (nums1[i + 1] <= nums2[j + 1]) {
+    while (nums1[i + 1] <= nums2[j]) {
         i++;
         j--;
     }

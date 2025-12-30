@@ -64,7 +64,7 @@ vector<vector<int>> subsets_2(vector<int>& nums) {
     return ans;
 }
 
-// 131分割回文串
+// 131, 分割回文串
 vector<vector<string>> partition(string s) {
     // 选或不选
     auto check = [&](int left, int right) {
@@ -90,7 +90,7 @@ vector<vector<string>> partition(string s) {
         }
         // 不加逗号
         // i <= n - 2 , i < n - 1 , i + 1 < n
-        if (end <= n - 2) {
+        if (end + 1 <= n - 1) {
             // 保证end+1在范围内
             dfs(start, end + 1);
         }
