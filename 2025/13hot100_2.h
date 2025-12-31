@@ -312,7 +312,7 @@ double findMedianSortedArrays_2(vector<int>& nums1, vector<int>& nums2) {
     int m = nums1.size();
     int n = nums2.size();
 
-    // 循环不变量,
+    // 循环不变量,二分i
     // nums1[left] <= nums2[j + 1]
     // nums1[right] > nums2[j + 1]
     int left = -1;
@@ -438,7 +438,7 @@ string decodeString_2(string s) {
                 pre_res += res;
             }
             res = std::move(pre_res);
-            // cout << res << ", " << pre_res<< ", " << pre_k << endl;
+            // cout << res << ", " << pre_res << ", " << pre_k << endl;
             // "3[a]2[bc]"  "3[a2[c]]"
             // a, , 3       c, a, 2
             // bc, aaa, 2   acc, , 3
@@ -471,11 +471,13 @@ int findKthLargest(vector<int>& nums, int k) {
         int j = right;
         while (true) {
             // 这里<, 不能带=
+            // 符合条件的i, 左边都小于pivot
             while (i <= j && nums[i] < pivot) {
                 i++;
             }
             // 此时 nums[i] >= pivot
 
+            // 符合条件的j, 右边都大于pivot
             while (i <= j && nums[j] > pivot) {
                 j--;
             }
@@ -502,9 +504,11 @@ int findKthLargest(vector<int>& nums, int k) {
             return nums[index];
         }
         if (index > n - k) {
+            // [left, index - 1]
             // index对应的值大了,右边界可以缩小
             right = index - 1;
         } else {
+            // [index + 1, right]
             left = index + 1;
         }
     }
