@@ -683,7 +683,8 @@ bool wordBreak(string s, vector<string>& wordDict) {
             return res;
         }
         // 所有情况中存在某个字符串在字典中,当前拆分成功,继续递归
-        for (int j = i - 1; j >= max(0, j - max_len); j--) {
+        // [j, i)子串长度最长就是max_len
+        for (int j = i - 1; j >= max(0, i - max_len); j--) {
             if (st.contains(s.substr(j, i - j)) && dfs(j)) {
                 return res = true;
             }
@@ -697,7 +698,9 @@ bool wordBreak(string s, vector<string>& wordDict) {
 
 // 152, 乘积最大子数组
 int maxProduct(vector<int>& nums) {
-    // 连续性子集问题
+    // 连续型的子集问题 -> 直接递推
+    // 不连续的子集型问题 -> 先记忆化搜索再递推
+    // 连续性子集问题, 需要记录两个值pair<int, int>, 不好记录
     int n = nums.size();
     // 以nums[i]为结尾的最大子数组乘积,最小子数组乘积
     // 三种情况,
@@ -708,10 +711,38 @@ int maxProduct(vector<int>& nums) {
     f_max[0] = f_min[0] = nums[0];
     for (int i = 1; i < n; i++) {
         int x = nums[i];
-        f_max[i] = max({f_min[i - 1] * x, f_max[i - 1] * x ,x});
-        f_min[i] = min({f_min[i - 1] * x, f_max[i - 1] * x, x});
+        int prod1 = f_max[i - 1] * x;
+        int prod2 = f_min[i - 1] * x;
+        f_max[i] = max({prod1, prod2 ,x});
+        f_min[i] = min({prod1, prod2, x});
     }
     return ranges::max(f_max);
+}
+int maxProduct_2(vector<int>& nums) {
+    // 记忆化搜索,明显麻烦多了
+    int n = nums.size();
+    vector<int> f_max(n), f_min(n);
+    vector<optional<pair<int, int>>> memo(n);
+    auto dfs = [&](this auto &&dfs, int i) -> pair<int, int> {
+        if (i < 0) {
+            return {1, 1};
+        }
+        auto &res = memo[i];
+        if (res) {
+            return res.value();
+        }
+        auto [mn, mx] = dfs(i - 1);
+        int prod1 = mn * nums[i];
+        int prod2 = mx * nums[i];
+        res = {min({nums[i], prod1, prod2}), max({nums[i], prod1, prod2})};
+        return res.value();
+    };
+    int ans = INT_MIN;
+    for (int i = 0; i < n; i++) {
+        int x = dfs(i).second;
+        ans = max(ans, x);
+    }
+    return ans;
 }
 
 // 416, 分割等和子集
