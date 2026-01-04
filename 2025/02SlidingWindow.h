@@ -239,6 +239,7 @@ int balancedString(string s) {
 string minWindow(string s, string t) {
     // lambda放最上面
     auto is_covered = [](int cnt_s[], int cnt_t[]) {
+        // 注意,这里有等号
         for (int i = 'a'; i <= 'z'; ++i) {
             if (cnt_s[i] < cnt_t[i]) {
                 return false;
@@ -258,6 +259,9 @@ string minWindow(string s, string t) {
         cnt_t[c] += 1;
     }
 
+    // -1可以排除一些特殊情况
+    // [ans_left, ans_right]
+    // [ans_left, ans_right)不好判断没有进入if的情况
     int ans_left = -1;
     int ans_right = s.size();
     int left = 0;
