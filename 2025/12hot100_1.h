@@ -58,6 +58,7 @@ int longestConsecutive(vector<int>& nums) {
         while (st.contains(y)) {
             y++;
         }
+        // [x, y)
         ans = max(ans, y - x);
     }
     return ans;
@@ -96,6 +97,7 @@ vector<int> findAnagrams(string s, string p) {
     // 只有小写字母, 数组大小26
     auto check = [&](int cnt_s[], int cnt_p[]) {
         for (int i = 0; i < 26; i++) {
+            // 不等号就行,不要判断大小
             if (cnt_p[i] != cnt_s[i]) {
                 return false;
             }
@@ -139,6 +141,7 @@ public:
         }
     }
 
+    // [i, j)
     int sumRange(int left, int right) {
         // s[j] - s[i] = [i, j - 1], 一共j - i个
         // [0, right] - [0, left - 1]

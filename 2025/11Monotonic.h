@@ -29,6 +29,7 @@ vector<int> dailyTemperatures(vector<int>& temperatures) {
 int trap(vector<int>& height) {
     // 前后缀是竖着看, 单调栈是横着看
     // 从左到右,横着一条条看
+    // 下一个更大,递减栈
     int n = height.size();
     stack<int> st;
     int ans = 0;
@@ -42,6 +43,7 @@ int trap(vector<int>& height) {
             if (st.empty()) {
                 break;
             }
+            // (j, i)
             int j = st.top();
             int left_h = height[j];
             int dh = min(left_h, right_h) - h;
@@ -369,6 +371,7 @@ vector<int> maxSlidingWindow(vector<int>& nums, int k) {
         }
         q.push_back(i);
         // 2.左边出
+        // [left, right]
         int left = i - k + 1;
         if (q.front() < left) {
             q.pop_front();

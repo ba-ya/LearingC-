@@ -208,6 +208,7 @@ int maxArea(vector<int>& height) {
     int left = 0;
     int right = height.size() - 1;
     while (left < right) {
+        // [left, right)
         ans = max(ans, (right - left) * min(height[left], height[right]));
         // 小边确定了高,大边再怎么挪也不可能获得更大面积,
         // 所以应该移动小边
