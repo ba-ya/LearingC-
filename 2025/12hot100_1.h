@@ -236,6 +236,7 @@ void rotate(vector<int>& nums, int k) {
         }
     };
     int n = nums.size();
+    // k要缩小范围到n内
     k = k % n;
     reverse(0, n - 1);
     reverse(0, k - 1);
