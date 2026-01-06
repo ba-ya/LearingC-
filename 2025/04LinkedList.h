@@ -291,7 +291,9 @@ bool isPalindrome(ListNode* head) {
     ListNode *head2 = reverse_list(mid);
     // 1,2,3,4,5 -> mid(3) 1,2,3 和 5,4,3
     // 1,2,3,4   -> mid(3) 1,2,3 和 4,3
-    // 循环需要走到head的倒数第二个while(head->next)或者head2走完while(head2)
+    // 循环需要走到
+    // head的倒数第二个while(head->next) 或者
+    // head2走完while(head2)
     while (head2) {
         if (head->val != head2->val) {
             return false;

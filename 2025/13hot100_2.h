@@ -16,7 +16,7 @@ int numIslands(vector<vector<char>>& grid) {
     // 方向矩阵, 上下左右
     int DIR[4][2] = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
     // 插旗
-    // 出界, 插过旗, 遇到水
+    // 出界, 插过旗=='2', 遇到水=='0'
     auto dfs = [&](this auto &&dfs, int i, int j) {
         if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] != '1') {
             return;
@@ -127,7 +127,6 @@ private:
         bool end = false;
     };
 
-
     Node *root = new Node();
     int find(string word) {
         Node *cur = root;
@@ -141,12 +140,12 @@ private:
         // 2表示完全匹配,1表示前缀匹配
         return cur->end ? 2 : 1;
     }
-    void destory(Node *node) {
+    void destroy(Node *node) {
         if (node == nullptr) {
             return;
         }
         for (Node * son : node->son) {
-            destory(son);
+            destroy(son);
         }
         delete node;
     }
@@ -155,7 +154,7 @@ public:
 
     }
     ~Trie(){
-        destory(root);
+        destroy(root);
     }
 
     void insert(string word) {

@@ -512,9 +512,7 @@ Node* copyRandomList(Node* head) {
     // 每个节点复制一个节点
     // 遍历原节点
     for (Node *cur = head; cur; cur = cur->next->next) {
-        Node *next = cur->next;
         cur->next = new Node(cur->val, cur->next, nullptr);
-        cur->next = next;
     }
 
     // 填充random节点
@@ -575,6 +573,7 @@ ListNode* sortList(ListNode* head) {
     };
     auto sorted = [&](this auto &&sorted, ListNode *head) {
         if (head == nullptr || head->next == nullptr) {
+            // 这里返回的是head
             return head;
         }
         auto mid = find_mid(head);
@@ -673,6 +672,8 @@ public:
 };
 // 手写链表
 class LRUCache_2 {
+    // 这里把key也存下来
+    // 在put的时候清除key_to_node里面旧key可以用
     struct Node {
         int key;
         int value;
