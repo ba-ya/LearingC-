@@ -90,7 +90,7 @@ vector<vector<string>> partition(string s) {
         }
         // 不加逗号
         // i <= n - 2 , i < n - 1 , i + 1 < n
-        if (end + 1 <= n - 1) {
+        if (end + 1 < n) {
             // 保证end+1在范围内
             dfs(start, end + 1);
         }
@@ -283,6 +283,7 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
             ans.emplace_back(path);
             return;
         }
+        // 可以重复,j从i开始
         for (int j = i; j < n && candidates[j] <= capacity; j++) {
             path.push_back(candidates[j]);
             // 可重复选取, 这里可以是j
@@ -379,7 +380,7 @@ vector<vector<int>> permute(vector<int>& nums) {
                 on_path[j] = true;
                 // path下一个就是i+1
                 dfs(i + 1);
-                // 再回复现场
+                // 再恢复现场
                 on_path[j] = false;
             }
         }
@@ -399,19 +400,20 @@ vector<vector<string>> solveNQueens(int n) {
     // col, r + c, r - c
     // true表示当前列,当前主对角线,次对角线已经存在棋子
     // 不允许在这3条线上放置棋子
-    vector<uint8_t> col(n), diag1(2 * n), diag2(2 * n);
+    vector<uint8_t> col(n), diag1(2 * n - 1), diag2(2 * n - 1);
     function<void(int)> dfs = [&](int r) {
         if (r == n) {
             ans.push_back(board);
             return;
         }
         for (int c = 0; c < n; c++) {
-            int rc = r - c + n;
-            if (!col[c] && !diag1[r + c] && !diag2[rc]) {
+            int rc1 = r + c;
+            int rc2 = r - c + n - 1;
+            if (!col[c] && !diag1[rc1] && !diag2[rc2]) {
+                col[c] = diag1[rc1] = diag2[rc2] = true;
                 board[r][c] = 'Q';
-                col[c] = diag1[r + c] = diag2[rc] = true;
                 dfs(r + 1);
-                col[c] = diag1[r + c] = diag2[rc] = false;
+                col[c] = diag1[rc1] = diag2[rc2] = false;
                 board[r][c] = '.';
             }
         }

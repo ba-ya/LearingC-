@@ -377,7 +377,7 @@ int findPeakElement(vector<int>& nums) {
     return right;
 }
 
-// 153寻找旋转排序数组中的最小值
+// 153, 寻找旋转排序数组中的最小值
 int findMin(vector<int>& nums) {
     // [0, n-2]
     int n = nums.size();

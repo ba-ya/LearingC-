@@ -59,7 +59,7 @@ int orangesRotting(vector<vector<int>>& grid) {
         }
     }
     int ans = 0;
-    while (fresh && rots.size()){
+    while (fresh && rots.size()) {
         vector<vector<int>> rots_2;
         for (auto &rot : rots) {
             int i = rot[0];
@@ -153,6 +153,7 @@ public:
     Trie() {
 
     }
+    // 指针,需要析构函数释放
     ~Trie(){
         destroy(root);
     }
