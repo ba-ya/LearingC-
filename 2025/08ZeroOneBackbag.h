@@ -51,6 +51,7 @@ int coinChange(vector<int>& coins, int amount) {
         if (res != -1) {
             return res;
         }
+        // 这个分支可以避免出现c < 0的情况
         // 容量不够只能不选
         if (c < coins[i]) {
             return res = dfs(i - 1, c);

@@ -127,7 +127,7 @@ string shortestCommonSupersequence(string str1, string str2) {
 }
 
 namespace LIS {
-// 300最长递增子序列
+// 300, 最长递增子序列
 // 时间复杂度:O(n^2), 空间复杂度:O(n)
 int lengthOfLIS(vector<int>& nums) {
     int n = nums.size();

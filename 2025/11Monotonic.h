@@ -185,7 +185,7 @@ vector<int> canSeePersonsCount_2(vector<int>& heights) {
 // 84, 柱状图中最大的矩形
 int largestRectangleArea(vector<int>& heights) {
     // 枚举每个height,
-    // 找出左边下一个更小, 右边下一个更小
+    // 找出左边下一个更小, 右边下一个更小, 递增栈
     int n = heights.size();
 
     stack<int> st;
@@ -226,6 +226,8 @@ int largestRectangleArea(vector<int>& heights) {
     return ans;
 }
 int largestRectangleArea_2(vector<int>& heights) {
+    // 主要用这个, 好理解一点
+    // 上/下一个更小, 递增栈
     int n = heights.size();
     vector<int> left(n, -1);
     vector<int> right(n, n);

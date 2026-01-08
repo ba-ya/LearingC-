@@ -273,6 +273,7 @@ int searchInsert(vector<int>& nums, int target) {
 
 // 4, 寻找两个正序数组的中位数
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    // 第一个数组小,保证i可以取到0
     if (nums1.size() > nums2.size()) {
         swap(nums1, nums2);
     }
@@ -296,6 +297,8 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         i++;
         j--;
     }
+    // nums1[i] < nums2[j + 1]
+    // nums1[i + 1] > num2[j]
     int mx = max(nums1[i], nums2[j]);
     int mn = min(nums1[i + 1], nums2[j + 1]);
     // 奇数取第一组最大的, 偶数平分第一组最大和第二组最小的
@@ -314,14 +317,23 @@ double findMedianSortedArrays_2(vector<int>& nums1, vector<int>& nums2) {
 
     // 循环不变量,二分i
     // nums1[left] <= nums2[j + 1]
-    // nums1[right] > nums2[j + 1]
+    // nums1[right] > nums2[j + 1], target
     int left = -1;
     int right = m;
     while (left + 1 < right) {
         int i = left + (right - left) / 2;
         int j = (m + n + 1) / 2 - i - 2;
-        (nums1[i] > nums2[j + 1] ? right : left) = i;
+        // i是第一部分,需要满足
+        if (nums1[i] <= nums2[j + 1]) {
+            // 染色可以确定, <i的部分都是红色,left = i
+            left = i;
+        } else {
+            // nums[i] > nums[j + 1]
+            // >i的部分是蓝色,right = i
+            right = i;
+        }
     }
+    // nums1[i] < nums2[j + 1], nums1[i + 1] > nums2[j + 1] > nums2[j]
     int i = left;
     int j = (m + n + 1) / 2 - i - 2;
     int ai = i >= 0 ? nums1[i] : INT_MIN;
@@ -434,7 +446,7 @@ string decodeString_2(string s) {
             // 此时res是[]内的字符串
             auto [pre_res, pre_k] = st.top();
             st.pop();
-            for (; pre_k > 0; pre_k--) {
+            while (pre_k--) {
                 pre_res += res;
             }
             res = std::move(pre_res);
@@ -470,6 +482,7 @@ int findKthLargest(vector<int>& nums, int k) {
         i = left + 1;// pivot不算
         int j = right;
         while (true) {
+            // 符合条件的都跳过
             // 这里<, 不能带=
             // 符合条件的i, 左边都小于pivot
             while (i <= j && nums[i] < pivot) {
@@ -486,7 +499,7 @@ int findKthLargest(vector<int>& nums, int k) {
             if (i >= j) {
                 break;
             }
-            // 不满足条件, 交换
+            // 留下的是不满足条件的, 需要交换
             swap(nums[i++], nums[j--]);
         }
 
@@ -528,8 +541,8 @@ vector<int> topKFrequent(vector<int>& nums, int k) {
     // 出现次数相同的元素,放到一个桶里
     // 最大有[0, max_cnt] max_cnt + 1种桶
     vector<vector<int>> buckets(max_cnt + 1);
-    for (auto it : cnts) {
-        buckets[it.second].push_back(it.first);
+    for (auto [key, val] : cnts) {
+        buckets[val].push_back(key);
     }
 
     // 前k个是答案个数是k个
@@ -579,7 +592,7 @@ int maxProfit(vector<int>& prices) {
     // 不能当天买,当天卖
     // 枚举卖出价格, 维护买入最小值
     int min_price = prices[0];
-    int ans = INT_MIN;
+    int ans = 0;
     for (int p : prices) {
         ans = max(ans, p - min_price);
         min_price = min(min_price, p);
@@ -633,6 +646,7 @@ vector<int> partitionLabels(string s) {
     for (int i = 0; i < n; i++) {
         end = max(end, last[s[i] - 'a']);
         if (i == end) {
+            // [start, end]
             ans.push_back(end - start + 1);
             start = end + 1;
         }

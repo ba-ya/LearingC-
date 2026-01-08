@@ -406,7 +406,7 @@ int search(vector<int>& nums, int target) {
         }
         return right;
     };
-    // []
+    // [left, right]
     auto lower_bound = [&](int left, int right) {
         int l = left - 1;
         int r = right + 1;
