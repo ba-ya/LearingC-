@@ -937,6 +937,7 @@ int findDuplicate(vector<int>& nums) {
     // 一开始想到之前有个题目41,每个人根据学号坐到自己的位置上,
     // 但这题要求不修改nums元素, 当作有环的图做, 类似142
 
+    // 入环口是重复元素
     // nums所有值都大于0
     int n = nums.size();
     int slow = 0, fast = 0;
