@@ -1,5 +1,4 @@
 ﻿#include <QApplication>
-#include "11Monotonic.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,10 +24,20 @@ int main(int argc, char *argv[])
     vec = {4,5,6,5};
     std::vector<int> vec2 = {2,1,2,1};
     LIS::bestTeamScore(vec, vec2);
-*/
+
     // 11
     vec = {1,3,4,3,2};
     Monotonic_Stack::largestRectangleArea(vec);
     Monotonic_Stack::largestRectangleArea_2(vec);
+*/
+    auto func2 = [&](int *p) {
+        qDebug() << "p addr:"<< &p << ", p val:" << p;
+    };
+    int var = 1;
+    int *p = &var;
+    qDebug() << "var addr:" << &var;
+    qDebug() << "p addr:"<< &p << ", p val:" << p;
+    func2(p);
+
     return a.exec();
 }
