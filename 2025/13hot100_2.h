@@ -17,7 +17,7 @@ int numIslands(vector<vector<char>>& grid) {
     int DIR[4][2] = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
     // 插旗
     // 出界, 插过旗=='2', 遇到水=='0'
-    auto dfs = [&](this auto &&dfs, int i, int j) {
+    auto dfs = [&](this auto &&dfs, int i, int j) -> void {
         if (i < 0 || i >= m || j < 0 || j >= n || grid[i][j] != '1') {
             return;
         }
@@ -84,8 +84,11 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
     // 构建有向图
     vector<vector<int>> g(numCourses);
     // [a, b], a的前置是b, 即b->a
+    // 通过b能到达a, 所以是g[b].emplace_back(a);
     for (auto &prer : prerequisites) {
-        g[prer[1]].emplace_back(prer[0]);
+        int a = prer[0];
+        int b = prer[1];
+        g[b].emplace_back(a);
     }
 
     // 0:未访问, 1:正在访问, 2:访问结束

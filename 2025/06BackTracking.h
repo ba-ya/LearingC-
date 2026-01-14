@@ -231,12 +231,12 @@ vector<string> generateParenthesis(int n) {
             ans.emplace_back(path);
             return;
         }
-        // '('当作选
+        // '('当作选, 左括号个数没有满还可以选
         if (left < n) {
             path[left + right] = '(';
             dfs(left + 1, right);
         }
-        // ')'当作不选
+        // ')'当作不选, 右括号个数小于左括号个数,可以选
         if (right < left) {
             path[left + right] = ')';
             dfs(left, right + 1);
@@ -303,7 +303,8 @@ vector<vector<int>> combinationSum_2(vector<int>& candidates, int target) {
             ans.push_back(path);
             return;
         }
-        if (i >= n || capacity < 0) {
+
+        if (i >= n || capacity < candidates[i]) {
             return;
         }
         // 不选
