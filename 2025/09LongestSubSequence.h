@@ -157,8 +157,6 @@ int lengthOfLIS(vector<int>& nums) {
     }
     return ans;
 }
-
-// 300最长递增子序列
 // 贪心+二分
 int lengthOfLIS_2(vector<int>& nums) {
     vector<int> g;

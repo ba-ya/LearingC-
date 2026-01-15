@@ -617,6 +617,18 @@ bool canJump(vector<int>& nums) {
     }
     return true;
 }
+bool canJump_2(vector<int>& nums) {
+    int end = 0;
+    int n = nums.size();
+    for (int i = 0; i < n - 1; i++) {
+        end = max(end, i + nums[i]);
+        if (i == end) {
+            // 需要造桥,说明不能一次走完
+            return false;
+        }
+    }
+    return true;
+}
 
 // 45, 跳跃游戏2
 int jump(vector<int>& nums) {
@@ -691,6 +703,7 @@ bool wordBreak(string s, vector<string>& wordDict) {
     int n = s.length();
     vector<int> memo(n + 1, -1);
     auto dfs = [&](this auto &&dfs, int i) -> bool {
+        // [j, i), 开区间,i = 0的时候就可以退出了
         if (i == 0) {
             // 还剩0个字符串需要划分, 拆分成功
             return true;
