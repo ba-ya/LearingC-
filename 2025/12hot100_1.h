@@ -302,6 +302,7 @@ int firstMissingPositive(vector<int>& nums) {
 void setZeroes(vector<vector<int>>& matrix) {
     int m = matrix.size();
     int n = matrix[0].size();
+    // (i, j) -> (n - j - 1, i)
     // 额外记录第一行是否需要置零
     bool first_row_has_zero = ranges::contains(matrix[0], 0);
     // 第一行,第一列作为标志记录当前行,当前列是否需要置零
