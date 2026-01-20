@@ -520,8 +520,7 @@ Node* copyRandomList(Node* head) {
     for (Node *cur = head; cur; cur = cur->next->next) {
         Node *copy = cur->next;
         if (cur->random) {
-            Node *random_copy = cur->random->next;
-            copy->random = random_copy;
+            copy->random = cur->random->next;
         }
     }
 
