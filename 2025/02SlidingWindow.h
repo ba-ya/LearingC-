@@ -261,7 +261,6 @@ string minWindow(string s, string t) {
 
     // -1可以排除一些特殊情况
     // [ans_left, ans_right]
-    // [ans_left, ans_right)不好判断没有进入if的情况
     int ans_left = -1;
     int ans_right = s.size();
     int left = 0;

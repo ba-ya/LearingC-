@@ -53,11 +53,11 @@ vector<vector<int>> subsets_2(vector<int>& nums) {
     vector<vector<int>> ans;
     vector<int> path;
     auto dfs = [&](this auto &&dfs, int i) -> void {
-        ans.emplace_back(path);
+        ans.emplace_back(path); // 不选,把当前子集加入答案
         for (int j = i; j < n; j++) {
-            path.emplace_back(nums[j]);
+            path.emplace_back(nums[j]); // 选
             dfs(j + 1);
-            path.pop_back();
+            path.pop_back(); // 恢复现场
         }
     };
     dfs(0);
